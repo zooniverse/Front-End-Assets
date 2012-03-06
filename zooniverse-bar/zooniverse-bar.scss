@@ -1,8 +1,15 @@
-$bg-color: transparentize(black, 0.2);
+$bg-color: transparentize(black, 0.4);
 $fg-color: white;
-$border: transparentize($fg-color, 0.8);
+$border-color: transparentize($fg-color, 0.8);
 
-$height: 35px;
+$bar-height: 30px;
+$max-dropdown-height: 500px;
+$max-accordion-height: 250px;
+
+@mixin box-sizing($args) {
+  -moz-box-sizing: $args;
+  box-sizing: $args;
+}
 
 @mixin transition($args) {
   -moz-transition: $args;
@@ -10,19 +17,36 @@ $height: 35px;
   transition: $args;
 }
 
+@mixin linear-gradient($start: transparent, $end: transparent, $from: top) {
+  background-color: transparent;
+  background-image: -moz-linear-gradient($from, $start, $end);
+  background-image: -webkit-linear-gradient($from, $start, $end);
+  background-image: linear-gradient($from, $start, $end);
+}
+
 // Menu bar
 #zooniverse-bar {
   background: $bg-color;
-  border-bottom: 1px solid $border;
+  border-bottom: 1px solid $border-color;
   color: $fg-color;
+  cursor: default;
   font: {
     family: Titillium, sans-serif;
     size: 12px;
   };
-  height: $height;
+  height: $bar-height;
+  letter-spacing: 1px;
   padding: 0 20px;
   position: relative;
+  text-transform: uppercase;
+  white-space: nowrap;
   z-index: 10;
+
+  // *All* links descending from the bar
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 
   // Bar item group
   > ul {
@@ -33,7 +57,7 @@ $height: 35px;
       float: left;
 
       > li {
-        border-right: 1px solid $border;
+        border-right: 1px solid $border-color;
 
         > div,
         > ul {
@@ -47,11 +71,13 @@ $height: 35px;
       float: right;
 
       > li {
-        border-left: 1px solid $border;
+        border-left: 1px solid $border-color;
 
         > div,
         > ul {
           left: auto;
+          margin: 0;
+          padding: 0;
           right: 0;
         }
       }
@@ -60,35 +86,38 @@ $height: 35px;
     // Bar item
     > li {
       display: inline-block;
-      font-family: TitilliumText22LRegular, sans-serif;
-      height: $height;
-      letter-spacing: 1px;
-      line-height: $height + ($height / 10);
+      float: left;
       position: relative;
-      text-transform: uppercase;
-      white-space: nowrap;
+
+      &:hover {
+        background: $bg-color;
+      }
 
       // Bar item label
       > :first-child {
-        color: transparentize($fg-color, 0.2);
         display: inline-block;
+        height: $bar-height;
+        line-height: $bar-height + ($bar-height / 10);
         padding: 0 15px;
         text-decoration: none;
-        &:hover {
-          color: $fg-color;
-        }
 
         // Menu or dropdown
-        & + div,
-        & + ul {
+        & + * {
+          @include transition(#{
+            max-height 0.25s ease-in-out,
+            opacity 0.25s ease-in-out
+          });
           background: $bg-color;
-          border: 1px solid $border {
+          border: 1px solid $border-color {
             radius: 0 0 5px 5px;
             top: 0;
           };
-          display: none;
+          font-size: 10px;
           line-height: normal;
           margin: 0;
+          max-height: 0;
+          opacity: 0;
+          overflow: hidden;
           padding: 0;
           position: absolute;
           top: 100%;
@@ -109,36 +138,47 @@ $height: 35px;
 
           // Menu item
           > li {
-            > label {
-              border-top: 1px solid $border;
-              color: transparentize($fg-color, 0.2);
-              cursor: pointer;
+            display: block;
+
+            > a {
+              border-top: 1px solid $border-color;
               display: block;
-              font-family: TitilliumText22LThin, sans-serif;
-              font-size: 18px;
-              padding: 10px 0 5px;
-              text-align: center;
+              padding: 5px 15px;
+              white-space: nowrap;
+
               &:hover {
-                color: $fg-color;
+                background: $bg-color;
               }
             }
 
             // Accordion heading
+            > label {
+              border-top: 1px solid $border-color;
+              cursor: pointer;
+              display: block;
+              font-size: 18px;
+              padding: 10px 0;
+              text-align: center;
+
+              &:hover {
+                background: $bg-color;
+              }
+            }
+
+            // Accordion trigger
             > input[type="radio"],
             > input[type="checkbox"] {
               display: none;
-              &:checked {
-                + ul {
-                  border-color: $border;
-                  max-height: 250px;
-                }
+
+              &:checked + ul {
+                border-color: $border-color;
+                max-height: $max-accordion-height;
               }
             }
 
             // Accordion menu
             > ul {
               @include transition(max-height 0.5s ease-in-out);
-              border-top: 1px solid transparent;
               margin: 0;
               max-height: 0;
               overflow: hidden;
@@ -146,20 +186,75 @@ $height: 35px;
 
               // Accordion menu item
               > li {
-                font-size: 10px;
-                padding: 2px 15px;
-                white-space: nowrap;
-
-                &:first-child {
-                  padding-top: 15px;
-                }
-
-                &:last-child {
-                  padding-bottom: 15px;
-                }
+                display: block;
 
                 > a {
+                  border-top: 1px solid $border-color;
                   display: block;
+                  padding: 5px 15px;
+                  white-space: nowrap;
+
+                  &:hover {
+                    background: $bg-color;
+                  }
+                }
+
+                &:last-child > a{
+                  padding-bottom: 10px;
+                }
+              }
+            }
+          }
+
+          &.sign-in {
+            margin-top: 1px;
+            padding: 5px 0;
+
+            > form {
+              > div {
+                padding: 2px 15px;
+
+                > label {
+                  > span:first-child {
+                    display: inline-block;
+                    width: 80px;
+                  }
+
+                  > input {
+                    @include box-sizing(border-box);
+                    background: transparentize($fg-color, 0.8);
+                    border: 1px solid transparentize($fg-color, 0.8);
+                    box-shadow: 0 0 5px -1px $bg-color inset;
+                    color: inherit;
+                    font-family: inherit;
+                    letter-spacing: inherit;
+                    padding: 3px 5px;
+                    width: 160px;
+                  }
+                }
+
+                &.action {
+                  text-align: right;
+
+                  > a {
+                    opacity: 0.8;
+                    text-transform: none;
+                  }
+
+                  > button {
+                    @include linear-gradient($border-color, transparent);
+                    border: 1px solid $border-color;
+                    color: inherit;
+                    cursor: pointer;
+                    font: {
+                      family: inherit;
+                      size: inherit;
+                    };
+                    letter-spacing: inherit;
+                    margin-left: 10px;
+                    padding: 5px 15px;
+                    text-transform: inherit;
+                  }
                 }
               }
             }
@@ -170,7 +265,10 @@ $height: 35px;
       // Menu or dropdown (with its item hovered)
       &:hover > :first-child + div,
       &:hover > :first-child + ul {
-          display: block;
+        max-height: $max-dropdown-height;
+        opacity: 1;
+        overflow: visible;
+        z-index: 1;
       }
     }
   }
