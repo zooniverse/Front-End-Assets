@@ -1,3 +1,24 @@
+@font-face {
+  font-family: "Titillium";
+  font-weight: 100;
+  font-style: normal;
+  src: url("../lib/TitilliumText/TitilliumText22L001-webfont.eot");
+  src: url("../lib/TitilliumText/TitilliumText22L001-webfont.eot?#iefix") format("embedded-opentype"), url("../lib/TitilliumText/TitilliumText22L001-webfont.woff") format("woff"), url("../lib/TitilliumText/TitilliumText22L001-webfont.ttf") format("truetype"), url("../lib/TitilliumText/TitilliumText22L001-webfont.svg#TitilliumText22LThin") format("svg"); }
+
+@font-face {
+  font-family: "Titillium";
+  font-weight: 400;
+  font-style: normal;
+  src: url("../lib/TitilliumText/TitilliumText22L002-webfont.eot");
+  src: url("../lib/TitilliumText/TitilliumText22L002-webfont.eot?#iefix") format("embedded-opentype"), url("../lib/TitilliumText/TitilliumText22L002-webfont.woff") format("woff"), url("../lib/TitilliumText/TitilliumText22L002-webfont.ttf") format("truetype"), url("../lib/TitilliumText/TitilliumText22L002-webfont.svg#TitilliumText22LLight") format("svg"); }
+
+@font-face {
+  font-family: "Titillium";
+  font-weight: 700;
+  font-style: normal;
+  src: url("../lib/TitilliumText/TitilliumText22L004-webfont.eot");
+  src: url("../lib/TitilliumText/TitilliumText22L004-webfont.eot?#iefix") format("embedded-opentype"), url("../lib/TitilliumText/TitilliumText22L004-webfont.woff") format("woff"), url("../lib/TitilliumText/TitilliumText22L004-webfont.ttf") format("truetype"), url("../lib/TitilliumText/TitilliumText22L004-webfont.svg#TitilliumText22LMedium") format("svg"); }
+
 #zooniverse-bar {
   background: rgba(0, 0, 0, 0.6);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -7,6 +28,7 @@
   font-size: 12px;
   height: 30px;
   letter-spacing: 1px;
+  line-height: 1;
   padding: 0 20px;
   position: relative;
   text-transform: uppercase;
@@ -45,7 +67,7 @@
       #zooniverse-bar > ul > li > :first-child {
         display: inline-block;
         height: 30px;
-        line-height: 33px;
+        line-height: 33.75px;
         padding: 0 15px;
         text-decoration: none; }
         #zooniverse-bar > ul > li > :first-child + * {
@@ -57,7 +79,6 @@
             border-radius: 0 0 5px 5px;
             border-top: 0;
           font-size: 10px;
-          line-height: normal;
           margin: 0;
           max-height: 0;
           opacity: 0;
@@ -118,8 +139,6 @@
                   white-space: nowrap; }
                   #zooniverse-bar > ul > li > :first-child + * > li > ul > li > a:hover {
                     background: rgba(0, 0, 0, 0.6); }
-                #zooniverse-bar > ul > li > :first-child + * > li > ul > li:last-child > a {
-                  padding-bottom: 10px; }
           #zooniverse-bar > ul > li > :first-child + *.sign-in {
             margin-top: 1px;
             padding: 5px 0; }
