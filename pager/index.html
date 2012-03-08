@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="utf-8" />
+
+		<title>Pager</title>
+
+		<style type="text/css">
+			[data-page] {
+				display: inline-block;
+				opacity: 0.5;
+				outline: 1px solid black;
+				padding: 2px;
+			}
+
+			[data-page].before {
+				background-color: yellow;
+			}
+
+			[data-page].active {
+				background-color: orange;
+				opacity: 1;
+			}
+
+			[data-page].after {
+				background-color: red;
+			}
+		</style>
+	</head>
+
+	<body>
+		<ul>
+			<li><a href="#/one">One</a></li>
+			<li><a href="#/two">Two</a></li>
+			<li>
+				<a href="#/three">Three</a>
+				<ul>
+					<li><a href="#/three/eh">Eh</a></li>
+					<li><a href="#/three/bee">Bee</a></li>
+					<li><a href="#/three/sea">Sea</a></li>
+				</ul>
+			</li>
+			<li><a href="#/four">Four</a></li>
+			<li><a href="#/five">Five</a></li>
+		</ul>
+
+		<div>
+			<div data-page="one">Page one</div>
+			<div data-page="two">Page two</div>
+			<div data-page="three">
+				Page three
+				<div data-page="eh">Three eh</div>
+				<div data-page="bee">Three bee</div>
+				<div data-page="sea">Three sea</div>
+			</div>
+			<div data-page="four">Page four</div>
+			<div data-page="five">Page five</div>
+		</div>
+
+		<script src="../lib/require.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			define('jQuery', [
+				'../lib/jquery'
+			], function() {
+				return jQuery;
+			});
+
+			define('Spine', [
+				'../lib/spine/lib/spine',
+				'../lib/spine/lib/route'
+			], function() {
+				return Spine;
+			});
+
+			define('util', [
+				'../util/util'
+			], function(util) {
+				return util;
+			});
+
+			require([
+				'jQuery',
+				'Pager',
+				'../nested-route/NestedRoute'
+			], function ($, Pager, NestedRoute) {
+				$('[data-page]').parent().each(function(i, element) {
+					new Pager({el: element});
+				});
+
+				NestedRoute.setup();
+			});
+		</script>
+	</body>
+</html>
