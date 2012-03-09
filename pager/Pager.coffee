@@ -3,82 +3,80 @@ define (require, exports) ->
 	$ = require 'jQuery'
 	{delay} = require 'util'
 
-	class Page extends Spine.Controller
-		path: '' # Like "/foo/bar"
+	PAGE_ATTR = 'data-page'
+	BEFORE_CLASS = 'before'
+	ACTIVE_CLASS = 'active'
+	AFTER_CLASS = 'after'
 
-		tabs: null
+	class Page extends Spine.Controller
+		pager: null
+
+		name: ''
+		links: null
 
 		constructor: ->
 			super
 
-			@tabs ||= $("a[href='##{@path}']")
+			@name = @el.attr PAGE_ATTR
 
-			@log "New Page at \"#{@path}\" and #{@tabs.length} tabs"
+			hash = '#' + @pager.path.replace ':page', @name
+			@links = $("a[href=\"#{hash}\"]")
 
-			if @el.hasClass 'active' then delay @defaultActivate
-
-		defaultActivate: =>
-			# Only activate by default if the active class is present.
-			# If it's not, another page has already been activated.
-			@activate() if @el.hasClass 'active'
+			@log "New Page at #{hash} with #{@links.length} links"
 
 		activate: =>
-			elAndTabs = @el.add @tabs
-			elAndTabs.addClass 'active'
-			elAndTabs.removeClass 'before'
-			elAndTabs.removeClass 'after'
+			elAndLinks = @el.add @links
+			elAndLinks.removeClass BEFORE_CLASS
+			elAndLinks.removeClass AFTER_CLASS
+			elAndLinks.addClass ACTIVE_CLASS
 
 		deactivate: (inactiveClass) =>
-			elAndTabs = @el.add @tabs
-			elAndTabs.removeClass 'active'
-			elAndTabs.addClass inactiveClass
+			elAndLinks = @el.add @links
+			elAndLinks.removeClass BEFORE_CLASS
+			elAndLinks.removeClass AFTER_CLASS
+			elAndLinks.removeClass ACTIVE_CLASS
+			elAndLinks.addClass inactiveClass
 
 	class Pager extends Spine.Controller
-		path: '' # "/foo/bar/:page"
-
 		pages: null
+		path: '' # Like "/foo/bar/:page"
 
 		constructor: ->
 			super
 
-			@path ||= do =>
-				name = @el.attr 'data-page'
+			@path = do =>
 				segments = []
 
-				if name then segments.push name
+				# A pager might be a page itself, so include it in the path.
+				elPage = @el.attr PAGE_ATTR
+				if elPage then segments.push elPage
 
-				@el.parents('[data-page]').each ->
-					segments.unshift $(@).attr 'data-page'
+				for parent in @el.parents("[#{PAGE_ATTR}]")
+					segments.unshift $(parent).attr PAGE_ATTR
 
 				segments.push ':page'
 
 				'/' + segments.join '/'
 
-			path = @path
-
-			@pages ||= do =>
-				@el.children('[data-page]').map ->
+			@pages = do =>
+				for child in @el.children "[#{PAGE_ATTR}]"
 					new Page
-						el: @
-						path: path.replace(':page', $(@).attr 'data-page')
+						el: child
+						pager: @
 
-			@route @path, @pathMatched
+			@route? @path, @pathMatched
 
-			@log "Created new Pager at \"#{@path}\" with #{@pages.length} pages"
+			@log "New Pager at #{@path} with #{@pages.length} pages"
 
 		pathMatched: (params) =>
 			return unless params.page
 
-			matched = false
-
-			@pages.each ->
-				if @el.attr('data-page') == params.page
-					matched = true
-					@activate()
+			disabledClass = BEFORE_CLASS
+			for page in @pages
+				if page.name == params.page
+					page.activate()
+					disabledClass = AFTER_CLASS
 				else
-					if not matched
-						@deactivate 'before'
-					else
-						@deactivate 'after'
+					page.deactivate disabledClass
 
 	exports = Pager

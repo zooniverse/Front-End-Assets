@@ -4,44 +4,50 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require, exports) {
-    var $, Page, Pager, Spine, delay;
+    var $, ACTIVE_CLASS, AFTER_CLASS, BEFORE_CLASS, PAGE_ATTR, Page, Pager, Spine, delay;
     Spine = require('Spine');
     $ = require('jQuery');
     delay = require('util').delay;
+    PAGE_ATTR = 'data-page';
+    BEFORE_CLASS = 'before';
+    ACTIVE_CLASS = 'active';
+    AFTER_CLASS = 'after';
     Page = (function(_super) {
 
       __extends(Page, _super);
 
-      Page.prototype.path = '';
+      Page.prototype.pager = null;
 
-      Page.prototype.tabs = null;
+      Page.prototype.name = '';
+
+      Page.prototype.links = null;
 
       function Page() {
         this.deactivate = __bind(this.deactivate, this);
         this.activate = __bind(this.activate, this);
-        this.defaultActivate = __bind(this.defaultActivate, this);        Page.__super__.constructor.apply(this, arguments);
-        this.tabs || (this.tabs = $("a[href='#" + this.path + "']"));
-        this.log("New Page at \"" + this.path + "\" and " + this.tabs.length + " tabs");
-        if (this.el.hasClass('active')) delay(this.defaultActivate);
+        var hash;
+        Page.__super__.constructor.apply(this, arguments);
+        this.name = this.el.attr(PAGE_ATTR);
+        hash = '#' + this.pager.path.replace(':page', this.name);
+        this.links = $("a[href=\"" + hash + "\"]");
+        this.log("New Page at " + hash + " with " + this.links.length + " links");
       }
 
-      Page.prototype.defaultActivate = function() {
-        if (this.el.hasClass('active')) return this.activate();
-      };
-
       Page.prototype.activate = function() {
-        var elAndTabs;
-        elAndTabs = this.el.add(this.tabs);
-        elAndTabs.addClass('active');
-        elAndTabs.removeClass('before');
-        return elAndTabs.removeClass('after');
+        var elAndLinks;
+        elAndLinks = this.el.add(this.links);
+        elAndLinks.removeClass(BEFORE_CLASS);
+        elAndLinks.removeClass(AFTER_CLASS);
+        return elAndLinks.addClass(ACTIVE_CLASS);
       };
 
       Page.prototype.deactivate = function(inactiveClass) {
-        var elAndTabs;
-        elAndTabs = this.el.add(this.tabs);
-        elAndTabs.removeClass('active');
-        return elAndTabs.addClass(inactiveClass);
+        var elAndLinks;
+        elAndLinks = this.el.add(this.links);
+        elAndLinks.removeClass(BEFORE_CLASS);
+        elAndLinks.removeClass(AFTER_CLASS);
+        elAndLinks.removeClass(ACTIVE_CLASS);
+        return elAndLinks.addClass(inactiveClass);
       };
 
       return Page;
@@ -51,55 +57,62 @@
 
       __extends(Pager, _super);
 
-      Pager.prototype.path = '';
-
       Pager.prototype.pages = null;
+
+      Pager.prototype.path = '';
 
       function Pager() {
         this.pathMatched = __bind(this.pathMatched, this);
-        var path,
-          _this = this;
+        var _this = this;
         Pager.__super__.constructor.apply(this, arguments);
-        this.path || (this.path = (function() {
-          var name, segments;
-          name = _this.el.attr('data-page');
+        this.path = (function() {
+          var elPage, parent, segments, _i, _len, _ref;
           segments = [];
-          if (name) segments.push(name);
-          _this.el.parents('[data-page]').each(function() {
-            return segments.unshift($(this).attr('data-page'));
-          });
+          elPage = _this.el.attr(PAGE_ATTR);
+          if (elPage) segments.push(elPage);
+          _ref = _this.el.parents("[" + PAGE_ATTR + "]");
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            parent = _ref[_i];
+            segments.unshift($(parent).attr(PAGE_ATTR));
+          }
           segments.push(':page');
           return '/' + segments.join('/');
-        })());
-        path = this.path;
-        this.pages || (this.pages = (function() {
-          return _this.el.children('[data-page]').map(function() {
-            return new Page({
-              el: this,
-              path: path.replace(':page', $(this).attr('data-page'))
-            });
-          });
-        })());
-        this.route(this.path, this.pathMatched);
-        this.log("Created new Pager at \"" + this.path + "\" with " + this.pages.length + " pages");
+        })();
+        this.pages = (function() {
+          var child, _i, _len, _ref, _results;
+          _ref = _this.el.children("[" + PAGE_ATTR + "]");
+          _results = [];
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            child = _ref[_i];
+            _results.push(new Page({
+              el: child,
+              pager: _this
+            }));
+          }
+          return _results;
+        })();
+        if (typeof this.route === "function") {
+          this.route(this.path, this.pathMatched);
+        }
+        this.log("New Pager at " + this.path + " with " + this.pages.length + " pages");
       }
 
       Pager.prototype.pathMatched = function(params) {
-        var matched;
+        var disabledClass, page, _i, _len, _ref, _results;
         if (!params.page) return;
-        matched = false;
-        return this.pages.each(function() {
-          if (this.el.attr('data-page') === params.page) {
-            matched = true;
-            return this.activate();
+        disabledClass = BEFORE_CLASS;
+        _ref = this.pages;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          page = _ref[_i];
+          if (page.name === params.page) {
+            page.activate();
+            _results.push(disabledClass = AFTER_CLASS);
           } else {
-            if (!matched) {
-              return this.deactivate('before');
-            } else {
-              return this.deactivate('after');
-            }
+            _results.push(page.deactivate(disabledClass));
           }
-        });
+        }
+        return _results;
       };
 
       return Pager;
