@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="utf-8" />
+
+		<title>Zooniverse bar</title>
+
+		<link href="zooniverse-bar.css" rel="stylesheet" />
+		<style type="text/css">
+			body {margin: 0;}
+		</style>
+	</head>
+
+	<body>
+		<div id="zooniverse-bar"></div>
+
+		<script src="../lib/require.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			define('jQuery', ['../lib/jquery'], function() {return jQuery;});
+
+			require(['ZooniverseBar'], function(ZooniverseBar) {
+				window.zb = new ZooniverseBar({
+					el: document.getElementById('zooniverse-bar')
+				});
+			});
+		</script>
+	</body>
+</html>

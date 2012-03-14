@@ -81,6 +81,13 @@ $titillium-dir: "../lib/TitilliumText";
   white-space: nowrap;
   z-index: 10;
 
+  // Automatic l18n
+  &[lang="en"] [lang="de"], &[lang="en"] [lang="pl"],
+  &[lang="de"] [lang="en"], &[lang="de"] [lang="pl"],
+  &[lang="pl"] [lang="en"], &[lang="pl"] [lang="de"] {
+    display: none;
+  }
+
   // *All* links descending from the bar
   a {
     color: inherit;

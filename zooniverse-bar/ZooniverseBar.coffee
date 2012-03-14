@@ -1,12 +1,15 @@
 define (require, exports) ->
-	Spine = require 'Spine'
+	$ = require 'jQuery'
 
-	translate = (raw) ->
-		if raw.constructor is String
-			$("<span>#{raw}</span>")
+	translate = (raw, href) ->
+		out = if raw.constructor is String
+			"<span>#{raw}</span>"
 		else
-			$("<span lang='#{lang}'>string</span>" for lang, string of raw)
+			("<span lang='#{lang}'>#{string}</span>" for lang, string of raw).join ''
 
+		out = "<a href='#{href}'>#{out}</a>" if href?
+
+		out
 
 	class Menu
 		constructor: (options) ->
@@ -15,11 +18,15 @@ define (require, exports) ->
 
 	class Link
 		constructor: (text, href) ->
-			@el = $("<li><a href='#{href}'>#{translate text}</a></li>")
+			@el = $("<li>#{translate text, href}</li>")
 
 	class Dropdown
-		constructor: (text, content) ->
-			@el = $("<li>#{translate text}</li>")
+		constructor: (heading, content) ->
+			@el = $("<li></li>")
+			if heading.constructor is
+				@el.append "<span>#{translate heading}</span>"
+			else if heading.el?
+				@el.append heading.el
 
 			if content.constructor is String
 				@el.append "<div>#{content}</div>"
@@ -39,9 +46,9 @@ define (require, exports) ->
 	languages = new Dropdown
 		en: 'EN', de: 'DE', pl: 'PL'
 		new Menu [
-			new Link 'English', '#en'
-			new Link 'Deutsch', '#de'
-			new Link 'Polski', '#pl'
+			new Link 'English', '#language:en'
+			new Link 'Deutsch', '#language:de'
+			new Link 'Polski', '#language:pl'
 		]
 
 	about = new Link
@@ -77,21 +84,37 @@ define (require, exports) ->
 
 	login = new Dropdown
 		en: 'Log in', de: 'Log in', pl: 'Log in'
-		'''
-			<form></form>
+	  '''
+			<form>TODO</form>
 		'''
 
-	leading = new Menu '', [home, languages]
+	leading = new Menu [home, languages]
 	leading.el.addClass 'leading'
 
-	trailing = new Menu '', [about, projects, login]
+	trailing = new Menu [about, projects, login]
 	trailing.el.addClass 'trailing'
 
 
 	class ZooniverseBar
 		constructor: (params) ->
-			@el = $('<div></div>')
+			@[property] = params[property] for own property of params or {}
+
+			@el ||= $('<div></div>')
+			@el = $(@el) unless @el.constructor is $
+			@el.addClass 'zooniverse-bar'
+
 			@el.append leading.el
 			@el.append trailing.el
+
+			defaultLang = @el.parent('[lang]').attr 'lang'
+			@el.attr 'lang', defaultLang or 'en'
+
+			@delegateEvents()
+
+		delegateEvents: =>
+			@el.on 'click', '[href^="#language:"]', (e) =>
+				e.preventDefault()
+				lang = $(e.target).parent('[href^="#language:"]').attr('href').split(':')[1]
+				@el.attr 'lang', lang
 
 	exports = ZooniverseBar

@@ -1,25 +1,24 @@
 (function() {
   var __hasProp = Object.prototype.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; },
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   define(function(require, exports) {
-    var Accordion, Dropdown, Link, Menu, Spine, ZooniverseBar, about, home, languages, leading, login, projects, trailing, translate;
-    Spine = require('Spine');
-    translate = function(raw) {
-      var lang, string;
-      if (raw.constructor === String) {
-        return $("<span>" + raw + "</span>");
-      } else {
-        return $((function() {
-          var _results;
-          _results = [];
-          for (lang in raw) {
-            string = raw[lang];
-            _results.push("<span lang='" + lang + "'>string</span>");
-          }
-          return _results;
-        })());
-      }
+    var $, Accordion, Dropdown, Link, Menu, ZooniverseBar, about, home, languages, leading, login, projects, trailing, translate;
+    $ = require('jQuery');
+    translate = function(raw, href) {
+      var lang, out, string;
+      out = raw.constructor === String ? "<span>" + raw + "</span>" : ((function() {
+        var _results;
+        _results = [];
+        for (lang in raw) {
+          string = raw[lang];
+          _results.push("<span lang='" + lang + "'>" + string + "</span>");
+        }
+        return _results;
+      })()).join('');
+      if (href != null) out = "<a href='" + href + "'>" + out + "</a>";
+      return out;
     };
     Menu = (function() {
 
@@ -38,7 +37,7 @@
     Link = (function() {
 
       function Link(text, href) {
-        this.el = $("<li><a href='" + href + "'>" + (translate(text)) + "</a></li>");
+        this.el = $("<li>" + (translate(text, href)) + "</li>");
       }
 
       return Link;
@@ -46,8 +45,11 @@
     })();
     Dropdown = (function() {
 
-      function Dropdown(text, content) {
-        this.el = $("<li>" + (translate(text)) + "</li>");
+      function Dropdown(heading, content) {
+        this.el = $("<li></li>");
+        if (heading.constructor === this.el.append("<span>" + (translate(heading)) + "</span>")) {} else if (heading.el != null) {
+          this.el.append(heading.el);
+        }
         if (content.constructor === String) {
           this.el.append("<div>" + content + "</div>");
         } else if (content.el != null) {
@@ -79,7 +81,7 @@
       en: 'EN',
       de: 'DE',
       pl: 'PL'
-    }, new Menu([new Link('English', '#en'), new Link('Deutsch', '#de'), new Link('Polski', '#pl')]));
+    }, new Menu([new Link('English', '#language:en'), new Link('Deutsch', '#language:de'), new Link('Polski', '#language:pl')]));
     about = new Link({
       en: 'About',
       de: 'About',
@@ -116,18 +118,40 @@
       en: 'Log in',
       de: 'Log in',
       pl: 'Log in'
-    }, '<form></form>');
-    leading = new Menu('', [home, languages]);
+    }, '<form>TODO</form>');
+    leading = new Menu([home, languages]);
     leading.el.addClass('leading');
-    trailing = new Menu('', [about, projects, login]);
+    trailing = new Menu([about, projects, login]);
     trailing.el.addClass('trailing');
     ZooniverseBar = (function() {
 
       function ZooniverseBar(params) {
-        this.el = $('<div></div>');
+        this.delegateEvents = __bind(this.delegateEvents, this);
+        var defaultLang, property, _ref;
+        _ref = params || {};
+        for (property in _ref) {
+          if (!__hasProp.call(_ref, property)) continue;
+          this[property] = params[property];
+        }
+        this.el || (this.el = $('<div></div>'));
+        if (this.el.constructor !== $) this.el = $(this.el);
+        this.el.addClass('zooniverse-bar');
         this.el.append(leading.el);
         this.el.append(trailing.el);
+        defaultLang = this.el.parent('[lang]').attr('lang');
+        this.el.attr('lang', defaultLang || 'en');
+        this.delegateEvents();
       }
+
+      ZooniverseBar.prototype.delegateEvents = function() {
+        var _this = this;
+        return this.el.on('click', '[href^="#language:"]', function(e) {
+          var lang;
+          e.preventDefault();
+          lang = $(e.target).parent('[href^="#language:"]').attr('href').split(':')[1];
+          return _this.el.attr('lang', lang);
+        });
+      };
 
       return ZooniverseBar;
 
