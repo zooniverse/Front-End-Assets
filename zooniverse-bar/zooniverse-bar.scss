@@ -81,7 +81,7 @@ $titillium-dir: "../lib/TitilliumText";
   white-space: nowrap;
   z-index: 10;
 
-  // Automatic l18n
+  // Automatic localization
   &[lang="en"] [lang="de"], &[lang="en"] [lang="pl"],
   &[lang="de"] [lang="en"], &[lang="de"] [lang="pl"],
   &[lang="pl"] [lang="en"], &[lang="pl"] [lang="de"] {
@@ -196,51 +196,46 @@ $titillium-dir: "../lib/TitilliumText";
               }
             }
 
-            // Accordion heading
-            > label {
-              border-top: 1px solid $border-color;
-              cursor: pointer;
-              display: block;
-              font-size: 18px;
-              padding: 10px 0;
-              text-align: center;
+            &.accordion {
+              // Accordion heading
+              > :first-child {
+                border-top: 1px solid $border-color;
+                cursor: pointer;
+                display: block;
+                font-size: 18px;
+                padding: 10px 0;
+                text-align: center;
 
-              &:hover {
-                background: $bg-color;
+                &:hover {
+                  background: $bg-color;
+                }
               }
-            }
 
-            // Accordion trigger
-            > input[type="radio"],
-            > input[type="checkbox"] {
-              display: none;
-
-              &:checked + ul {
-                border-color: $border-color;
+              &.open > ul {
                 max-height: $max-accordion-height;
               }
-            }
 
-            // Accordion menu
-            > ul {
-              @include transition(max-height 0.5s ease-in-out);
-              margin: 0;
-              max-height: 0;
-              overflow: hidden;
-              padding: 0;
+              // Accordion menu
+              > ul {
+                @include transition(max-height 0.5s ease-in-out);
+                margin: 0;
+                max-height: 0;
+                overflow: hidden;
+                padding: 0;
 
-              // Accordion menu item
-              > li {
-                display: block;
-
-                > a {
-                  border-top: 1px solid $border-color;
+                // Accordion menu item
+                > li {
                   display: block;
-                  padding: 5px 15px;
-                  white-space: nowrap;
 
-                  &:hover {
-                    background: $bg-color;
+                  > a {
+                    border-top: 1px solid $border-color;
+                    display: block;
+                    padding: 5px 15px;
+                    white-space: nowrap;
+
+                    &:hover {
+                      background: $bg-color;
+                    }
                   }
                 }
               }
@@ -304,8 +299,8 @@ $titillium-dir: "../lib/TitilliumText";
       }
 
       // Menu or dropdown (with its item hovered)
-      &:hover > :first-child + div,
-      &:hover > :first-child + ul {
+      &.open > :first-child + div,
+      &.open > :first-child + ul {
         max-height: $max-dropdown-height;
         opacity: 1;
         overflow: visible;

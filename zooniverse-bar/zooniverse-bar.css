@@ -108,23 +108,18 @@
               white-space: nowrap; }
               #zooniverse-bar > ul > li > :first-child + * > li > a:hover {
                 background: rgba(0, 0, 0, 0.6); }
-            #zooniverse-bar > ul > li > :first-child + * > li > label {
+            #zooniverse-bar > ul > li > :first-child + * > li.accordion > :first-child {
               border-top: 1px solid rgba(255, 255, 255, 0.2);
               cursor: pointer;
               display: block;
               font-size: 18px;
               padding: 10px 0;
               text-align: center; }
-              #zooniverse-bar > ul > li > :first-child + * > li > label:hover {
+              #zooniverse-bar > ul > li > :first-child + * > li.accordion > :first-child:hover {
                 background: rgba(0, 0, 0, 0.6); }
-            #zooniverse-bar > ul > li > :first-child + * > li > input[type="radio"],
-            #zooniverse-bar > ul > li > :first-child + * > li > input[type="checkbox"] {
-              display: none; }
-              #zooniverse-bar > ul > li > :first-child + * > li > input[type="radio"]:checked + ul,
-              #zooniverse-bar > ul > li > :first-child + * > li > input[type="checkbox"]:checked + ul {
-                border-color: rgba(255, 255, 255, 0.2);
-                max-height: 250px; }
-            #zooniverse-bar > ul > li > :first-child + * > li > ul {
+            #zooniverse-bar > ul > li > :first-child + * > li.accordion.open > ul {
+              max-height: 250px; }
+            #zooniverse-bar > ul > li > :first-child + * > li.accordion > ul {
               -moz-transition: max-height 0.5s ease-in-out;
               -webkit-transition: max-height 0.5s ease-in-out;
               transition: max-height 0.5s ease-in-out;
@@ -132,14 +127,14 @@
               max-height: 0;
               overflow: hidden;
               padding: 0; }
-              #zooniverse-bar > ul > li > :first-child + * > li > ul > li {
+              #zooniverse-bar > ul > li > :first-child + * > li.accordion > ul > li {
                 display: block; }
-                #zooniverse-bar > ul > li > :first-child + * > li > ul > li > a {
+                #zooniverse-bar > ul > li > :first-child + * > li.accordion > ul > li > a {
                   border-top: 1px solid rgba(255, 255, 255, 0.2);
                   display: block;
                   padding: 5px 15px;
                   white-space: nowrap; }
-                  #zooniverse-bar > ul > li > :first-child + * > li > ul > li > a:hover {
+                  #zooniverse-bar > ul > li > :first-child + * > li.accordion > ul > li > a:hover {
                     background: rgba(0, 0, 0, 0.6); }
           #zooniverse-bar > ul > li > :first-child + *.sign-in {
             margin-top: 1px;
@@ -179,7 +174,7 @@
                   margin-left: 10px;
                   padding: 5px 15px;
                   text-transform: inherit; }
-      #zooniverse-bar > ul > li:hover > :first-child + div, #zooniverse-bar > ul > li:hover > :first-child + ul {
+      #zooniverse-bar > ul > li.open > :first-child + div, #zooniverse-bar > ul > li.open > :first-child + ul {
         max-height: 500px;
         opacity: 1;
         overflow: visible;
