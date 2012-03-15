@@ -167,8 +167,11 @@
 
       function ZooniverseBar(params) {
         this.closeAllDropdowns = __bind(this.closeAllDropdowns, this);
+        this.changeLang = __bind(this.changeLang, this);
         this.delegateEvents = __bind(this.delegateEvents, this);
         var defaultLang, direction, group, name, property, _i, _len, _ref, _ref2;
+        this.leading = ['home', 'languages'];
+        this.trailing = ['about', 'projects', 'signIn'];
         _ref = params || {};
         for (property in _ref) {
           if (!__hasProp.call(_ref, property)) continue;
@@ -204,13 +207,18 @@
           var lang;
           e.preventDefault();
           lang = $(e.target).closest('[href^="#language:"]').attr('href').split(':')[1];
-          _this.el.attr('lang', lang);
+          _this.changelang(lang);
           return _this.closeAllDropdowns();
         });
         this.el.on('click', function(e) {
           return e.stopPropagation();
         });
         return $(document).on('click', ':not(.zooniverse-bar *)', this.closeAllDropdowns);
+      };
+
+      ZooniverseBar.prototype.changeLang = function(lang) {
+        $('html').attr('lang', lang);
+        return this.el.attr('lang', lang);
       };
 
       ZooniverseBar.prototype.closeAllDropdowns = function() {

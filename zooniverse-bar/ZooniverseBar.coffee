@@ -142,6 +142,10 @@ define (require, exports) ->
 		@Accordion = Accordion
 
 		constructor: (params) ->
+			# Defaults
+			@leading = ['home', 'languages']
+			@trailing = ['about', 'projects', 'signIn']
+
 			@[property] = params[property] for own property of params or {}
 
 			@el ||= $('<div></div>')
@@ -162,11 +166,15 @@ define (require, exports) ->
 			@el.on 'click', '[href^="#language:"]', (e) =>
 				e.preventDefault()
 				lang = $(e.target).closest('[href^="#language:"]').attr('href').split(':')[1]
-				@el.attr 'lang', lang
+				@changelang lang
 				@closeAllDropdowns()
 
 			@el.on 'click', (e) => e.stopPropagation();
 			$(document).on 'click', ':not(.zooniverse-bar *)', @closeAllDropdowns
+
+		changeLang: (lang) =>
+			$('html').attr 'lang', lang
+			@el.attr 'lang', lang
 
 		closeAllDropdowns: =>
 			@el.find('.dropdown.open').removeClass 'open'
