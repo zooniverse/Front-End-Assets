@@ -1,181 +1,124 @@
-@font-face {
-  font-family: "Titillium";
-  font-weight: 100;
-  font-style: normal;
-  src: url("../lib/TitilliumText/TitilliumText22L001-webfont.eot");
-  src: url("../lib/TitilliumText/TitilliumText22L001-webfont.eot?#iefix") format("embedded-opentype"), url("../lib/TitilliumText/TitilliumText22L001-webfont.woff") format("woff"), url("../lib/TitilliumText/TitilliumText22L001-webfont.ttf") format("truetype"), url("../lib/TitilliumText/TitilliumText22L001-webfont.svg#TitilliumText22LThin") format("svg"); }
-
-@font-face {
-  font-family: "Titillium";
-  font-weight: 400;
-  font-style: normal;
-  src: url("../lib/TitilliumText/TitilliumText22L002-webfont.eot");
-  src: url("../lib/TitilliumText/TitilliumText22L002-webfont.eot?#iefix") format("embedded-opentype"), url("../lib/TitilliumText/TitilliumText22L002-webfont.woff") format("woff"), url("../lib/TitilliumText/TitilliumText22L002-webfont.ttf") format("truetype"), url("../lib/TitilliumText/TitilliumText22L002-webfont.svg#TitilliumText22LLight") format("svg"); }
-
-@font-face {
-  font-family: "Titillium";
-  font-weight: 700;
-  font-style: normal;
-  src: url("../lib/TitilliumText/TitilliumText22L004-webfont.eot");
-  src: url("../lib/TitilliumText/TitilliumText22L004-webfont.eot?#iefix") format("embedded-opentype"), url("../lib/TitilliumText/TitilliumText22L004-webfont.woff") format("woff"), url("../lib/TitilliumText/TitilliumText22L004-webfont.ttf") format("truetype"), url("../lib/TitilliumText/TitilliumText22L004-webfont.svg#TitilliumText22LMedium") format("svg"); }
-
-#zooniverse-bar {
-  background: rgba(0, 0, 0, 0.6);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+.zooniverse-bar {
+  background: rgba(0, 0, 0, 0.75);
   color: white;
-  cursor: default;
-  font-family: Titillium, sans-serif;
-  font-size: 12px;
-  height: 30px;
+  float: left;
+  font: 12px Titillium, "Helvetica Neue", sans-serif;
   letter-spacing: 1px;
-  line-height: 1;
-  padding: 0 20px;
-  position: relative;
   text-transform: uppercase;
-  white-space: nowrap;
-  z-index: 10; }
-  #zooniverse-bar[lang="en"] [lang="de"], #zooniverse-bar[lang="en"] [lang="pl"], #zooniverse-bar[lang="de"] [lang="en"], #zooniverse-bar[lang="de"] [lang="pl"], #zooniverse-bar[lang="pl"] [lang="en"], #zooniverse-bar[lang="pl"] [lang="de"] {
-    display: none; }
-  #zooniverse-bar a {
+  width: 100%; }
+  .zooniverse-bar a {
     color: inherit;
     text-decoration: none; }
-  #zooniverse-bar > ul {
+  .zooniverse-bar > .menu {
     margin: 0;
     padding: 0; }
-    #zooniverse-bar > ul.leading {
-      float: left; }
-      #zooniverse-bar > ul.leading > li {
-        border-right: 1px solid rgba(255, 255, 255, 0.2); }
-        #zooniverse-bar > ul.leading > li > div,
-        #zooniverse-bar > ul.leading > li > ul {
-          left: 0;
-          right: auto; }
-    #zooniverse-bar > ul.trailing {
-      float: right; }
-      #zooniverse-bar > ul.trailing > li {
-        border-left: 1px solid rgba(255, 255, 255, 0.2); }
-        #zooniverse-bar > ul.trailing > li > div,
-        #zooniverse-bar > ul.trailing > li > ul {
-          left: auto;
-          margin: 0;
-          padding: 0;
+    .zooniverse-bar > .menu.leading {
+      float: left;
+      margin-left: 30px; }
+      .zooniverse-bar > .menu.leading > .menu-item {
+        border-right: 1px solid rgba(255, 255, 255, 0.25); }
+        .zooniverse-bar > .menu.leading > .menu-item > .dropdown-content {
+          left: 0; }
+    .zooniverse-bar > .menu.trailing {
+      float: right;
+      margin-right: 30px; }
+      .zooniverse-bar > .menu.trailing > .menu-item {
+        border-left: 1px solid rgba(255, 255, 255, 0.25); }
+        .zooniverse-bar > .menu.trailing > .menu-item > .dropdown-content {
           right: 0; }
-    #zooniverse-bar > ul > li {
-      display: inline-block;
+    .zooniverse-bar > .menu > .menu-item {
+      border-top: 0;
+      cursor: default;
+      display: block;
       float: left;
       position: relative; }
-      #zooniverse-bar > ul > li:hover {
-        background: rgba(0, 0, 0, 0.6); }
-      #zooniverse-bar > ul > li > :first-child {
+      .zooniverse-bar > .menu > .menu-item > a,
+      .zooniverse-bar > .menu > .menu-item > .dropdown-heading {
         display: inline-block;
-        height: 30px;
-        line-height: 33.75px;
-        padding: 0 15px;
-        text-decoration: none; }
-        #zooniverse-bar > ul > li > :first-child + * {
-          -moz-transition: max-height 0.25s ease-in-out, opacity 0.25s ease-in-out;
-          -webkit-transition: max-height 0.25s ease-in-out, opacity 0.25s ease-in-out;
-          transition: max-height 0.25s ease-in-out, opacity 0.25s ease-in-out;
-          background: rgba(0, 0, 0, 0.6);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 0 0 5px 5px;
-            border-top: 0;
-          font-size: 10px;
+        padding: 6px 20px 3px; }
+      .zooniverse-bar > .menu > .menu-item > .dropdown-heading:after {
+        content: "\25BC";
+        font-size: 8px;
+        margin-left: 2px;
+        opacity: 0.67;
+        vertical-align: 0; }
+      .zooniverse-bar > .menu > .menu-item > .dropdown-content {
+        background: rgba(0, 0, 0, 0.75);
+        overflow: hidden;
+        position: absolute;
+        top: 100%; }
+        .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu {
           margin: 0;
-          max-height: 0;
-          opacity: 0;
-          overflow: hidden;
-          padding: 0;
-          position: absolute;
-          top: 100%; }
-          #zooniverse-bar > ul > li > :first-child + *:after {
-            content: " ";
-            display: block;
-            height: 100%;
-            left: 0;
-            margin: 0 0 0 -20px;
-            padding: 0 20px 200px;
-            position: absolute;
-            top: 0;
-            width: 100%;
-            z-index: -1; }
-          #zooniverse-bar > ul > li > :first-child + * > li {
+          padding: 0; }
+          .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item {
+            border-top: 1px solid rgba(255, 255, 255, 0.25);
             display: block; }
-            #zooniverse-bar > ul > li > :first-child + * > li > a {
-              border-top: 1px solid rgba(255, 255, 255, 0.2);
+            .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.link > a {
               display: block;
-              padding: 5px 15px;
+              padding: 6px 20px 3px;
               white-space: nowrap; }
-              #zooniverse-bar > ul > li > :first-child + * > li > a:hover {
-                background: rgba(0, 0, 0, 0.6); }
-            #zooniverse-bar > ul > li > :first-child + * > li.accordion > :first-child {
-              border-top: 1px solid rgba(255, 255, 255, 0.2);
-              cursor: pointer;
+            .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.link:hover {
+              background: rgba(0, 0, 0, 0.75); }
+            .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.accordion > .accordion-heading {
               display: block;
-              font-size: 18px;
-              padding: 10px 0;
+              font-size: 24px;
+              padding: 9px 20px 3px;
               text-align: center; }
-              #zooniverse-bar > ul > li > :first-child + * > li.accordion > :first-child:hover {
-                background: rgba(0, 0, 0, 0.6); }
-            #zooniverse-bar > ul > li > :first-child + * > li.accordion.open > ul {
-              max-height: 250px; }
-            #zooniverse-bar > ul > li > :first-child + * > li.accordion > ul {
-              -moz-transition: max-height 0.5s ease-in-out;
-              -webkit-transition: max-height 0.5s ease-in-out;
-              transition: max-height 0.5s ease-in-out;
-              margin: 0;
-              max-height: 0;
-              overflow: hidden;
-              padding: 0; }
-              #zooniverse-bar > ul > li > :first-child + * > li.accordion > ul > li {
-                display: block; }
-                #zooniverse-bar > ul > li > :first-child + * > li.accordion > ul > li > a {
-                  border-top: 1px solid rgba(255, 255, 255, 0.2);
-                  display: block;
-                  padding: 5px 15px;
-                  white-space: nowrap; }
-                  #zooniverse-bar > ul > li > :first-child + * > li.accordion > ul > li > a:hover {
-                    background: rgba(0, 0, 0, 0.6); }
-          #zooniverse-bar > ul > li > :first-child + *.sign-in {
-            margin-top: 1px;
-            padding: 5px 0; }
-            #zooniverse-bar > ul > li > :first-child + *.sign-in > form > div {
-              padding: 2px 15px; }
-              #zooniverse-bar > ul > li > :first-child + *.sign-in > form > div > label > span:first-child {
-                display: inline-block;
-                width: 80px; }
-              #zooniverse-bar > ul > li > :first-child + *.sign-in > form > div > label > input {
-                -moz-box-sizing: border-box;
-                box-sizing: border-box;
-                background: rgba(255, 255, 255, 0.2);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                box-shadow: 0 0 5px -1px rgba(0, 0, 0, 0.6) inset;
-                color: inherit;
-                font-family: inherit;
-                letter-spacing: inherit;
-                padding: 3px 5px;
-                width: 160px; }
-              #zooniverse-bar > ul > li > :first-child + *.sign-in > form > div.action {
-                text-align: right; }
-                #zooniverse-bar > ul > li > :first-child + *.sign-in > form > div.action > a {
-                  opacity: 0.8;
-                  text-transform: none; }
-                #zooniverse-bar > ul > li > :first-child + *.sign-in > form > div.action > button {
-                  background-color: transparent;
-                  background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.2), transparent);
-                  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.2), transparent);
-                  background-image: linear-gradient(top, rgba(255, 255, 255, 0.2), transparent);
-                  border: 1px solid rgba(255, 255, 255, 0.2);
-                  color: inherit;
-                  cursor: pointer;
-                  font-family: inherit;
-                  font-size: inherit;
-                  letter-spacing: inherit;
-                  margin-left: 10px;
-                  padding: 5px 15px;
-                  text-transform: inherit; }
-      #zooniverse-bar > ul > li.open > :first-child + div, #zooniverse-bar > ul > li.open > :first-child + ul {
-        max-height: 500px;
-        opacity: 1;
-        overflow: visible;
-        z-index: 1; }
+            .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.accordion > .accordion-content {
+              overflow: hidden; }
+              .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.accordion > .accordion-content.menu {
+                margin: 0;
+                padding: 0; }
+                .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.accordion > .accordion-content.menu > .menu-item {
+                  border-top: 1px solid rgba(255, 255, 255, 0.25);
+                  display: block; }
+                  .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.accordion > .accordion-content.menu > .menu-item.link > a {
+                    display: block;
+                    padding: 6px 20px 3px;
+                    white-space: nowrap; }
+                    .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.accordion > .accordion-content.menu > .menu-item.link > a:hover {
+                      background: rgba(0, 0, 0, 0.75); }
+      .zooniverse-bar > .menu > .menu-item:hover, .zooniverse-bar > .menu > .menu-item.open {
+        background: rgba(0, 0, 0, 0.75); }
+  .zooniverse-bar[lang="en"] [lang="de"], .zooniverse-bar[lang="en"] [lang="pl"], .zooniverse-bar[lang="de"] [lang="en"], .zooniverse-bar[lang="de"] [lang="pl"], .zooniverse-bar[lang="pl"] [lang="en"], .zooniverse-bar[lang="pl"] [lang="de"] {
+    display: none; }
+  .zooniverse-bar form.sign-in {
+    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 15px 0; }
+    .zooniverse-bar form.sign-in > div {
+      padding: 2px 15px; }
+      .zooniverse-bar form.sign-in > div > label {
+        white-space: nowrap; }
+        .zooniverse-bar form.sign-in > div > label > span:first-child {
+          display: inline-block;
+          width: 80px; }
+        .zooniverse-bar form.sign-in > div > label > input {
+          -moz-box-sizing: border-box;
+          box-sizing: args;
+          background: rgba(255, 255, 255, 0.2);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          box-shadow: 0 0 5px -1px rgba(0, 0, 0, 0.75) inset;
+          color: inherit;
+          font-family: inherit;
+          letter-spacing: inherit;
+          padding: 3px 5px;
+          width: 160px; }
+      .zooniverse-bar form.sign-in > div.action {
+        text-align: right; }
+        .zooniverse-bar form.sign-in > div.action > a {
+          opacity: 0.8;
+          text-transform: none; }
+        .zooniverse-bar form.sign-in > div.action > button {
+          background-color: transparent;
+          background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.25), transparent);
+          background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.25), transparent);
+          background-image: linear-gradient(top, rgba(255, 255, 255, 0.25), transparent);
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          color: inherit;
+          cursor: pointer;
+          font-family: inherit;
+          font-size: inherit;
+          letter-spacing: inherit;
+          margin-left: 10px;
+          padding: 5px 15px;
+          text-transform: inherit; }

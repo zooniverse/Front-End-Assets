@@ -1,7 +1,6 @@
 (function() {
   var define,
-    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
-    __hasProp = Object.prototype.hasOwnProperty;
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
 
   define = window.define || function(factory) {
     var getGlobal;
@@ -56,7 +55,11 @@
     })();
     Dropdown = (function() {
 
+      Dropdown.prototype.showing = false;
+
       function Dropdown(heading, content) {
+        this.hide = __bind(this.hide, this);
+        this.show = __bind(this.show, this);
         this.onClickHeading = __bind(this.onClickHeading, this);        this.el = $('<li class="dropdown"></li>');
         if (heading.constructor === Object) {
           this.el.append("<span class='dropdown-heading'>" + (translate(heading)) + "</span>");
@@ -64,20 +67,68 @@
           this.el.append(heading.el);
           heading.el.addClass('dropdown-heading');
         }
+        this.heading = this.el.children().first();
         if (content.constructor === String) {
           this.el.append("<div class='dropdown-content'>" + content + "</div>");
         } else if (content.el != null) {
           this.el.append(content.el);
           content.el.addClass('dropdown-content');
         }
-        this.el.children().first().on('click', this.onClickHeading);
+        this.content = this.el.children().last();
+        this.el.data('Dropdown', this);
+        this.heading.on('click', this.onClickHeading);
+        this.hide(true);
       }
 
       Dropdown.prototype.onClickHeading = function(e) {
-        var wasOpen;
-        wasOpen = this.el.hasClass('open');
-        this.el.closest('.zooniverse-bar').find('.dropdown').removeClass('open');
-        if (!wasOpen) return this.el.addClass('open');
+        var dropdown, _i, _len, _ref;
+        _ref = this.el.closest('.zooniverse-bar').find('.dropdown');
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          dropdown = _ref[_i];
+          if (!this.el.is(dropdown)) $(dropdown).data('Dropdown').hide();
+        }
+        if (this.showing) {
+          return this.hide();
+        } else {
+          return this.show();
+        }
+      };
+
+      Dropdown.prototype.showStyle = {
+        opacity: 1,
+        top: '100%'
+      };
+
+      Dropdown.prototype.show = function() {
+        this.showing = true;
+        this.el.addClass('open');
+        this.el.css({
+          'z-index': 1
+        });
+        this.content.css({
+          display: ''
+        });
+        return this.content.animate(this.showStyle, 250);
+      };
+
+      Dropdown.prototype.hideStyle = {
+        opacity: 0,
+        top: '50%'
+      };
+
+      Dropdown.prototype.hide = function(now) {
+        var _this = this;
+        this.showing = false;
+        this.el.removeClass('open');
+        if (now) this.content.css(this.hideStyle);
+        this.el.css({
+          'z-index': ''
+        });
+        return this.content.animate(this.hideStyle, 125, function() {
+          return _this.content.css({
+            display: 'none'
+          });
+        });
       };
 
       return Dropdown;
@@ -85,7 +136,11 @@
     })();
     Accordion = (function() {
 
+      Accordion.prototype.showing = false;
+
       function Accordion(heading, content) {
+        this.hide = __bind(this.hide, this);
+        this.show = __bind(this.show, this);
         this.onClickHeading = __bind(this.onClickHeading, this);        this.el = $('<li class="accordion"></li>');
         if (heading.constructor === Object) {
           this.el.append("<span class='accordion-heading'>" + (translate(heading)) + "</span>");
@@ -93,18 +148,59 @@
           this.el.append(heading.el);
           heading.el.addClass('accordion-heading');
         }
+        this.heading = this.el.children().first();
         if (content.constructor === String) {
           this.el.append("<div class='accordion-content'>" + content + "</div>");
         } else if (content.el != null) {
           this.el.append(content.el);
           content.el.addClass('accordion-content');
         }
-        this.el.children().first().on('click', this.onClickHeading);
+        this.content = this.el.children().last();
+        this.el.data('Accordion', this);
+        this.heading.on('click', this.onClickHeading);
+        if (this.el.hasClass('open')) {
+          this.show();
+        } else {
+          this.hide();
+        }
       }
 
       Accordion.prototype.onClickHeading = function(e) {
-        this.el.siblings('.accordion').removeClass('open');
-        return this.el.toggleClass('open');
+        var sibling, _i, _len, _ref;
+        _ref = this.el.siblings('.accordion');
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          sibling = _ref[_i];
+          $(sibling).data('Accordion').hide();
+        }
+        if (this.showing) {
+          return this.hide();
+        } else {
+          return this.show();
+        }
+      };
+
+      Accordion.prototype.show = function() {
+        var naturalHeight;
+        this.showing = true;
+        this.el.addClass('open');
+        this.content.css({
+          height: 'auto'
+        });
+        naturalHeight = this.content.height();
+        this.content.css({
+          height: 0
+        }, 250);
+        return this.content.animate({
+          height: naturalHeight
+        });
+      };
+
+      Accordion.prototype.hide = function() {
+        this.showing = false;
+        this.el.removeClass('open');
+        return this.content.animate({
+          height: 0
+        }, 250);
       };
 
       return Accordion;
@@ -169,26 +265,22 @@
         this.closeAllDropdowns = __bind(this.closeAllDropdowns, this);
         this.changeLang = __bind(this.changeLang, this);
         this.delegateEvents = __bind(this.delegateEvents, this);
-        var defaultLang, direction, group, name, property, _i, _len, _ref, _ref2;
+        var defaultLang, direction, group, name, _i, _len, _ref;
         this.leading = ['home', 'languages'];
         this.trailing = ['about', 'projects', 'signIn'];
-        _ref = params || {};
-        for (property in _ref) {
-          if (!__hasProp.call(_ref, property)) continue;
-          this[property] = params[property];
-        }
+        $.extend(this, params);
         this.el || (this.el = $('<div></div>'));
         if (this.el.constructor !== $) this.el = $(this.el);
         this.el.addClass('zooniverse-bar');
-        _ref2 = ['leading', 'trailing'];
-        for (_i = 0, _len = _ref2.length; _i < _len; _i++) {
-          direction = _ref2[_i];
+        _ref = ['leading', 'trailing'];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          direction = _ref[_i];
           group = new Menu((function() {
-            var _j, _len2, _ref3, _results;
-            _ref3 = this[direction];
+            var _j, _len2, _ref2, _results;
+            _ref2 = this[direction];
             _results = [];
-            for (_j = 0, _len2 = _ref3.length; _j < _len2; _j++) {
-              name = _ref3[_j];
+            for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+              name = _ref2[_j];
               if (name in items) _results.push(items[name]);
             }
             return _results;
@@ -204,10 +296,8 @@
       ZooniverseBar.prototype.delegateEvents = function() {
         var _this = this;
         this.el.on('click', '[href^="#language:"]', function(e) {
-          var lang;
           e.preventDefault();
-          lang = $(e.target).closest('[href^="#language:"]').attr('href').split(':')[1];
-          _this.changelang(lang);
+          _this.changeLang($(e.target).closest('[href^="#language:"]').attr('href').split(':')[1]);
           return _this.closeAllDropdowns();
         });
         this.el.on('click', function(e) {
@@ -222,7 +312,14 @@
       };
 
       ZooniverseBar.prototype.closeAllDropdowns = function() {
-        return this.el.find('.dropdown.open').removeClass('open');
+        var dropdown, _i, _len, _ref, _results;
+        _ref = this.el.find('.dropdown');
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          dropdown = _ref[_i];
+          _results.push($(dropdown).data('Dropdown').hide());
+        }
+        return _results;
       };
 
       return ZooniverseBar;

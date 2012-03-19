@@ -24,13 +24,18 @@ define (require, exports) ->
 			@el = $("<li class='link'><a href='#{href}'>#{translate text}</a></li>")
 
 	class Dropdown
+		showing: false
+
 		constructor: (heading, content) ->
 			@el = $('<li class="dropdown"></li>')
+
 			if heading.constructor is Object
 				@el.append "<span class='dropdown-heading'>#{translate heading}</span>"
 			else if heading.el?
 				@el.append heading.el
 				heading.el.addClass 'dropdown-heading'
+
+			@heading = @el.children().first()
 
 			if content.constructor is String
 				@el.append "<div class='dropdown-content'>#{content}</div>"
@@ -38,21 +43,59 @@ define (require, exports) ->
 				@el.append content.el
 				content.el.addClass 'dropdown-content'
 
-			@el.children().first().on 'click', @onClickHeading
+			@content = @el.children().last()
+
+			@el.data 'Dropdown', @
+
+			@heading.on 'click', @onClickHeading
+
+			@hide true
 
 		onClickHeading: (e) =>
-			wasOpen = @el.hasClass 'open'
-			@el.closest('.zooniverse-bar').find('.dropdown').removeClass 'open'
-			@el.addClass 'open' unless wasOpen
+			for dropdown in @el.closest('.zooniverse-bar').find '.dropdown'
+				unless @el.is dropdown then $(dropdown).data('Dropdown').hide()
+
+			if @showing then @hide() else @show()
+
+		showStyle:
+			opacity: 1
+			top: '100%'
+
+		show: =>
+			@showing = true
+			@el.addClass 'open'
+
+			@el.css 'z-index': 1
+			@content.css display: ''
+			@content.animate @showStyle, 250
+
+		hideStyle:
+			opacity: 0
+			top: '50%'
+
+		hide: (now) =>
+			@showing = false
+			@el.removeClass 'open'
+
+			if now then @content.css @hideStyle
+
+			@el.css 'z-index': ''
+			@content.animate @hideStyle, 125, =>
+				@content.css display: 'none'
 
 	class Accordion
+		showing: false
+
 		constructor: (heading, content) ->
 			@el = $('<li class="accordion"></li>')
+
 			if heading.constructor is Object
 				@el.append "<span class='accordion-heading'>#{translate heading}</span>"
 			else if heading.el?
 				@el.append heading.el
 				heading.el.addClass 'accordion-heading'
+
+			@heading = @el.children().first()
 
 			if content.constructor is String
 				@el.append "<div class='accordion-content'>#{content}</div>"
@@ -60,11 +103,34 @@ define (require, exports) ->
 				@el.append content.el
 				content.el.addClass 'accordion-content'
 
-			@el.children().first().on 'click', @onClickHeading
+			@content = @el.children().last()
+
+			@el.data 'Accordion', @
+
+			@heading.on 'click', @onClickHeading
+
+			if @el.hasClass 'open' then @show() else @hide()
 
 		onClickHeading: (e) =>
-			@el.siblings('.accordion').removeClass 'open'
-			@el.toggleClass 'open'
+			for sibling in @el.siblings '.accordion'
+				$(sibling).data('Accordion').hide()
+
+			if @showing then @hide() else @show()
+
+		show: =>
+			@showing = true
+			@el.addClass 'open'
+
+			@content.css height: 'auto'
+			naturalHeight = @content.height()
+			@content.css height: 0, 250
+
+			@content.animate height: naturalHeight
+
+		hide: =>
+			@showing = false
+			@el.removeClass 'open'
+			@content.animate height: 0, 250
 
 
 	items =
@@ -146,7 +212,7 @@ define (require, exports) ->
 			@leading = ['home', 'languages']
 			@trailing = ['about', 'projects', 'signIn']
 
-			@[property] = params[property] for own property of params or {}
+			$.extend @, params
 
 			@el ||= $('<div></div>')
 			@el = $(@el) unless @el.constructor is $
@@ -165,11 +231,11 @@ define (require, exports) ->
 		delegateEvents: =>
 			@el.on 'click', '[href^="#language:"]', (e) =>
 				e.preventDefault()
-				lang = $(e.target).closest('[href^="#language:"]').attr('href').split(':')[1]
-				@changelang lang
+				@changeLang $(e.target).closest('[href^="#language:"]').attr('href').split(':')[1]
 				@closeAllDropdowns()
 
 			@el.on 'click', (e) => e.stopPropagation();
+
 			$(document).on 'click', ':not(.zooniverse-bar *)', @closeAllDropdowns
 
 		changeLang: (lang) =>
@@ -177,7 +243,9 @@ define (require, exports) ->
 			@el.attr 'lang', lang
 
 		closeAllDropdowns: =>
-			@el.find('.dropdown.open').removeClass 'open'
+			for dropdown in @el.find('.dropdown')
+				$(dropdown).data('Dropdown').hide()
+
 
 	exports = ZooniverseBar
 

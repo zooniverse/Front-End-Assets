@@ -1,52 +1,14 @@
-$bg-color: transparentize(black, 0.4);
+$bg-color: transparentize(black, 0.25);
 $fg-color: white;
-$border-color: transparentize($fg-color, 0.8);
+$border-color: transparentize($fg-color, 0.75);
 
 $bar-height: 30px;
 $max-dropdown-height: 500px;
 $max-accordion-height: 250px;
 
-$titillium-dir: "../lib/TitilliumText";
-
-@font-face {
-  font-family: "Titillium";
-  font-weight: 100;
-  font-style: normal;
-  src: url($titillium-dir + "/TitilliumText22L001-webfont.eot");
-  src:
-    url($titillium-dir + "/TitilliumText22L001-webfont.eot?#iefix") format("embedded-opentype"),
-    url($titillium-dir + "/TitilliumText22L001-webfont.woff") format("woff"),
-    url($titillium-dir + "/TitilliumText22L001-webfont.ttf") format("truetype"),
-    url($titillium-dir + "/TitilliumText22L001-webfont.svg#TitilliumText22LThin") format("svg");
-}
-
-@font-face {
-  font-family: "Titillium";
-  font-weight: 400;
-  font-style: normal;
-  src: url($titillium-dir + "/TitilliumText22L002-webfont.eot");
-  src:
-    url($titillium-dir + "/TitilliumText22L002-webfont.eot?#iefix") format("embedded-opentype"),
-    url($titillium-dir + "/TitilliumText22L002-webfont.woff") format("woff"),
-    url($titillium-dir + "/TitilliumText22L002-webfont.ttf") format("truetype"),
-    url($titillium-dir + "/TitilliumText22L002-webfont.svg#TitilliumText22LLight") format("svg");
-}
-
-@font-face {
-  font-family: "Titillium";
-  font-weight: 700;
-  font-style: normal;
-  src: url($titillium-dir + "/TitilliumText22L004-webfont.eot");
-  src:
-    url($titillium-dir + "/TitilliumText22L004-webfont.eot?#iefix") format("embedded-opentype"),
-    url($titillium-dir + "/TitilliumText22L004-webfont.woff") format("woff"),
-    url($titillium-dir + "/TitilliumText22L004-webfont.ttf") format("truetype"),
-    url($titillium-dir + "/TitilliumText22L004-webfont.svg#TitilliumText22LMedium") format("svg");
-}
-
 @mixin box-sizing($args) {
   -moz-box-sizing: $args;
-  box-sizing: $args;
+  box-sizing: args;
 }
 
 @mixin transition($args) {
@@ -62,134 +24,91 @@ $titillium-dir: "../lib/TitilliumText";
   background-image: linear-gradient($from, $start, $end);
 }
 
-// Menu bar
-#zooniverse-bar {
+.zooniverse-bar {
   background: $bg-color;
-  border-bottom: 1px solid $border-color;
   color: $fg-color;
-  cursor: default;
-  font: {
-    family: Titillium, sans-serif;
-    size: 12px;
-  };
-  height: $bar-height;
+  float: left;
+  font: 12px Titillium, "Helvetica Neue", sans-serif;
   letter-spacing: 1px;
-  line-height: 1;
-  padding: 0 20px;
-  position: relative;
   text-transform: uppercase;
-  white-space: nowrap;
-  z-index: 10;
+  width: 100%;
 
-  // Automatic localization
-  &[lang="en"] [lang="de"], &[lang="en"] [lang="pl"],
-  &[lang="de"] [lang="en"], &[lang="de"] [lang="pl"],
-  &[lang="pl"] [lang="en"], &[lang="pl"] [lang="de"] {
-    display: none;
-  }
-
-  // *All* links descending from the bar
   a {
     color: inherit;
     text-decoration: none;
   }
 
-  // Bar item group
-  > ul {
+  > .menu {
     margin: 0;
     padding: 0;
 
     &.leading {
       float: left;
+      margin-left: $bar-height;
 
-      > li {
+      > .menu-item {
         border-right: 1px solid $border-color;
 
-        > div,
-        > ul {
+        > .dropdown-content {
           left: 0;
-          right: auto;
         }
       }
     }
 
     &.trailing {
       float: right;
+      margin-right: $bar-height;
 
-      > li {
+      > .menu-item {
         border-left: 1px solid $border-color;
 
-        > div,
-        > ul {
-          left: auto;
-          margin: 0;
-          padding: 0;
+        > .dropdown-content {
           right: 0;
         }
       }
     }
 
-    // Bar item
-    > li {
-      display: inline-block;
+    > .menu-item {
+      border-top: 0;
+      cursor: default;
+      display: block;
       float: left;
       position: relative;
 
-      &:hover {
-        background: $bg-color;
+      > a,
+      > .dropdown-heading {
+        display: inline-block;
+        padding: 6px 20px 3px;
       }
 
-      // Bar item label
-      > :first-child {
-        display: inline-block;
-        height: $bar-height;
-        line-height: $bar-height + ($bar-height / 8);
-        padding: 0 15px;
-        text-decoration: none;
+      > .dropdown-heading:after {
+        content: "\25BC";
+        font-size: 8px;
+        margin-left: 2px;
+        opacity: 0.67;
+        vertical-align: 0;
+      }
 
-        // Menu or dropdown
-        & + * {
-          @include transition(#{
-            max-height 0.25s ease-in-out,
-            opacity 0.25s ease-in-out
-          });
-          background: $bg-color;
-          border: 1px solid $border-color {
-            radius: 0 0 5px 5px;
-            top: 0;
-          };
-          font-size: 10px;
+      > .dropdown-content {
+        background: $bg-color;
+        overflow: hidden;
+        position: absolute;
+        top: 100%;
+
+        &.menu {
           margin: 0;
-          max-height: 0;
-          opacity: 0;
-          overflow: hidden;
           padding: 0;
-          position: absolute;
-          top: 100%;
 
-          // Extra space for cursor overshoot
-          &:after {
-            content: " ";
-            display: block;
-            height: 100%;
-            left: 0;
-            margin: 0 0 0 -20px;
-            padding: 0 20px 200px;
-            position: absolute;
-            top: 0;
-            width: 100%;
-            z-index: -1;
-          }
-
-          // Menu item
-          > li {
+          > .menu-item {
+            border-top: 1px solid $border-color;
             display: block;
 
-            > a {
-              border-top: 1px solid $border-color;
-              display: block;
-              padding: 5px 15px;
-              white-space: nowrap;
+            &.link {
+              > a {
+                display: block;
+                padding: 6px 20px 3px;
+                white-space: nowrap;
+              }
 
               &:hover {
                 background: $bg-color;
@@ -197,99 +116,36 @@ $titillium-dir: "../lib/TitilliumText";
             }
 
             &.accordion {
-              // Accordion heading
-              > :first-child {
-                border-top: 1px solid $border-color;
-                cursor: pointer;
+              > .accordion-heading {
                 display: block;
-                font-size: 18px;
-                padding: 10px 0;
+                font-size: 24px;
+                padding: 9px 20px 3px;
                 text-align: center;
-
-                &:hover {
-                  background: $bg-color;
-                }
               }
 
-              &.open > ul {
-                max-height: $max-accordion-height;
-              }
-
-              // Accordion menu
-              > ul {
-                @include transition(max-height 0.5s ease-in-out);
-                margin: 0;
-                max-height: 0;
+              > .accordion-content {
+                // NOTE: Show/hide animation handled by script.
                 overflow: hidden;
-                padding: 0;
 
-                // Accordion menu item
-                > li {
-                  display: block;
+                &.menu {
+                  margin: 0;
+                  padding: 0;
 
-                  > a {
+                  > .menu-item {
                     border-top: 1px solid $border-color;
                     display: block;
-                    padding: 5px 15px;
-                    white-space: nowrap;
 
-                    &:hover {
-                      background: $bg-color;
+                    &.link {
+                      > a {
+                        display: block;
+                        padding: 6px 20px 3px;
+                        white-space: nowrap;
+
+                        &:hover {
+                          background: $bg-color;
+                        }
+                      }
                     }
-                  }
-                }
-              }
-            }
-          }
-
-          &.sign-in {
-            margin-top: 1px;
-            padding: 5px 0;
-
-            > form {
-              > div {
-                padding: 2px 15px;
-
-                > label {
-                  > span:first-child {
-                    display: inline-block;
-                    width: 80px;
-                  }
-
-                  > input {
-                    @include box-sizing(border-box);
-                    background: transparentize($fg-color, 0.8);
-                    border: 1px solid transparentize($fg-color, 0.8);
-                    box-shadow: 0 0 5px -1px $bg-color inset;
-                    color: inherit;
-                    font-family: inherit;
-                    letter-spacing: inherit;
-                    padding: 3px 5px;
-                    width: 160px;
-                  }
-                }
-
-                &.action {
-                  text-align: right;
-
-                  > a {
-                    opacity: 0.8;
-                    text-transform: none;
-                  }
-
-                  > button {
-                    @include linear-gradient($border-color, transparent);
-                    border: 1px solid $border-color;
-                    color: inherit;
-                    cursor: pointer;
-                    font: {
-                      family: inherit;
-                      size: inherit;
-                    };
-                    letter-spacing: inherit;
-                    margin-left: 10px;
-                    padding: 5px 15px;
-                    text-transform: inherit;
                   }
                 }
               }
@@ -298,13 +154,69 @@ $titillium-dir: "../lib/TitilliumText";
         }
       }
 
-      // Menu or dropdown (with its item hovered)
-      &.open > :first-child + div,
-      &.open > :first-child + ul {
-        max-height: $max-dropdown-height;
-        opacity: 1;
-        overflow: visible;
-        z-index: 1;
+      &:hover,
+      &.open {
+        background: $bg-color;
+      }
+    }
+  }
+
+  &[lang="en"] [lang="de"], &[lang="en"] [lang="pl"],
+  &[lang="de"] [lang="en"], &[lang="de"] [lang="pl"],
+  &[lang="pl"] [lang="en"], &[lang="pl"] [lang="de"] {
+    display: none;
+  }
+
+  form.sign-in {
+    border-top: 1px solid $border-color;
+    padding: 15px 0;
+
+    > div {
+      padding: 2px 15px;
+
+      > label {
+        white-space: nowrap;
+
+        > span:first-child {
+          display: inline-block;
+          width: 80px;
+        }
+
+        > input {
+          @include box-sizing(border-box);
+          background: transparentize($fg-color, 0.8);
+          border: 1px solid transparentize($fg-color, 0.8);
+          box-shadow: 0 0 5px -1px $bg-color inset;
+          color: inherit;
+          font-family: inherit;
+          letter-spacing: inherit;
+          padding: 3px 5px;
+          width: 160px;
+        }
+      }
+
+      &.action {
+        text-align: right;
+
+        > a {
+          opacity: 0.8;
+          text-transform: none;
+        }
+
+        > button {
+          @include linear-gradient($border-color, transparent);
+          border: 1px solid $border-color;
+          color: inherit;
+          cursor: pointer;
+          font: {
+            family: inherit;
+            size: inherit;
+          };
+          letter-spacing: inherit;
+          margin-left: 10px;
+          padding: 5px 15px;
+          text-transform: inherit;
+        }
       }
     }
   }
