@@ -86,12 +86,11 @@
     border-top: 1px solid rgba(255, 255, 255, 0.25);
     padding: 15px 0; }
     .zooniverse-bar form.sign-in > div {
-      padding: 2px 15px; }
+      padding: 3px 15px; }
       .zooniverse-bar form.sign-in > div > label {
+        display: inline-block;
+        position: relative;
         white-space: nowrap; }
-        .zooniverse-bar form.sign-in > div > label > span:first-child {
-          display: inline-block;
-          width: 80px; }
         .zooniverse-bar form.sign-in > div > label > input {
           -moz-box-sizing: border-box;
           box-sizing: args;
@@ -101,11 +100,21 @@
           color: inherit;
           font-family: inherit;
           letter-spacing: inherit;
-          padding: 3px 5px;
-          width: 160px; }
+          margin: 0;
+          padding: 6px 5px 3px;
+          width: 200px; }
+          .zooniverse-bar form.sign-in > div > label > input + .placeholder {
+            opacity: 0.75;
+            position: absolute;
+            left: 0;
+            margin: 6px 5px;
+            top: 0; }
+          .zooniverse-bar form.sign-in > div > label > input:focus + .placeholder, .zooniverse-bar form.sign-in > div > label > input.full + .placeholder {
+            display: none; }
       .zooniverse-bar form.sign-in > div.action {
         text-align: right; }
         .zooniverse-bar form.sign-in > div.action > a {
+          letter-spacing: normal;
           opacity: 0.8;
           text-transform: none; }
         .zooniverse-bar form.sign-in > div.action > button {
@@ -120,5 +129,5 @@
           font-size: inherit;
           letter-spacing: inherit;
           margin-left: 10px;
-          padding: 5px 15px;
+          padding: 6px 15px 3px;
           text-transform: inherit; }

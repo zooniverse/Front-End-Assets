@@ -183,14 +183,14 @@ define (require, exports) ->
 				<form class="sign-in">
 					<div>
 						<label>
-							<span>Username</span>
 							<input type="text" name="username" />
+							<span class="placeholder">Username</span>
 						</label>
 					</div>
 					<div>
 						<label>
-							<span>Password</span>
 							<input type="password" name="password" />
+							<span class="placeholder">Password</span>
 						</label>
 					</div>
 					<div class="action">
@@ -237,6 +237,16 @@ define (require, exports) ->
 			@el.on 'click', (e) => e.stopPropagation();
 
 			$(document).on 'click', ':not(.zooniverse-bar *)', @closeAllDropdowns
+
+			@el.on 'change', (e) =>
+				input = $(e.target)
+
+				return if input.attr('type') isnt 'text'
+
+				if input.val()
+					input.addClass 'full'
+				else
+					input.removeClass 'full'
 
 		changeLang: (lang) =>
 			$('html').attr 'lang', lang

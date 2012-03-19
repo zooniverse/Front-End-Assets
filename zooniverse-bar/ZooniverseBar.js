@@ -249,7 +249,7 @@
         en: 'Sign in',
         de: 'Sign in',
         pl: 'Sign in'
-      }, '<form class="sign-in">\n	<div>\n		<label>\n			<span>Username</span>\n			<input type="text" name="username" />\n		</label>\n	</div>\n	<div>\n		<label>\n			<span>Password</span>\n			<input type="password" name="password" />\n		</label>\n	</div>\n	<div class="action">\n		<a href="#">Create a new account</a>\n		<button type="submit">Sign in</button>\n	</div>\n</form>')
+      }, '<form class="sign-in">\n	<div>\n		<label>\n			<input type="text" name="username" />\n			<span class="placeholder">Username</span>\n		</label>\n	</div>\n	<div>\n		<label>\n			<input type="password" name="password" />\n			<span class="placeholder">Password</span>\n		</label>\n	</div>\n	<div class="action">\n		<a href="#">Create a new account</a>\n		<button type="submit">Sign in</button>\n	</div>\n</form>')
     };
     ZooniverseBar = (function() {
 
@@ -303,7 +303,17 @@
         this.el.on('click', function(e) {
           return e.stopPropagation();
         });
-        return $(document).on('click', ':not(.zooniverse-bar *)', this.closeAllDropdowns);
+        $(document).on('click', ':not(.zooniverse-bar *)', this.closeAllDropdowns);
+        return this.el.on('change', function(e) {
+          var input;
+          input = $(e.target);
+          if (input.attr('type') !== 'text') return;
+          if (input.val()) {
+            return input.addClass('full');
+          } else {
+            return input.removeClass('full');
+          }
+        });
       };
 
       ZooniverseBar.prototype.changeLang = function(lang) {
