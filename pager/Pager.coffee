@@ -1,9 +1,12 @@
 define (require, exports) ->
 	Spine = require 'Spine'
 	$ = require 'jQuery'
+
+	Route = require 'lib/Route'
 	{delay} = require 'util'
 
 	PAGE_ATTR = 'data-page'
+
 	BEFORE_CLASS = 'before'
 	ACTIVE_CLASS = 'active'
 	AFTER_CLASS = 'after'
@@ -64,16 +67,16 @@ define (require, exports) ->
 						el: child
 						pager: @
 
-			@route? @path, @pathMatched
+			page.activate() for page in @pages when page.el.hasClass 'active'
+
+			@route = new Route @path, @pathMatched
 
 			@log "New Pager at #{@path} with #{@pages.length} pages"
 
-		pathMatched: (params) =>
-			return unless params.page
-
+		pathMatched: (pageName) =>
 			disabledClass = BEFORE_CLASS
 			for page in @pages
-				if page.name == params.page
+				if page.name == pageName
 					page.activate()
 					disabledClass = AFTER_CLASS
 				else

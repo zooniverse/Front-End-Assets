@@ -4,9 +4,10 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor; child.__super__ = parent.prototype; return child; };
 
   define(function(require, exports) {
-    var $, ACTIVE_CLASS, AFTER_CLASS, BEFORE_CLASS, PAGE_ATTR, Page, Pager, Spine, delay;
+    var $, ACTIVE_CLASS, AFTER_CLASS, BEFORE_CLASS, PAGE_ATTR, Page, Pager, Route, Spine, delay;
     Spine = require('Spine');
     $ = require('jQuery');
+    Route = require('lib/Route');
     delay = require('util').delay;
     PAGE_ATTR = 'data-page';
     BEFORE_CLASS = 'before';
@@ -63,7 +64,8 @@
 
       function Pager() {
         this.pathMatched = __bind(this.pathMatched, this);
-        var _this = this;
+        var page, _i, _len, _ref,
+          _this = this;
         Pager.__super__.constructor.apply(this, arguments);
         this.path = (function() {
           var elPage, parent, segments, _i, _len, _ref;
@@ -91,21 +93,23 @@
           }
           return _results;
         })();
-        if (typeof this.route === "function") {
-          this.route(this.path, this.pathMatched);
+        _ref = this.pages;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          page = _ref[_i];
+          if (page.el.hasClass('active')) page.activate();
         }
+        this.route = new Route(this.path, this.pathMatched);
         this.log("New Pager at " + this.path + " with " + this.pages.length + " pages");
       }
 
-      Pager.prototype.pathMatched = function(params) {
+      Pager.prototype.pathMatched = function(pageName) {
         var disabledClass, page, _i, _len, _ref, _results;
-        if (!params.page) return;
         disabledClass = BEFORE_CLASS;
         _ref = this.pages;
         _results = [];
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           page = _ref[_i];
-          if (page.name === params.page) {
+          if (page.name === pageName) {
             page.activate();
             _results.push(disabledClass = AFTER_CLASS);
           } else {
