@@ -3,100 +3,30 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>The Zooniverse Bar</title>
+
+		<title>Zooniverse bar</title>
+
+		<link href="titillium.css" rel="stylesheet" />
 		<link href="zooniverse-bar.css" rel="stylesheet" />
+
+		<style type="text/css">
+			body {
+				background: #000;
+				margin: 0;
+				overflow-y: scroll;
+			}
+		</style>
 	</head>
 
-	<body style="background: #345; margin: 0; overflow-y: scroll;">
-		<div id="zooniverse-bar">
-			<ul class="leading">
-				<li class="home item">
-					<a href="http://www.zooniverse.org/" target="blank">Zooniverse</a>
-				</li>
+	<body>
+		<div id="zooniverse-bar"></div>
 
-				<!--<li class="language item">
-					<span>
-						<span lang="en">EN</span>
-						<span lang="de">DE</span>
-						<span lang="pl">PL</span>
-					</span>
-					<ul>
-						<li><a href="#" data-language="en"><abbr>EN</abbr> English</a></li>
-						<li><a href="#" data-language="en"><abbr>DE</abbr> Deutsch</a></li>
-						<li><a href="#" data-langauge="pl"><abbr>PL</abbr> Polski</a></li>
-					</ul>
-				</li>-->
-			</ul>
-
-			<ul class="trailing">
-				<li class="about item">
-					<a target="blank" href="http://www.zooniverse.org/about/">About</a>
-				</li>
-
-				<li class="projects item">
-					<a target="blank" href="https://www.zooniverse.org/projects/">Projects</a>
-					<ul>
-						<li>
-							<label for="zooniverse-project-space">Space</label>
-							<input type="radio" id="zooniverse-project-space" name="zooniverse-project" checked="checked" />
-							<ul>
-								<li><a href="https://www.zooniverse.org/project/hubble" target="blank">Galaxy Zoo: Hubble</a></li>
-								<li><a href="https://www.zooniverse.org/project/moonzoo" target="blank">Moon Zoo</a></li>
-								<li><a href="https://www.zooniverse.org/project/solarstormwatch" target="blank">Solar Stormwatch</a></li>
-								<li><a href="https://www.zooniverse.org/project/mergers" target="blank">Galaxy Zoo: Mergers</a></li>
-								<li><a href="https://www.zooniverse.org/project/supernovae" target="blank">Galaxy Zoo: Supernovae</a></li>
-								<li><a href="https://www.zooniverse.org/project/planethunters" target="blank">Planet Hunters</a></li>
-								<li><a href="https://www.zooniverse.org/project/milkyway" target="blank">The Milky Way Project</a></li>
-							</ul>
-						</li>
-						<li>
-							<label for="zooniverse-project-climate">Climate</label>
-							<input type="radio" id="zooniverse-project-climate" name="zooniverse-project" />
-							<ul>
-								<li><a href="https://www.zooniverse.org/project/oldweather" target="blank">Old Weather</a></li>
-							</ul>
-						</li>
-						<li>
-							<label for="zooniverse-project-humanities">Humanities</label>
-							<input type="radio" id="zooniverse-project-humanities" name="zooniverse-project" />
-							<ul>
-								<li><a href="https://www.zooniverse.org/project/ancientlives" target="blank">Ancient Lives</a></li>
-							</ul>
-						</li>
-						<li>
-							<label for="zooniverse-project-nature">Nature</label>
-							<input type="radio" id="zooniverse-project-nature" name="zooniverse-project" />
-							<ul>
-								<li><a href="https://www.zooniverse.org/project/whalefm" target="blank">Whale FM</a></li>
-							</ul>
-						</li>
-					</ul>
-				</li>
-
-				<!--<li class="sign-in item">
-					<span>Sign in</span>
-					<div class="sign-in">
-						<form>
-							<div>
-								<label>
-									<span>Username</span>
-									<input type="text" name="username" />
-								</label>
-							</div>
-							<div>
-								<label>
-									<span>Password</span>
-									<input type="password" name="password" />
-								</label>
-							</div>
-							<div class="action">
-								<a href="#">Create a new account</a>
-								<button type="submit">Sign in</button>
-							</div>
-						</form>
-					</div>
-				</li>-->
-			</ul>
-		</div>
+		<script src="../lib/jquery.js" type="text/javascript"></script>
+		<script src="ZooniverseBar.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			window.zb = new ZooniverseBar({
+				el: document.getElementById('zooniverse-bar')
+			});
+		</script>
 	</body>
 </html>

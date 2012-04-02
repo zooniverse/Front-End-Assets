@@ -5,12 +5,14 @@ define = window.define or (factory) ->
 define (require, exports) ->
 	$ = require 'jQuery'
 
+	delay = (duration, callback) ->
+		setTimeout callback, duration
+
 	translate = (raw) ->
 		if raw.constructor is String
 			"<span>#{raw}</span>"
 		else
 			("<span lang='#{lang}'>#{string}</span>" for lang, string of raw).join ''
-
 
 	class Menu
 		constructor: (options) ->
@@ -47,15 +49,16 @@ define (require, exports) ->
 
 			@el.data 'Dropdown', @
 
-			@heading.on 'click', @onClickHeading
+			@heading.on 'mouseenter', @show
+
+			@el.on 'mouseleave', =>
+				delete @dontHide
+				@el.on 'mouseenter', @preventHide
+				delay 667, =>
+					@el.off 'mouseenter', @preventHide
+					@hide() unless @dontHide
 
 			@hide true
-
-		onClickHeading: (e) =>
-			for dropdown in @el.closest('.zooniverse-bar').find '.dropdown'
-				unless @el.is dropdown then $(dropdown).data('Dropdown').hide()
-
-			if @showing then @hide() else @show()
 
 		showStyle:
 			opacity: 1
@@ -82,6 +85,9 @@ define (require, exports) ->
 			@el.css 'z-index': ''
 			@content.animate @hideStyle, 125, =>
 				@content.css display: 'none'
+
+		preventHide: =>
+			@dontHide = true
 
 	class Accordion
 		showing: false
@@ -131,7 +137,6 @@ define (require, exports) ->
 			@showing = false
 			@el.removeClass 'open'
 			@content.animate height: 0, 250
-
 
 	items =
 		home: new Link
@@ -200,7 +205,6 @@ define (require, exports) ->
 				</form>
 			'''
 
-
 	class ZooniverseBar
 		@Menu = Menu
 		@Link = Link
@@ -232,11 +236,8 @@ define (require, exports) ->
 			@el.on 'click', '[href^="#language:"]', (e) =>
 				e.preventDefault()
 				@changeLang $(e.target).closest('[href^="#language:"]').attr('href').split(':')[1]
-				@closeAllDropdowns()
 
 			@el.on 'click', (e) => e.stopPropagation();
-
-			$(document).on 'click', ':not(.zooniverse-bar *)', @closeAllDropdowns
 
 			@el.on 'change', (e) =>
 				input = $(e.target)
@@ -251,11 +252,6 @@ define (require, exports) ->
 		changeLang: (lang) =>
 			$('html').attr 'lang', lang
 			@el.attr 'lang', lang
-
-		closeAllDropdowns: =>
-			for dropdown in @el.find('.dropdown')
-				$(dropdown).data('Dropdown').hide()
-
 
 	exports = ZooniverseBar
 

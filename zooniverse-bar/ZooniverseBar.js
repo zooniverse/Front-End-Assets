@@ -11,8 +11,11 @@
   };
 
   define(function(require, exports) {
-    var $, Accordion, Dropdown, Link, Menu, ZooniverseBar, items, translate;
+    var $, Accordion, Dropdown, Link, Menu, ZooniverseBar, delay, items, translate;
     $ = require('jQuery');
+    delay = function(duration, callback) {
+      return setTimeout(callback, duration);
+    };
     translate = function(raw) {
       var lang, string;
       if (raw.constructor === String) {
@@ -58,9 +61,11 @@
       Dropdown.prototype.showing = false;
 
       function Dropdown(heading, content) {
+        this.preventHide = __bind(this.preventHide, this);
         this.hide = __bind(this.hide, this);
         this.show = __bind(this.show, this);
-        this.onClickHeading = __bind(this.onClickHeading, this);        this.el = $('<li class="dropdown"></li>');
+        var _this = this;
+        this.el = $('<li class="dropdown"></li>');
         if (heading.constructor === Object) {
           this.el.append("<span class='dropdown-heading'>" + (translate(heading)) + "</span>");
         } else if (heading.el != null) {
@@ -76,23 +81,17 @@
         }
         this.content = this.el.children().last();
         this.el.data('Dropdown', this);
-        this.heading.on('click', this.onClickHeading);
+        this.heading.on('mouseenter', this.show);
+        this.el.on('mouseleave', function() {
+          delete _this.dontHide;
+          _this.el.on('mouseenter', _this.preventHide);
+          return delay(667, function() {
+            _this.el.off('mouseenter', _this.preventHide);
+            if (!_this.dontHide) return _this.hide();
+          });
+        });
         this.hide(true);
       }
-
-      Dropdown.prototype.onClickHeading = function(e) {
-        var dropdown, _i, _len, _ref;
-        _ref = this.el.closest('.zooniverse-bar').find('.dropdown');
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          dropdown = _ref[_i];
-          if (!this.el.is(dropdown)) $(dropdown).data('Dropdown').hide();
-        }
-        if (this.showing) {
-          return this.hide();
-        } else {
-          return this.show();
-        }
-      };
 
       Dropdown.prototype.showStyle = {
         opacity: 1,
@@ -129,6 +128,10 @@
             display: 'none'
           });
         });
+      };
+
+      Dropdown.prototype.preventHide = function() {
+        return this.dontHide = true;
       };
 
       return Dropdown;
@@ -262,7 +265,6 @@
       ZooniverseBar.Accordion = Accordion;
 
       function ZooniverseBar(params) {
-        this.closeAllDropdowns = __bind(this.closeAllDropdowns, this);
         this.changeLang = __bind(this.changeLang, this);
         this.delegateEvents = __bind(this.delegateEvents, this);
         var defaultLang, direction, group, name, _i, _len, _ref;
@@ -297,13 +299,11 @@
         var _this = this;
         this.el.on('click', '[href^="#language:"]', function(e) {
           e.preventDefault();
-          _this.changeLang($(e.target).closest('[href^="#language:"]').attr('href').split(':')[1]);
-          return _this.closeAllDropdowns();
+          return _this.changeLang($(e.target).closest('[href^="#language:"]').attr('href').split(':')[1]);
         });
         this.el.on('click', function(e) {
           return e.stopPropagation();
         });
-        $(document).on('click', ':not(.zooniverse-bar *)', this.closeAllDropdowns);
         return this.el.on('change', function(e) {
           var input;
           input = $(e.target);
@@ -319,17 +319,6 @@
       ZooniverseBar.prototype.changeLang = function(lang) {
         $('html').attr('lang', lang);
         return this.el.attr('lang', lang);
-      };
-
-      ZooniverseBar.prototype.closeAllDropdowns = function() {
-        var dropdown, _i, _len, _ref, _results;
-        _ref = this.el.find('.dropdown');
-        _results = [];
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          dropdown = _ref[_i];
-          _results.push($(dropdown).data('Dropdown').hide());
-        }
-        return _results;
       };
 
       return ZooniverseBar;

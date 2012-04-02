@@ -3,8 +3,6 @@ $fg-color: white;
 $border-color: transparentize($fg-color, 0.75);
 
 $bar-height: 30px;
-$max-dropdown-height: 500px;
-$max-accordion-height: 250px;
 
 @mixin box-sizing($args) {
   -moz-box-sizing: $args;
@@ -26,6 +24,7 @@ $max-accordion-height: 250px;
 
 .zooniverse-bar {
   background: $bg-color;
+  border-bottom: 1px solid $border-color;
   color: $fg-color;
   float: left;
   font: 12px Titillium, "Helvetica Neue", sans-serif;
@@ -82,7 +81,7 @@ $max-accordion-height: 250px;
       }
 
       > .dropdown-heading:after {
-        content: "\25BC";
+        // content: "\25BC";
         font-size: 8px;
         margin-left: 2px;
         opacity: 0.67;
@@ -91,6 +90,9 @@ $max-accordion-height: 250px;
 
       > .dropdown-content {
         background: $bg-color;
+        border: 1px solid $border-color {
+          top: 0;
+        };
         overflow: hidden;
         position: absolute;
         top: 100%;
@@ -189,13 +191,13 @@ $max-accordion-height: 250px;
           letter-spacing: inherit;
           margin: 0;
           padding: 6px 5px 3px;
-          width: 200px;
+          width: 210px;
 
           + .placeholder {
             opacity: 0.75;
             position: absolute;
             left: 0;
-            margin: 6px 5px;
+            margin: 7px 5px 0;
             top: 0;
           }
 

@@ -1,5 +1,6 @@
 .zooniverse-bar {
   background: rgba(0, 0, 0, 0.75);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
   color: white;
   float: left;
   font: 12px Titillium, "Helvetica Neue", sans-serif;
@@ -37,13 +38,14 @@
         display: inline-block;
         padding: 6px 20px 3px; }
       .zooniverse-bar > .menu > .menu-item > .dropdown-heading:after {
-        content: "\25BC";
         font-size: 8px;
         margin-left: 2px;
         opacity: 0.67;
         vertical-align: 0; }
       .zooniverse-bar > .menu > .menu-item > .dropdown-content {
         background: rgba(0, 0, 0, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+          border-top: 0;
         overflow: hidden;
         position: absolute;
         top: 100%; }
@@ -102,12 +104,12 @@
           letter-spacing: inherit;
           margin: 0;
           padding: 6px 5px 3px;
-          width: 200px; }
+          width: 210px; }
           .zooniverse-bar form.sign-in > div > label > input + .placeholder {
             opacity: 0.75;
             position: absolute;
             left: 0;
-            margin: 6px 5px;
+            margin: 7px 5px 0;
             top: 0; }
           .zooniverse-bar form.sign-in > div > label > input:focus + .placeholder, .zooniverse-bar form.sign-in > div > label > input.full + .placeholder {
             display: none; }
