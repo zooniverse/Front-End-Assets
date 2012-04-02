@@ -161,24 +161,28 @@ define (require, exports) ->
 				new Accordion
 					en: 'Space', de: 'Space', pl: 'Space'
 					new Menu [
-						new Link 'Galaxy Zoo: Hubble', '#'
-						new Link 'Galaxy Zoo: Mergers', '#'
-						new Link 'Galaxy Zoo: Supernovae', '#'
+						new Link 'Galaxy Zoo: Hubble', 'https://www.zooniverse.org/project/hubble'
+						new Link 'Moon Zoo', 'https://www.zooniverse.org/project/moonzoo'
+						new Link 'Solar Stormwatch', 'https://www.zooniverse.org/project/solarstormwatch'
+						new Link 'Galaxy Zoo: Mergers', 'https://www.zooniverse.org/project/mergers'
+						new Link 'Galaxy Zoo: Supernovae', 'https://www.zooniverse.org/project/supernovae'
+						new Link 'Planet Hunters', 'https://www.zooniverse.org/project/planethunters'
+						new Link 'Milky Way Project', 'https://www.zooniverse.org/project/milkyway'
 					]
 				new Accordion
 					en: 'Climate', de: 'Climate', pl: 'Climate'
 					new Menu [
-						new Link 'Old Weather', '#'
+						new Link 'Old Weather', 'https://www.zooniverse.org/project/oldweather'
 					]
 				new Accordion
 					en: 'Humanities', de: 'Humanities', pl: 'Humanities'
 					new Menu [
-						new Link 'Ancient Lives', '#'
+						new Link 'Ancient Lives', 'https://www.zooniverse.org/project/ancientlives'
 					]
 				new Accordion
 					en: 'Nature', de: 'Nature', pl: 'Nature'
 					new Menu [
-						new Link 'Whale FM', '#'
+						new Link 'Whale FM', 'https://www.zooniverse.org/project/whalefm'
 					]
 			]
 
