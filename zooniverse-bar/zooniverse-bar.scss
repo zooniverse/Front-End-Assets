@@ -81,7 +81,7 @@ $bar-height: 30px;
       }
 
       > .dropdown-heading:after {
-        // content: "\25BC";
+        // content: "\25BC"; // Down-arrow
         font-size: 8px;
         margin-left: 2px;
         opacity: 0.67;
@@ -93,9 +93,17 @@ $bar-height: 30px;
         border: 1px solid $border-color {
           top: 0;
         };
-        overflow: hidden;
         position: absolute;
         top: 100%;
+
+        &:after {
+          content: " ";
+          height: 100px;
+          left: 0;
+          position: absolute;
+          top: 100%;
+          width: 100%;
+        }
 
         &.menu {
           margin: 0;

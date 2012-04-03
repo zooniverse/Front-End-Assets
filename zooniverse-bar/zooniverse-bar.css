@@ -46,9 +46,15 @@
         background: rgba(0, 0, 0, 0.75);
         border: 1px solid rgba(255, 255, 255, 0.25);
           border-top: 0;
-        overflow: hidden;
         position: absolute;
         top: 100%; }
+        .zooniverse-bar > .menu > .menu-item > .dropdown-content:after {
+          content: " ";
+          height: 100px;
+          left: 0;
+          position: absolute;
+          top: 100%;
+          width: 100%; }
         .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu {
           margin: 0;
           padding: 0; }

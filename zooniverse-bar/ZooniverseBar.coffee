@@ -54,7 +54,7 @@ define (require, exports) ->
 			@el.on 'mouseleave', =>
 				delete @dontHide
 				@el.on 'mouseenter', @preventHide
-				delay 667, =>
+				delay 333, =>
 					@el.off 'mouseenter', @preventHide
 					@hide() unless @dontHide
 

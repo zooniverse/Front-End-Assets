@@ -85,7 +85,7 @@
         this.el.on('mouseleave', function() {
           delete _this.dontHide;
           _this.el.on('mouseenter', _this.preventHide);
-          return delay(667, function() {
+          return delay(333, function() {
             _this.el.off('mouseenter', _this.preventHide);
             if (!_this.dontHide) return _this.hide();
           });
