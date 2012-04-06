@@ -19,14 +19,14 @@
       .zooniverse-bar > .menu.leading > .menu-item {
         border-right: 1px solid rgba(255, 255, 255, 0.25); }
         .zooniverse-bar > .menu.leading > .menu-item > .dropdown-content {
-          left: 0; }
+          left: -1px; }
     .zooniverse-bar > .menu.trailing {
       float: right;
       margin-right: 30px; }
       .zooniverse-bar > .menu.trailing > .menu-item {
         border-left: 1px solid rgba(255, 255, 255, 0.25); }
         .zooniverse-bar > .menu.trailing > .menu-item > .dropdown-content {
-          right: 0; }
+          right: -1px; }
     .zooniverse-bar > .menu > .menu-item {
       border-top: 0;
       cursor: default;
