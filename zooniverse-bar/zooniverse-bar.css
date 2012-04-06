@@ -1,7 +1,7 @@
 .zooniverse-bar {
   background: rgba(0, 0, 0, 0.75);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
-  color: white;
+  border-bottom: 1px solid rgba(211, 211, 211, 0.25);
+  color: #d3d3d3;
   float: left;
   font: 12px Titillium, "Helvetica Neue", sans-serif;
   letter-spacing: 1px;
@@ -10,6 +10,8 @@
   .zooniverse-bar a {
     color: inherit;
     text-decoration: none; }
+    .zooniverse-bar a:hover {
+      color: white; }
   .zooniverse-bar > .menu {
     margin: 0;
     padding: 0; }
@@ -17,14 +19,14 @@
       float: left;
       margin-left: 30px; }
       .zooniverse-bar > .menu.leading > .menu-item {
-        border-right: 1px solid rgba(255, 255, 255, 0.25); }
+        border-right: 1px solid rgba(211, 211, 211, 0.25); }
         .zooniverse-bar > .menu.leading > .menu-item > .dropdown-content {
           left: -1px; }
     .zooniverse-bar > .menu.trailing {
       float: right;
       margin-right: 30px; }
       .zooniverse-bar > .menu.trailing > .menu-item {
-        border-left: 1px solid rgba(255, 255, 255, 0.25); }
+        border-left: 1px solid rgba(211, 211, 211, 0.25); }
         .zooniverse-bar > .menu.trailing > .menu-item > .dropdown-content {
           right: -1px; }
     .zooniverse-bar > .menu > .menu-item {
@@ -44,7 +46,7 @@
         vertical-align: 0; }
       .zooniverse-bar > .menu > .menu-item > .dropdown-content {
         background: rgba(0, 0, 0, 0.75);
-        border: 1px solid rgba(255, 255, 255, 0.25);
+        border: 1px solid rgba(211, 211, 211, 0.25);
           border-top: 0;
         position: absolute;
         top: 100%; }
@@ -59,26 +61,26 @@
           margin: 0;
           padding: 0; }
           .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item {
-            border-top: 1px solid rgba(255, 255, 255, 0.25);
+            border-top: 1px solid rgba(211, 211, 211, 0.25);
             display: block; }
             .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.link > a {
               display: block;
               padding: 6px 20px 3px;
               white-space: nowrap; }
-            .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.link:hover {
-              background: rgba(0, 0, 0, 0.75); }
             .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.accordion > .accordion-heading {
               display: block;
               font-size: 24px;
               padding: 9px 20px 3px;
               text-align: center; }
+              .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.accordion > .accordion-heading:hover {
+                color: white; }
             .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.accordion > .accordion-content {
               overflow: hidden; }
               .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.accordion > .accordion-content.menu {
                 margin: 0;
                 padding: 0; }
                 .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.accordion > .accordion-content.menu > .menu-item {
-                  border-top: 1px solid rgba(255, 255, 255, 0.25);
+                  border-top: 1px solid rgba(211, 211, 211, 0.25);
                   display: block; }
                   .zooniverse-bar > .menu > .menu-item > .dropdown-content.menu > .menu-item.accordion > .accordion-content.menu > .menu-item.link > a {
                     display: block;
@@ -91,7 +93,7 @@
   .zooniverse-bar[lang="en"] [lang="de"], .zooniverse-bar[lang="en"] [lang="pl"], .zooniverse-bar[lang="de"] [lang="en"], .zooniverse-bar[lang="de"] [lang="pl"], .zooniverse-bar[lang="pl"] [lang="en"], .zooniverse-bar[lang="pl"] [lang="de"] {
     display: none; }
   .zooniverse-bar form.sign-in {
-    border-top: 1px solid rgba(255, 255, 255, 0.25);
+    border-top: 1px solid rgba(211, 211, 211, 0.25);
     padding: 15px 0; }
     .zooniverse-bar form.sign-in > div {
       padding: 3px 15px; }
@@ -102,8 +104,8 @@
         .zooniverse-bar form.sign-in > div > label > input {
           -moz-box-sizing: border-box;
           box-sizing: args;
-          background: rgba(255, 255, 255, 0.2);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          background: rgba(211, 211, 211, 0.2);
+          border: 1px solid rgba(211, 211, 211, 0.2);
           box-shadow: 0 0 5px -1px rgba(0, 0, 0, 0.75) inset;
           color: inherit;
           font-family: inherit;
@@ -127,10 +129,10 @@
           text-transform: none; }
         .zooniverse-bar form.sign-in > div.action > button {
           background-color: transparent;
-          background-image: -moz-linear-gradient(top, rgba(255, 255, 255, 0.25), transparent);
-          background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.25), transparent);
-          background-image: linear-gradient(top, rgba(255, 255, 255, 0.25), transparent);
-          border: 1px solid rgba(255, 255, 255, 0.25);
+          background-image: -moz-linear-gradient(top, rgba(211, 211, 211, 0.25), transparent);
+          background-image: -webkit-linear-gradient(top, rgba(211, 211, 211, 0.25), transparent);
+          background-image: linear-gradient(top, rgba(211, 211, 211, 0.25), transparent);
+          border: 1px solid rgba(211, 211, 211, 0.25);
           color: inherit;
           cursor: pointer;
           font-family: inherit;

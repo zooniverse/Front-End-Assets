@@ -1,5 +1,5 @@
 $bg-color: transparentize(black, 0.25);
-$fg-color: white;
+$fg-color: #d3d3d3;
 $border-color: transparentize($fg-color, 0.75);
 
 $bar-height: 30px;
@@ -35,6 +35,10 @@ $bar-height: 30px;
   a {
     color: inherit;
     text-decoration: none;
+
+    &:hover {
+      color: lighten($fg-color, 100%);
+    }
   }
 
   > .menu {
@@ -119,10 +123,6 @@ $bar-height: 30px;
                 padding: 6px 20px 3px;
                 white-space: nowrap;
               }
-
-              &:hover {
-                background: $bg-color;
-              }
             }
 
             &.accordion {
@@ -131,6 +131,10 @@ $bar-height: 30px;
                 font-size: 24px;
                 padding: 9px 20px 3px;
                 text-align: center;
+
+                &:hover {
+                  color: lighten($fg-color, 50%);
+                }
               }
 
               > .accordion-content {
