@@ -41,7 +41,7 @@ $bar-height: 30px;
     }
   }
 
-  > .menu {
+  > .zooniverse-menu {
     margin: 0;
     padding: 0;
 
@@ -49,10 +49,10 @@ $bar-height: 30px;
       float: left;
       margin-left: $bar-height;
 
-      > .menu-item {
+      > .zooniverse-menu-item {
         border-right: 1px solid $border-color;
 
-        > .dropdown-content {
+        > .zooniverse-dropdown-content {
           left: -1px;
         }
       }
@@ -62,16 +62,16 @@ $bar-height: 30px;
       float: right;
       margin-right: $bar-height;
 
-      > .menu-item {
+      > .zooniverse-menu-item {
         border-left: 1px solid $border-color;
 
-        > .dropdown-content {
+        > .zooniverse-dropdown-content {
           right: -1px;
         }
       }
     }
 
-    > .menu-item {
+    > .zooniverse-menu-item {
       border-top: 0;
       cursor: default;
       display: block;
@@ -79,12 +79,12 @@ $bar-height: 30px;
       position: relative;
 
       > a,
-      > .dropdown-heading {
+      > .zooniverse-dropdown-heading {
         display: inline-block;
         padding: 6px 20px 3px;
       }
 
-      > .dropdown-heading:after {
+      > .zooniverse-dropdown-heading:after {
         // content: "\25BC"; // Down-arrow
         font-size: 8px;
         margin-left: 2px;
@@ -92,7 +92,7 @@ $bar-height: 30px;
         vertical-align: 0;
       }
 
-      > .dropdown-content {
+      > .zooniverse-dropdown-content {
         background: $bg-color;
         border: 1px solid $border-color {
           top: 0;
@@ -109,15 +109,15 @@ $bar-height: 30px;
           width: 100%;
         }
 
-        &.menu {
+        &.zooniverse-menu {
           margin: 0;
           padding: 0;
 
-          > .menu-item {
+          > .zooniverse-menu-item {
             border-top: 1px solid $border-color;
             display: block;
 
-            &.link {
+            &.zooniverse-link {
               > a {
                 display: block;
                 padding: 6px 20px 3px;
@@ -125,8 +125,8 @@ $bar-height: 30px;
               }
             }
 
-            &.accordion {
-              > .accordion-heading {
+            &.zooniverse-accordion {
+              > .zooniverse-accordion-heading {
                 display: block;
                 font-size: 24px;
                 padding: 9px 20px 3px;
@@ -137,19 +137,19 @@ $bar-height: 30px;
                 }
               }
 
-              > .accordion-content {
+              > .zooniverse-accordion-content {
                 // NOTE: Show/hide animation handled by script.
                 overflow: hidden;
 
-                &.menu {
+                &.zooniverse-menu {
                   margin: 0;
                   padding: 0;
 
-                  > .menu-item {
+                  > .zooniverse-menu-item {
                     border-top: 1px solid $border-color;
                     display: block;
 
-                    &.link {
+                    &.zooniverse-link {
                       > a {
                         display: block;
                         padding: 6px 20px 3px;
@@ -181,7 +181,7 @@ $bar-height: 30px;
     display: none;
   }
 
-  form.sign-in {
+  form.zooniverse-sign-in {
     border-top: 1px solid $border-color;
     padding: 15px 0;
 
@@ -220,7 +220,7 @@ $bar-height: 30px;
         }
       }
 
-      &.action {
+      &.zooniverse-action {
         text-align: right;
 
         > a {

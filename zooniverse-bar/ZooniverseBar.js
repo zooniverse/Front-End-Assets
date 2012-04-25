@@ -36,11 +36,11 @@
 
       function Menu(options) {
         var option, _i, _len;
-        this.el = $('<ul class="menu"></ul>');
+        this.el = $('<ul class="zooniverse-menu"></ul>');
         for (_i = 0, _len = options.length; _i < _len; _i++) {
           option = options[_i];
           this.el.append(option.el);
-          option.el.addClass('menu-item');
+          option.el.addClass('zooniverse-menu-item');
         }
       }
 
@@ -50,7 +50,7 @@
     Link = (function() {
 
       function Link(text, href) {
-        this.el = $("<li class='link'><a href='" + href + "'>" + (translate(text)) + "</a></li>");
+        this.el = $("<li class='zooniverse-link'><a href='" + href + "'>" + (translate(text)) + "</a></li>");
       }
 
       return Link;
@@ -65,19 +65,19 @@
         this.hide = __bind(this.hide, this);
         this.show = __bind(this.show, this);
         var _this = this;
-        this.el = $('<li class="dropdown"></li>');
+        this.el = $('<li class="zooniverse-dropdown"></li>');
         if (heading.constructor === Object) {
-          this.el.append("<span class='dropdown-heading'>" + (translate(heading)) + "</span>");
+          this.el.append("<span class='zooniverse-dropdown-heading'>" + (translate(heading)) + "</span>");
         } else if (heading.el != null) {
           this.el.append(heading.el);
-          heading.el.addClass('dropdown-heading');
+          heading.el.addClass('zooniverse-dropdown-heading');
         }
         this.heading = this.el.children().first();
         if (content.constructor === String) {
-          this.el.append("<div class='dropdown-content'>" + content + "</div>");
+          this.el.append("<div class='zooniverse-dropdown-content'>" + content + "</div>");
         } else if (content.el != null) {
           this.el.append(content.el);
-          content.el.addClass('dropdown-content');
+          content.el.addClass('zooniverse-dropdown-content');
         }
         this.content = this.el.children().last();
         this.el.data('Dropdown', this);
@@ -144,19 +144,19 @@
       function Accordion(heading, content) {
         this.hide = __bind(this.hide, this);
         this.show = __bind(this.show, this);
-        this.onClickHeading = __bind(this.onClickHeading, this);        this.el = $('<li class="accordion"></li>');
+        this.onClickHeading = __bind(this.onClickHeading, this);        this.el = $('<li class="zooniverse-accordion"></li>');
         if (heading.constructor === Object) {
-          this.el.append("<span class='accordion-heading'>" + (translate(heading)) + "</span>");
+          this.el.append("<span class='zooniverse-accordion-heading'>" + (translate(heading)) + "</span>");
         } else if (heading.el != null) {
           this.el.append(heading.el);
-          heading.el.addClass('accordion-heading');
+          heading.el.addClass('zooniverse-accordion-heading');
         }
         this.heading = this.el.children().first();
         if (content.constructor === String) {
-          this.el.append("<div class='accordion-content'>" + content + "</div>");
+          this.el.append("<div class='zooniverse-accordion-content'>" + content + "</div>");
         } else if (content.el != null) {
           this.el.append(content.el);
-          content.el.addClass('accordion-content');
+          content.el.addClass('zooniverse-accordion-content');
         }
         this.content = this.el.children().last();
         this.el.data('Accordion', this);
@@ -252,7 +252,7 @@
         en: 'Sign in',
         de: 'Sign in',
         pl: 'Sign in'
-      }, '<form class="sign-in">\n	<div>\n		<label>\n			<input type="text" name="username" />\n			<span class="placeholder">Username</span>\n		</label>\n	</div>\n	<div>\n		<label>\n			<input type="password" name="password" />\n			<span class="placeholder">Password</span>\n		</label>\n	</div>\n	<div class="action">\n		<a href="#">Create a new account</a>\n		<button type="submit">Sign in</button>\n	</div>\n</form>')
+      }, '<form class="zooniverse-sign-in">\n	<div>\n		<label>\n			<input type="text" name="username" />\n			<span class="placeholder">Username</span>\n		</label>\n	</div>\n	<div>\n		<label>\n			<input type="password" name="password" />\n			<span class="placeholder">Password</span>\n		</label>\n	</div>\n	<div class="zooniverse-action">\n		<a href="#">Create a new account</a>\n		<button type="submit">Sign in</button>\n	</div>\n</form>')
     };
     ZooniverseBar = (function() {
 

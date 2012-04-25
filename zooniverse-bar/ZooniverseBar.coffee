@@ -16,34 +16,34 @@ define (require, exports) ->
 
 	class Menu
 		constructor: (options) ->
-			@el = $('<ul class="menu"></ul>')
+			@el = $('<ul class="zooniverse-menu"></ul>')
 			for option in options
 				@el.append option.el
-				option.el.addClass 'menu-item'
+				option.el.addClass 'zooniverse-menu-item'
 
 	class Link
 		constructor: (text, href) ->
-			@el = $("<li class='link'><a href='#{href}'>#{translate text}</a></li>")
+			@el = $("<li class='zooniverse-link'><a href='#{href}'>#{translate text}</a></li>")
 
 	class Dropdown
 		showing: false
 
 		constructor: (heading, content) ->
-			@el = $('<li class="dropdown"></li>')
+			@el = $('<li class="zooniverse-dropdown"></li>')
 
 			if heading.constructor is Object
-				@el.append "<span class='dropdown-heading'>#{translate heading}</span>"
+				@el.append "<span class='zooniverse-dropdown-heading'>#{translate heading}</span>"
 			else if heading.el?
 				@el.append heading.el
-				heading.el.addClass 'dropdown-heading'
+				heading.el.addClass 'zooniverse-dropdown-heading'
 
 			@heading = @el.children().first()
 
 			if content.constructor is String
-				@el.append "<div class='dropdown-content'>#{content}</div>"
+				@el.append "<div class='zooniverse-dropdown-content'>#{content}</div>"
 			else if content.el?
 				@el.append content.el
-				content.el.addClass 'dropdown-content'
+				content.el.addClass 'zooniverse-dropdown-content'
 
 			@content = @el.children().last()
 
@@ -93,21 +93,21 @@ define (require, exports) ->
 		showing: false
 
 		constructor: (heading, content) ->
-			@el = $('<li class="accordion"></li>')
+			@el = $('<li class="zooniverse-accordion"></li>')
 
 			if heading.constructor is Object
-				@el.append "<span class='accordion-heading'>#{translate heading}</span>"
+				@el.append "<span class='zooniverse-accordion-heading'>#{translate heading}</span>"
 			else if heading.el?
 				@el.append heading.el
-				heading.el.addClass 'accordion-heading'
+				heading.el.addClass 'zooniverse-accordion-heading'
 
 			@heading = @el.children().first()
 
 			if content.constructor is String
-				@el.append "<div class='accordion-content'>#{content}</div>"
+				@el.append "<div class='zooniverse-accordion-content'>#{content}</div>"
 			else if content.el?
 				@el.append content.el
-				content.el.addClass 'accordion-content'
+				content.el.addClass 'zooniverse-accordion-content'
 
 			@content = @el.children().last()
 
@@ -189,7 +189,7 @@ define (require, exports) ->
 		signIn: new Dropdown
 			en: 'Sign in', de: 'Sign in', pl: 'Sign in'
 		  '''
-				<form class="sign-in">
+				<form class="zooniverse-sign-in">
 					<div>
 						<label>
 							<input type="text" name="username" />
@@ -202,7 +202,7 @@ define (require, exports) ->
 							<span class="placeholder">Password</span>
 						</label>
 					</div>
-					<div class="action">
+					<div class="zooniverse-action">
 						<a href="#">Create a new account</a>
 						<button type="submit">Sign in</button>
 					</div>
