@@ -29,8 +29,12 @@ $bar-height: 30px;
   float: left;
   font: 12px Titillium, "Helvetica Neue", sans-serif;
   letter-spacing: 1px;
+  left: 0;
+  position: absolute;
   text-transform: uppercase;
+  top: 0;
   width: 100%;
+  z-index: 100;
 
   a {
     color: inherit;
