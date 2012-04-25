@@ -94,8 +94,6 @@
                       background: rgba(0, 0, 0, 0.75); }
       .zooniverse-bar > .zooniverse-menu > .zooniverse-menu-item:hover, .zooniverse-bar > .zooniverse-menu > .zooniverse-menu-item.open {
         background: rgba(0, 0, 0, 0.75); }
-  .zooniverse-bar[lang="en"] [lang="de"], .zooniverse-bar[lang="en"] [lang="pl"], .zooniverse-bar[lang="de"] [lang="en"], .zooniverse-bar[lang="de"] [lang="pl"], .zooniverse-bar[lang="pl"] [lang="en"], .zooniverse-bar[lang="pl"] [lang="de"] {
-    display: none; }
   .zooniverse-bar form.zooniverse-sign-in {
     border-top: 1px solid rgba(211, 211, 211, 0.25);
     padding: 15px 0; }

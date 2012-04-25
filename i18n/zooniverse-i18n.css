@@ -1,0 +1,4 @@
+[lang="en"] [lang="de"], [lang="en"] [lang="pl"],
+[lang="de"] [lang="en"], [lang="de"] [lang="pl"],
+[lang="pl"] [lang="en"], [lang="pl"] [lang="de"] {
+  display: none; }
