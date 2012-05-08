@@ -1,106 +1,107 @@
-$ = require 'jQuery'
+define (require, exports, module) ->
+  $ = require 'jQuery'
 
-class Tutorial
-  steps: null
+  class Tutorial
+    steps: null
 
-  className: 'tutorial'
-  message: null
-  underlay: null
+    className: 'tutorial'
+    message: null
+    underlay: null
 
-  current = -1
+    current = -1
 
-  constructor: ({@el, @steps}) ->
-    @steps ?= []
+    constructor: ({@el, @steps}) ->
+      @steps ?= []
 
-    @underlay = $('<div></div>')
-    @underlay.addClass 'underlay'
+      @underlay = $('<div></div>')
+      @underlay.addClass 'underlay'
 
-    @underlay.appendTo @el
+      @underlay.appendTo @el
 
-    @message = $('<div></div>')
-    @message.addClass 'step'
+      @message = $('<div></div>')
+      @message.addClass 'step'
 
-    @message.appendTo @el
+      @message.appendTo @el
 
-  start: =>
-    @message.add(@underlay).css display: ''
-    @current = -1
-    @next()
+    start: =>
+      @message.add(@underlay).css display: ''
+      @current = -1
+      @next()
 
-  next: (e) =>
-    e?.stopPropagation()
+    next: (e) =>
+      e?.stopPropagation()
 
-    if !!~@current then @steps[@current].leave()
+      if !!~@current then @steps[@current].leave()
 
-    @current += 1
-    if @steps[@current]
-      @steps[@current].enter @
-    else
-      @end()
+      @current += 1
+      if @steps[@current]
+        @steps[@current].enter @
+      else
+        @end()
 
-  end: =>
-    @message.add(@underlay).css display: 'none'
+    end: =>
+      @message.add(@underlay).css display: 'none'
 
-class Tutorial.Step
-  content: ''
-  modal: false
-  size: null
-  attach: null
-  className: ''
-  nextOn: ''
+  class Tutorial.Step
+    content: ''
+    modal: false
+    style: null
+    attach: null
+    className: ''
+    nextOn: ''
 
-  tutorial: null
+    tutorial: null
 
-  constructor: ({@content, @size, @attach, @nextOn, @className}) ->
+    constructor: ({@content, @style, @attach, @nextOn, @className}) ->
 
-  enter: (@tutorial) =>
-    @tutorial.message.html @content
+    enter: (@tutorial) =>
+      @tutorial.message.html "<p>#{@content.join('</p><p>')}</p>"
 
-    if @nextOn
-      $(document).on eventName, selector, @tutorial.next for eventName, selector of @nextOn
-    else
-      buttonsHolder = $('<div class="continue"><button>Next</button></div>')
-      @tutorial.message.append buttonsHolder
-      @tutorial.message.on 'click', '.continue button', @tutorial.next
+      if @nextOn
+        $(document).on eventName, selector, @tutorial.next for eventName, selector of @nextOn
+      else
+        buttonsHolder = $('<div class="continue"><button>Next</button></div>')
+        @tutorial.message.append buttonsHolder
+        @tutorial.message.on 'click', '.continue button', @tutorial.next
 
-    @tutorial.message.css @size
+      @tutorial.message.css @style if @style
 
-    @move @attach.x, @attach.y, @attach.to, @attach.at.x, @attach.at.y
+      @move @attach.x, @attach.y, @attach.to, @attach.at.x, @attach.at.y if @attach
 
-    @tutorial.message.addClass @className if @className
+      @tutorial.message.addClass @className if @className
 
-  move: (stepX, stepY, target, targetX, targetY) ->
-    xStrings = left: 0, center: 0.5, right: 1
-    yStrings = top: 0, middle: 0.5, bottom: 1
+    move: (stepX, stepY, target, targetX, targetY) ->
+      xStrings = left: 0, center: 0.5, right: 1
+      yStrings = top: 0, middle: 0.5, bottom: 1
 
-    stepX = xStrings[stepX] if stepX of xStrings
-    stepY = yStrings[stepY] if stepY of yStrings
-    targetX = xStrings[targetX] if targetX of xStrings
-    targetY = yStrings[targetY] if targetY of yStrings
+      stepX = xStrings[stepX] if stepX of xStrings
+      stepY = yStrings[stepY] if stepY of yStrings
+      targetX = xStrings[targetX] if targetX of xStrings
+      targetY = yStrings[targetY] if targetY of yStrings
 
-    target = $(target).first()
+      target = $(target).first()
 
-    targetSize = width: target.width(), height: target.height()
-    targetOffset = target.offset()
+      targetSize = width: target.width(), height: target.height()
+      targetOffset = target.offset()
 
-    stepSize = width: @tutorial.message.width(), height: @tutorial.message.height()
-    stepOffset =
-      left: targetOffset.left - (stepSize.width * stepX) + (targetSize.width * targetX)
-      top: targetOffset.top - (stepSize.height * stepY) + (targetSize.height * targetY)
+      stepSize = width: @tutorial.message.width(), height: @tutorial.message.height()
+      stepOffset =
+        left: targetOffset.left - (stepSize.width * stepX) + (targetSize.width * targetX)
+        top: targetOffset.top - (stepSize.height * stepY) + (targetSize.height * targetY)
 
-    @tutorial.message.css stepOffset
+      @tutorial.message.css stepOffset
 
-  leave: =>
-    @tutorial.message.html ''
+    leave: =>
+      @tutorial.message.html ''
 
-    if @nextOn
-      $(document).off eventName, selector, @tutorial.next for eventName, selector of @nextOn
-    else
-      @tutorial.message.off 'click', '.continue button', @tutorial.next
+      if @nextOn
+        $(document).off eventName, selector, @tutorial.next for eventName, selector of @nextOn
+      else
+        @tutorial.message.off 'click', '.continue button', @tutorial.next
 
-    @tutorial.message.removeClass @className if @className
+      @tutorial.message.removeClass @className if @className
 
-if module?.exports?
-  module.exports = Tutorial
-else
-  window.Tutorial = Tutorial
+  if module?.exports?
+    module.exports = Tutorial
+  else
+    window.Tutorial = Tutorial
