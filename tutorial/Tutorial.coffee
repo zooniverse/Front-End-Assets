@@ -1,30 +1,62 @@
+define = window.define || (callback) ->
+  require = window.require || (module) ->
+    window[module]
+
+  module = exports: {}
+
+  callback(require, module.exports, module)
+
+  window.Tutorial = module.exports
+
 define (require, exports, module) ->
   $ = require 'jQuery'
 
   class Tutorial
     steps: null
+    className: 'tutorial-step'
+    controlsClass: 'tutorial-controls'
+    arrowClass: 'tutorial-arrow'
+    messageClass: 'tutorial-message'
+    continueClass: 'tutorial-continue'
 
-    className: 'tutorial'
+    skipText: '&rarr;'
+    skipTitle: 'Skip this step'
+    exitText: '&times;'
+    exitTitle: 'Exit tutorial'
+
+    el: null
     message: null
-    underlay: null
+    arrow: null
 
     current = -1
 
-    constructor: ({@el, @steps}) ->
+    constructor: ({@steps}) ->
       @steps ?= []
 
-      @underlay = $('<div></div>')
-      @underlay.addClass 'underlay'
+      @el = $("<div class='#{@className}'></div>")
 
-      @underlay.appendTo @el
+      @controls = $("""
+        <div class="#{@controlsClass}">
+          <button value="skip" title="#{@skipTitle}">#{@skipText}</button>
+          <button value="end" title="#{@exitTitle}">#{@exitText}</button>
+        </div>
+      """)
 
-      @message = $('<div></div>')
-      @message.addClass 'step'
+      @message = $("<div class='#{@messageClass}'></div>")
 
+      @arrow = $("<div class='#{@arrowClass}'></div>")
+
+      @controls.appendTo @el
       @message.appendTo @el
+      @arrow.appendTo @el
+
+      @controls.on 'click', '[value="skip"]', @next
+      @controls.on 'click', '[value="end"]', @end
+
+      @el.appendTo $('body')
 
     start: =>
-      @message.add(@underlay).css display: ''
+      @message.css display: ''
       @current = -1
       @next()
 
@@ -40,37 +72,40 @@ define (require, exports, module) ->
         @end()
 
     end: =>
-      @message.add(@underlay).css display: 'none'
+      @el.css display: 'none'
 
   class Tutorial.Step
     content: ''
     modal: false
     style: null
-    attach: null
     className: ''
-    nextOn: ''
+    attach: null
+    nextOn: null
+    continueText: 'Next'
 
     tutorial: null
 
-    constructor: ({@content, @style, @attach, @nextOn, @className}) ->
+    constructor: ({@content, @style, @attach, @nextOn, @className, @arrowClass}) ->
+      @content = [@content] unless @content instanceof Array
 
     enter: (@tutorial) =>
       @tutorial.message.html "<p>#{@content.join('</p><p>')}</p>"
 
-      if @nextOn
+      if @nextOn?
         $(document).on eventName, selector, @tutorial.next for eventName, selector of @nextOn
       else
-        buttonsHolder = $('<div class="continue"><button>Next</button></div>')
+        buttonsHolder = $("<div class='#{@tutorial.continueClass}'><button>#{@continueText}</button></div>")
         @tutorial.message.append buttonsHolder
-        @tutorial.message.on 'click', '.continue button', @tutorial.next
+        @tutorial.el.on 'click', ".#{@tutorial.continueClass} button", @tutorial.next
 
-      @tutorial.message.css @style if @style
+      @tutorial.el.css @style if @style
+      @tutorial.arrow.addClass @arrowClass if @arrowClass
 
-      @move @attach.x, @attach.y, @attach.to, @attach.at.x, @attach.at.y if @attach
+      @moveMessage @attach.x, @attach.y, @attach.to, @attach.at.x, @attach.at.y if @attach
 
-      @tutorial.message.addClass @className if @className
+      @tutorial.el.addClass @className if @className
 
-    move: (stepX, stepY, target, targetX, targetY) ->
+    moveMessage: (stepX, stepY, target, targetX, targetY) ->
       xStrings = left: 0, center: 0.5, right: 1
       yStrings = top: 0, middle: 0.5, bottom: 1
 
@@ -81,25 +116,26 @@ define (require, exports, module) ->
 
       target = $(target).first()
 
-      targetSize = width: target.width(), height: target.height()
+      targetSize = width: target.width(), height: target.outerHeight()
       targetOffset = target.offset()
 
-      stepSize = width: @tutorial.message.width(), height: @tutorial.message.height()
+      stepSize = width: @tutorial.el.width(), height: @tutorial.el.outerHeight()
       stepOffset =
         left: targetOffset.left - (stepSize.width * stepX) + (targetSize.width * targetX)
         top: targetOffset.top - (stepSize.height * stepY) + (targetSize.height * targetY)
 
-      @tutorial.message.css stepOffset
+      @tutorial.el.offset stepOffset
 
     leave: =>
       @tutorial.message.html ''
 
-      if @nextOn
+      if @nextOn?
         $(document).off eventName, selector, @tutorial.next for eventName, selector of @nextOn
       else
-        @tutorial.message.off 'click', '.continue button', @tutorial.next
+        @tutorial.el.off 'click', ".#{@tutorial.continueClass} button", @tutorial.next
 
-      @tutorial.message.removeClass @className if @className
+      @tutorial.arrow.removeClass @arrowClass if @arrowClass
+      @tutorial.el.removeClass @className if @className
 
   if module?.exports?
     module.exports = Tutorial
