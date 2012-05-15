@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Bat Detective Demo</title>
+  </head>
+
+  <body>
+    <div class="zooniverse-top-bar"></div>
+    <div class="bat-detective-app">
+      <header></header>
+      <div class="bat-detective-app">
+        <section data-page="home"></section>
+
+        <section data-page="classify"></section>
+
+        <section data-page="profile"></section>
+      </div>
+    </div>
+
+    <script src="scripts/lib/require.js"></script>
+    <script>
+      require.config({
+        baseUrl: 'scripts',
+        paths: {
+          order: 'lib/require/order',
+          text: 'lib/require/text',
+          zooniverse: 'lib/zooniverse'
+        }
+      });
+
+      define('jQuery', [
+        'lib/jquery'
+      ], function() {
+        return jQuery;
+      });
+
+      define('Spine', [
+        'order!lib/spine/spine',
+        'order!lib/spine/relation'
+      ], function() {
+        return Spine;
+      });
+
+      require(['main']);
+    </script>
+  </body>
+</html>
