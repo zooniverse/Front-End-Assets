@@ -1,42 +1,53 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
-  User = require 'zooniverse/models/User'
   $ = require 'jQuery'
-  Pager = require 'zooniverse/controllers/Pager'
+
+  User = require 'zooniverse/models/User'
+  Authentication = require 'zooniverse/controllers/Authentication'
+  # TopBar = require 'zooniverse/controllers/TopBar'
+  # Pager = require 'zooniverse/controllers/Pager'
 
   class App extends Spine.Controller
-    project: null
-    workflows: null
+    languages: null
+    projects: null
     widgets: null
 
-    User: User
+    authentication: "//#{location.host}/authentication.html"
 
     constructor: ->
       super
-      @configure()
-      @initPagers()
-      @initWorkflows()
+      @setup()
+      # @initTopBar()
+      # @initPagers()
+      # @initProjects()
       @initWidgets()
 
-    configure: =>
+    setup: =>
+      # Send cross-origin request headers when logged in.
       $.ajaxSetup beforeSend: (xhr) ->
-        if @User.current?
+        if User.current?
           # TODO: Use a proper base-64 encoder.
           # http://stringencoders.googlecode.com/svn/trunk/javascript/base64.js
-          auth = btoa "#{@User.current.username}:#{@User.current.apiKey}"
+          auth = btoa "#{User.current.username}:#{User.current.apiKey}"
           xhr.setRequestHeader 'Authorization', "Basic #{auth}"
 
-    initPagers: =>
-      for pager in @el.find('[data-page]').parent()
-        new Pager el: pager
+      Authentication.setSrc @authentication
 
-    initWorkflows: =>
-      for id, {controller, attributes} of @project.workflows
-        instance = new controller attributes
-        instance.workflowId = id
+    initTopBar: =>
+      @topBar = new TopBar
+        languages: @languages
+
+    initPagers: =>
+      for pageContainer in @el.find('[data-page]').parent()
+        new Pager el: pageContainer
+
+    initProjects: =>
+      for id, {name, workflows} of @projects
+        for id, {controller, attributes} of workflows
+          'TODO'
 
     initWidgets: =>
       for id, {controller, attributes} of @widgets
-        instance = new controller attributes
+        @widgets[id].instance = new controller attributes
 
   module.exports = App

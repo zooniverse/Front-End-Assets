@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Zooniverse Authentication</title>
+  </head>
+
+  <body>
+    <script>
+      var $ = parent.require('jQuery');
+
+      var host = 'https://login.zooniverse.org';
+      if (!!~location.host.indexOf('localhost')) host = 'http://localhost:3000';
+
+      function issueCommand(command, params) {
+        var url = host + '/' + command + '?callback=?';
+        var request = $.getJSON(url, params);
+
+        setTimeout(function() {
+          if (request.state() === 'pending') {
+            postBack(command, {success: false, message: 'Server request failed'});
+          }
+        }, 2500);
+
+        request.done(function(response) {
+          postBack(command, response);
+        });
+
+        request.fail(function(response) {
+          postBack(command, {success: false, message: 'Couldn\'t connect to the server'});
+        });
+      }
+
+      function postBack(command, response) {
+        parent.postMessage({command: command, response: response}, location.protocol + '//' + location.host);
+      }
+
+      $(window).on('message', function(e) {
+        console.info('Message to auth', e.originalEvent);
+
+        var commands = e.originalEvent.data;
+        for (var command in commands) {
+          issueCommand(command, commands[command]);
+        }
+      });
+
+      issueCommand('current_user', {});
+    </script>
+  </body>
+</html>

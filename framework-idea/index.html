@@ -3,18 +3,16 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Bat Detective Demo</title>
+    <title>Sea Floor Explorer</title>
   </head>
 
   <body>
-    <div class="zooniverse-top-bar"></div>
-    <div class="bat-detective-app">
+    <div class="sea-floor-app">
+      <div class="login-form"></div>
       <header></header>
-      <div class="bat-detective-app">
+      <div class="content">
         <section data-page="home"></section>
-
         <section data-page="classify"></section>
-
         <section data-page="profile"></section>
       </div>
     </div>
@@ -43,7 +41,7 @@
         return Spine;
       });
 
-      require(['main']);
+      require(['app'], function(app) {window.app = app;});
     </script>
   </body>
 </html>
