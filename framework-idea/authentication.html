@@ -37,7 +37,7 @@
       }
 
       $(window).on('message', function(e) {
-        console.info('Message to auth', e.originalEvent);
+        // console.info('Message to auth', e.originalEvent);
 
         var commands = e.originalEvent.data;
         for (var command in commands) {

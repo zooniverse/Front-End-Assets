@@ -5,7 +5,7 @@ define (require, exports, module) ->
   User = require 'zooniverse/models/User'
   Authentication = require 'zooniverse/controllers/Authentication'
   # TopBar = require 'zooniverse/controllers/TopBar'
-  # Pager = require 'zooniverse/controllers/Pager'
+  Pager = require 'zooniverse/controllers/Pager'
 
   class App extends Spine.Controller
     languages: null
@@ -18,7 +18,7 @@ define (require, exports, module) ->
       super
       @setup()
       # @initTopBar()
-      # @initPagers()
+      @initPagers()
       # @initProjects()
       @initWidgets()
 
