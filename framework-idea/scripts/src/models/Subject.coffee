@@ -1,5 +1,6 @@
-Subject = require 'zooniverse/models/Subject'
+define (require, exports, module) ->
+  Subject = require 'zooniverse/models/Subject'
 
-class Spectrogram extends Subject
+  class Subject extends Subject
 
-module.exports = Spectrogram
+  module.exports = Subject

@@ -34,6 +34,7 @@ define (require, exports, module) ->
       e.preventDefault()
 
     onError: (error) =>
+      return unless error?
       @el.removeClass 'signed-in'
       @el.removeClass 'waiting'
       @el.addClass 'has-error'

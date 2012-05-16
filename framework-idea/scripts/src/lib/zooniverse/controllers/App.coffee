@@ -19,7 +19,7 @@ define (require, exports, module) ->
       @setup()
       # @initTopBar()
       @initPagers()
-      # @initProjects()
+      @initProjects()
       @initWidgets()
 
     setup: =>
@@ -43,8 +43,9 @@ define (require, exports, module) ->
 
     initProjects: =>
       for id, {name, workflows} of @projects
-        for id, {controller, attributes} of workflows
-          'TODO'
+        for id, {subject, controller, attributes} of workflows
+          subject.setWorkflow id
+          workflows[id].instance = new controller attributes
 
     initWidgets: =>
       for id, {controller, attributes} of @widgets

@@ -1,6 +1,9 @@
 define (require, exports, module) ->
   App = require 'zooniverse/controllers/App'
 
+  Classifier = require 'controllers/Classifier'
+  Subject = require 'models/Subject'
+
   LoginForm = require 'zooniverse/controllers/LoginForm'
 
   seaFloor = new App
@@ -11,7 +14,12 @@ define (require, exports, module) ->
     projects:
       PSF1234567890:
         name: 'seafloor'
-        workflows: {}
+        workflows:
+          WSF1234567890:
+            subject: Subject
+            controller: Classifier
+            attributes:
+              el: '.classifier'
 
     widgets:
       loginForm:
