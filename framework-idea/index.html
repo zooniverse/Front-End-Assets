@@ -4,18 +4,39 @@
   <head>
     <meta charset="utf-8" />
     <title>Sea Floor Explorer</title>
+
+    <style>
+      [data-page] {opacity: 0.33;}
+      [data-page].active {opacity: 1;}
+    </style>
   </head>
 
   <body>
     <div class="sea-floor-app">
-      <div class="login-form"></div>
-      <header></header>
+      <header>
+        <h1>Seafloor Explorer</h1>
+        <a href="#/home">Home</a>
+        <a href="#/classify">Classify</a>
+        <a href="#/profile">Profile</a>
+      </header>
+
       <div class="content">
-        <section data-page="home" class="active"></section>
-        <section data-page="classify">
-          <div class="classifier"></div>
+        <section data-page="home" class="active">
+          <h2>Home</h2>
+          <hr />
+
         </section>
-        <section data-page="profile"></section>
+        <section data-page="classify">
+          <h2>Classify</h2>
+          <div class="classifier"></div>
+          <hr />
+        </section>
+
+        <section data-page="profile">
+          <h2>Profile</h2>
+          <div class="login-form"></div>
+          <hr />
+        </section>
       </div>
     </div>
 

@@ -12,6 +12,11 @@ define (require, exports, module) ->
     projects: null
     widgets: null
 
+    host: if location.post isnt 80
+      '//localhost:3000'
+    else
+      'https://ouroboros.zooniverse.org'
+
     authentication: "//#{location.host}/authentication.html"
 
     constructor: ->
@@ -42,10 +47,16 @@ define (require, exports, module) ->
         new Pager el: pageContainer
 
     initProjects: =>
-      for id, {name, workflows} of @projects
-        for id, {subject, controller, attributes} of workflows
-          subject.setWorkflow id
-          workflows[id].instance = new controller attributes
+      for project, {name, workflows} of @projects
+        for workflow, {controller, attributes} of workflows
+          workflows[workflow].instance = new controller attributes
+
+          controller.subject.host = @host
+          controller.subject.project = project
+
+          controller.classification.host = @host
+          controller.classification.project = project
+          controller.classification.workflow = workflow
 
     initWidgets: =>
       for id, {controller, attributes} of @widgets

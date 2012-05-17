@@ -1,6 +1,11 @@
 define (require, exports, module) ->
-  Subject = require 'zooniverse/models/Subject'
+  ZooniverseSubject = require 'zooniverse/models/Subject'
 
-  class Subject extends Subject
+  class Subject extends ZooniverseSubject
+    @configure 'Subject'
+    @queueLength: 5
+
+    @forTutorial: ->
+      @create {}
 
   module.exports = Subject

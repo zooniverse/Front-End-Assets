@@ -16,7 +16,6 @@ define (require, exports, module) ->
         name: 'seafloor'
         workflows:
           WSF1234567890:
-            subject: Subject
             controller: Classifier
             attributes:
               el: '.classifier'

@@ -1,3 +1,7 @@
-Classification = require 'lib/zooniverse/models/Classification'
+define (require, exports, module) ->
+  ZooniverseClassification = require 'zooniverse/models/Classification'
 
-module.exports = class extends Classification
+  class Classification extends ZooniverseClassification
+    @configure 'Classification', 'cool'
+
+  module.exports = Classification
