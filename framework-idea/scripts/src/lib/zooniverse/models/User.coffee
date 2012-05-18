@@ -5,13 +5,13 @@ define (require, exports, module) ->
   Authentication = require 'zooniverse/controllers/Authentication'
 
   class User extends Spine.Model
-    @configure 'User', 'zooniverseId', 'username', 'apiKey', 'finishedTutorial'
+    @configure 'User', 'zooniverseId', 'name', 'apiKey', 'finishedTutorial'
 
     @fromJSON: (raw) ->
       super
         id: raw.id
         zooniverseId: raw.zooniverse_id
-        username: raw.name
+        name: raw.name
         apiKey: raw.api_key
 
     @current: null
@@ -31,4 +31,5 @@ define (require, exports, module) ->
     Authentication.bind 'logout', ->
       User.signOut()
 
+  window.User = User
   module.exports = User

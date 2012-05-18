@@ -9,13 +9,12 @@ define (require, exports, module) ->
   seaFloor = new App
     el: '.sea-floor-app'
 
-    authentication: '//localhost:8000/authentication.html'
+    authentication: '//localhost:8000/login-frame/index.html'
 
     projects:
-      PSF1234567890:
-        name: 'seafloor'
+      '4fa4088d54558f3d6a000001':
         workflows:
-          WSF1234567890:
+          '4fa408de54558f3d6a000002':
             controller: Classifier
             attributes:
               el: '.classifier'

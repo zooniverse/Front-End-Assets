@@ -18,6 +18,7 @@ define (require, exports, module) ->
       '.errors': 'errors'
       '.sign-in input[name="username"]': 'usernameField'
       '.sign-in input[name="password"]': 'passwordField'
+      '.sign-out .current': 'currentDisplay'
 
     constructor: ->
       super
@@ -44,6 +45,7 @@ define (require, exports, module) ->
       @el.toggleClass 'signed-in', User.current?
       @el.removeClass 'waiting', User.current?
       @usernameField.add(@passwordField).val ''
+      @currentDisplay.html User.current?.name || ''
 
     signOut: =>
       Authentication.logOut()

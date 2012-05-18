@@ -12,10 +12,8 @@ define (require, exports, module) ->
     projects: null
     widgets: null
 
-    host: if location.post isnt 80
-      '//localhost:3000'
-    else
-      'https://ouroboros.zooniverse.org'
+    host: 'https://ouroboros.zooniverse.org'
+    @::host = '//localhost:3000' unless location.post is 80
 
     authentication: "//#{location.host}/authentication.html"
 
@@ -33,7 +31,7 @@ define (require, exports, module) ->
         if User.current?
           # TODO: Use a proper base-64 encoder.
           # http://stringencoders.googlecode.com/svn/trunk/javascript/base64.js
-          auth = btoa "#{User.current.username}:#{User.current.apiKey}"
+          auth = btoa "#{User.current.name}:#{User.current.apiKey}"
           xhr.setRequestHeader 'Authorization', "Basic #{auth}"
 
       Authentication.setSrc @authentication
@@ -47,7 +45,7 @@ define (require, exports, module) ->
         new Pager el: pageContainer
 
     initProjects: =>
-      for project, {name, workflows} of @projects
+      for project, {workflows} of @projects
         for workflow, {controller, attributes} of workflows
           workflows[workflow].instance = new controller attributes
 

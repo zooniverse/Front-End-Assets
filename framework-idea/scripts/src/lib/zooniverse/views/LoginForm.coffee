@@ -21,6 +21,6 @@ define (require, exports, module) ->
     <div class="waiting">Signing in...</div>
 
     <div class="sign-out">
-      <button>Sign out</button>
+      <p>Currently logged in as <strong class="current"></strong>. <button>Sign out</button></p>
     </div>
   """
