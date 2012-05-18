@@ -16,19 +16,19 @@ define (require, exports, module) ->
 
     @current: null
 
-    @signIn: (user) ->
+    @signIn: (user) =>
       return if user is @current
       @current = user
       @trigger 'sign-in', @current
 
-    @signOut: ->
+    @signOut: =>
       @current?.destroy()
       @signIn null
 
-    Authentication.bind 'login', (data) ->
-      User.signIn User.fromJSON(data)
+    Authentication.bind 'login', (data) =>
+      @signIn @fromJSON data
 
-    Authentication.bind 'logout', ->
-      User.signOut()
+    Authentication.bind 'logout', =>
+      @signOut()
 
   module.exports = User
