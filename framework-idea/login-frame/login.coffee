@@ -16,7 +16,8 @@ issueCommand = (command, params = {}, options = {}) ->
     return if options.ignoreFailure
     postBack command, success: false, message: 'Couldn\'t connect to the server'
 
-$(window).on 'message', (e) ->
-  issueCommand command, params for command, params in e.originalEvent.data
+$(window).on 'message', ({originalEvent: e}) ->
+  # console.log 'Auth got message', e
+  issueCommand command, params for command, params of e.data
 
 issueCommand 'current_user', {}, postAs: 'login', ignoreFailure: true

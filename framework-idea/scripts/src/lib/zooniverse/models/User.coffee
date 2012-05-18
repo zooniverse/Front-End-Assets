@@ -31,5 +31,4 @@ define (require, exports, module) ->
     Authentication.bind 'logout', ->
       User.signOut()
 
-  window.User = User
   module.exports = User
