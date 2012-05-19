@@ -1,5 +1,5 @@
 define (require, exports, module) ->
-  """
+  '''
     <div class="errors"></div>
 
     <div class="sign-in">
@@ -23,4 +23,4 @@ define (require, exports, module) ->
     <div class="sign-out">
       <p>Currently logged in as <strong class="current"></strong>. <button>Sign out</button></p>
     </div>
-  """
+  '''

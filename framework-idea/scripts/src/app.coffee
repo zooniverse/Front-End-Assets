@@ -4,7 +4,7 @@ define (require, exports, module) ->
   Classifier = require 'controllers/Classifier'
   Subject = require 'models/Subject'
 
-  LoginForm = require 'zooniverse/controllers/LoginForm'
+  Profile = require 'zooniverse/controllers/Profile'
 
   seaFloor = new App
     el: '.sea-floor-app'
@@ -21,8 +21,12 @@ define (require, exports, module) ->
 
     widgets:
       loginForm:
-        controller: LoginForm
+        controller: Profile
         attributes:
-          el: '.login-form'
+          el: '.profile'
+
+  window.User = require 'zooniverse/models/User'
+  window.Subject = require 'models/Subject'
+  window.Classification = require 'models/Classification'
 
   module.exports = seaFloor

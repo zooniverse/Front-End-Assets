@@ -4,8 +4,15 @@ define (require, exports, module) ->
 
   Authentication = require 'zooniverse/controllers/Authentication'
 
+  Favorite = require 'zooniverse/models/Favorite'
+  Recent = require 'zooniverse/models/Recent'
+  Group = require 'zooniverse/models/Group'
+
   class User extends Spine.Model
     @configure 'User', 'zooniverseId', 'name', 'apiKey', 'finishedTutorial'
+    @hasMany 'favorites', Favorite
+    @hasMany 'recents', Recent
+    @hasMany 'groups', Group
 
     @fromJSON: (raw) ->
       super
