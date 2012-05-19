@@ -11,12 +11,12 @@ define (require, exports, module) ->
 
     @external = null # The iframe's window
 
-    @post = (message) =>
-      @external.postMessage message, "#{location.protocol}//#{location.host}"
-
     @setSrc: (url) =>
       @iframe.attr 'src', url
       @external = @iframe.get(0).contentWindow # Do we need to wait for load?
+
+    @post = (message) =>
+      @external.postMessage message, "#{location.protocol}//#{location.host}"
 
     @logIn: (username, password) =>
       @post login: {username, password}
