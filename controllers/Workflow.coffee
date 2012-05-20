@@ -2,6 +2,7 @@ define (require, exports, module) ->
   Spine = require 'Spine'
 
   User = require 'zooniverse/models/User'
+  {delay} = require 'zooniverse/util'
 
   class Workflow extends Spine.Controller
     @subject: null
@@ -16,10 +17,13 @@ define (require, exports, module) ->
 
       @bindToSubject()
 
-      if User.current?.finishedTutorial
-        @nextSubject()
-      else
-        @startTutorial()
+      # Delay here so that extending classes can call "super" at
+      # the top and not worry about a Subject loading immediately.
+      delay =>
+        if User.current?.finishedTutorial
+          @nextSubject()
+        else
+          @startTutorial()
 
     bindToSubject: =>
       @constructor.subject.bind 'fetching', =>
@@ -56,5 +60,8 @@ define (require, exports, module) ->
 
     render: =>
       # Override this.
+
+    goToTalk: =>
+      Subject.current.goToTalk()
 
   module.exports = Workflow
