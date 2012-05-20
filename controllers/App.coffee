@@ -15,7 +15,7 @@ define (require, exports, module) ->
     host: 'https://ouroboros.zooniverse.org'
     @::host = '//localhost:3000' unless location.post is 80
 
-    authentication: "//#{location.host}/authentication.html"
+    authentication: "//#{location.host}/login-frame/index.html"
 
     constructor: ->
       super
