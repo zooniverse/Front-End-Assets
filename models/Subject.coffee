@@ -60,4 +60,7 @@ define (require, exports, module) ->
       @current = newCurrent
       @trigger 'change-current', newCurrent
 
+    goToTalk: =>
+      alert "TODO: Go to talk (#{@zooniverseId})"
+
   module.exports = Subject
