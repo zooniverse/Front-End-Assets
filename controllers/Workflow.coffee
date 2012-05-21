@@ -62,6 +62,6 @@ define (require, exports, module) ->
       # Override this.
 
     goToTalk: =>
-      Subject.current.goToTalk()
+      @constructor.subject.current.goToTalk()
 
   module.exports = Workflow
