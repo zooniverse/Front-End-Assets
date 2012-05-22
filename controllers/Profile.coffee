@@ -2,8 +2,8 @@ define (require, exports, module) ->
   Spine = require 'Spine'
 
   User = require 'zooniverse/models/User'
-  TEMPLATE = require 'zooniverse/views/Profile'
   LoginForm = require 'zooniverse/controllers/LoginForm'
+  TEMPLATE = require 'zooniverse/views/Profile'
 
   class Profile extends Spine.Controller
     className: 'zooniverse-profile'
@@ -34,12 +34,12 @@ define (require, exports, module) ->
       @el.toggleClass 'signed-in', User.current?
 
       favorites = User.current?.favorites().all() || []
-      @el.toggleClass 'has-favorites', favorites.length > 0
+      @el.toggleClass 'has-items', favorites.length > 0
 
       recents = User.current?.recents().all() || []
-      @el.toggleClass 'has-recents', recents.length > 0
+      @el.toggleClass 'has-items', recents.length > 0
 
       groups = User.current?.groups().all() || []
-      @el.toggleClass 'has-groups', groups.length > 0
+      @el.toggleClass 'has-items', groups.length > 0
 
   module.exports = Profile
