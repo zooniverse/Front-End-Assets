@@ -54,8 +54,10 @@ define (require, exports, module) ->
     startTutorial: =>
       @constructor.subject.setCurrent @constructor.subject.forTutorial()
 
-    nextSubject: =>
+    saveClassification: =>
       @classification.persist();
+
+    nextSubject: =>
       fetching = @constructor.subject.fetch()
       fetching.done (subjects) =>
         @constructor.subject.setCurrent subjects[0]
@@ -65,5 +67,6 @@ define (require, exports, module) ->
 
     goToTalk: =>
       @constructor.subject.current.goToTalk()
+      @nextSubject()
 
   module.exports = Workflow
