@@ -11,11 +11,11 @@ define (require, exports, module) ->
     @current: null
     @queueLength: 3
 
-    @fromJSON: (raw) ->
+    @fromJSON: (raw...) ->
       # Override this.
       # Do whatever transforms you need to do
       # on the raw data, then call super on it.
-      super raw
+      super raw...
 
     @forTutorial: ->
       # Override this.
@@ -39,15 +39,17 @@ define (require, exports, module) ->
       handle.resolve queue[0...@queueLength] if queue.length >= @queueLength
 
       # If the queue is running low, get more from the server.
-      if queue.length <= @queueLength
+      if queue.length < @queueLength
         groupSegment = ''
-        groupSegment = "#{group}/" if group?
+        groupSegment = "groups/#{group}/" if group?
 
-        url = "#{@host}/projects/#{@project}/groups/#{groupSegment}subjects?limit=#{@queueLength - queue.length}"
+        url = "#{@host}/projects/#{@project}/#{groupSegment}subjects?limit=#{@queueLength - queue.length}"
         request = $.getJSON url
 
         request.done (response) =>
-          handle.resolve (@fromJSON item for item in response)
+          newSubjects = (@fromJSON item for item in response)
+          subject.save() for subject in newSubjects
+          handle.resolve newSubjects
 
         request.fail (args...) ->
           handle.reject args...

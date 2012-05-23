@@ -25,6 +25,8 @@ define (require, exports, module) ->
         else
           @startTutorial()
 
+        Subject.fetch()
+
     bindToSubject: =>
       @constructor.subject.bind 'fetching', =>
         @el.removeClass 'error'
