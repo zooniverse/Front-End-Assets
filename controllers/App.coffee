@@ -13,9 +13,11 @@ define (require, exports, module) ->
     widgets: null
 
     host: 'https://ouroboros.zooniverse.org'
-    @::host = '//localhost:3000' unless location.post is 80
-
     authentication: "//#{location.host}/login-frame/index.html"
+
+    unless location.port is 80
+      @::host = "//#{location.hostname}:3000"
+      @::authentication = "//#{location.host}/login-frame/index.html"
 
     constructor: ->
       super
