@@ -22,7 +22,7 @@ define (require, exports, module) ->
 
       @name = @el.attr PAGE_ATTR
 
-      hash = '#' + @pager.path.replace ':page', @name
+      hash = '#!' + @pager.path.replace ':page', @name
       @links = $("a[href=\"#{hash}\"]")
 
       # console.log "New Page at #{hash} with #{@links.length} links"
