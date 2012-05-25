@@ -3,9 +3,9 @@ define (require, exports, module) ->
 
   # Redirect if we end up here from an escaped_fragment URL.
   # Breaks the back button!
-  currentLocation = location.toString()
-  if currentLocation.indexOf '?_escaped_fragment_='
-    location.href = currentLocation.replace '?_escaped_fragment_=', '#!'
+  # currentLocation = location.toString()
+  # if currentLocation.indexOf '?_escaped_fragment_='
+  #   location.href = currentLocation.replace '?_escaped_fragment_=', '#!'
 
   checkRoutes = ->
     hash = location.hash.slice 2 # Slice off "#!"

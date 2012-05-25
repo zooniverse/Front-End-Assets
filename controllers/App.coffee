@@ -3,6 +3,9 @@ define (require, exports, module) ->
   $ = require 'jQuery'
 
   User = require 'zooniverse/models/User'
+  Project = require 'zooniverse/models/Project'
+  Favorite = require 'zooniverse/models/Favorite'
+  Recent = require 'zooniverse/models/Recent'
   Authentication = require 'zooniverse/controllers/Authentication'
   # TopBar = require 'zooniverse/controllers/TopBar'
   Pager = require 'zooniverse/controllers/Pager'
@@ -12,11 +15,8 @@ define (require, exports, module) ->
     projects: null
     widgets: null
 
-    host: 'https://ouroboros.zooniverse.org'
-    authentication: "//#{location.host}/login-frame/index.html"
-
+    authentication: "https://some.s3.bucket/path/to/auth.html"
     unless location.port is 80
-      @::host = "//#{location.hostname}:3000"
       @::authentication = "//#{location.host}/login-frame/index.html"
 
     constructor: ->
@@ -47,14 +47,17 @@ define (require, exports, module) ->
         new Pager el: pageContainer
 
     initProjects: =>
-      for project, {workflows} of @projects
-        for workflow, {controller, attributes} of workflows
-          workflows[workflow].instance = new controller attributes
+      for projectId, {attributes, workflows} of @projects
+        project = Project.create attributes
+        project.updateAttributes id: projectId
 
-          controller.subject.host = @host
+        Project.current = project # TODO: Multiple projects?
+
+        for workflowId, {controller, attributes} of workflows
+          workflow = new controller attributes
+          workflow.id = workflowId
+
           controller.subject.project = project
-
-          controller.classification.host = @host
           controller.classification.project = project
           controller.classification.workflow = workflow
 

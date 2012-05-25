@@ -2,11 +2,10 @@ define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
 
+  Project = require 'zooniverse/models/Project'
+
   class Subject extends Spine.Model
     @configure 'Subject'
-
-    @host: 'HOST'
-    @project: 'PROJECT_ID'
 
     @current: null
     @queueLength: 3
@@ -43,7 +42,7 @@ define (require, exports, module) ->
         groupSegment = ''
         groupSegment = "groups/#{group}/" if group?
 
-        url = "#{@host}/projects/#{@project}/#{groupSegment}subjects?limit=#{@queueLength - queue.length}"
+        url = "#{Project.current.host}/projects/#{Project.current.id}/#{groupSegment}subjects?limit=#{@queueLength - queue.length}"
         request = $.getJSON url
 
         request.done (response) =>
