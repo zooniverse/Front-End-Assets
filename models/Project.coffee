@@ -1,8 +1,13 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
 
+  Workflow = require 'zooniverse/models/Workflow'
+
   class Project extends Spine.Model
     @configure 'Project', 'id', 'host', 'name', 'slug', 'description', 'facebookAppId'
+    @hasMany 'workflows', Workflow
+
+    current: null
 
     constructor: ->
       super
@@ -16,6 +21,6 @@ define (require, exports, module) ->
       @description ?= 'Real Science Online'
       @facebookAppId ?= '310507282327045'
 
-    current: null
+  Workflow.belongsTo 'project', Project
 
   module.exports = Project

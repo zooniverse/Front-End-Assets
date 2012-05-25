@@ -3,10 +3,9 @@ define (require, exports, module) ->
   $ = require 'jQuery'
 
   User = require 'zooniverse/models/User'
-  Project = require 'zooniverse/models/Project'
-  Favorite = require 'zooniverse/models/Favorite'
-  Recent = require 'zooniverse/models/Recent'
   Authentication = require 'zooniverse/controllers/Authentication'
+  Project = require 'zooniverse/models/Project'
+
   # TopBar = require 'zooniverse/controllers/TopBar'
   Pager = require 'zooniverse/controllers/Pager'
 
@@ -47,19 +46,23 @@ define (require, exports, module) ->
         new Pager el: pageContainer
 
     initProjects: =>
-      for projectId, {attributes, workflows} of @projects
+      for projectID, {attributes, workflows} of @projects
         project = Project.create attributes
-        project.updateAttributes id: projectId
+        project.updateAttributes id: projectID
 
-        Project.current = project # TODO: Multiple projects?
+        Project.current = project
 
-        for workflowId, {controller, attributes} of workflows
-          workflow = new controller attributes
-          workflow.id = workflowId
+        for workflowID, {subject, classification, controller, attributes} of workflows
+          workflow = project.workflows().create attributes
+          workflow.updateAttributes id: workflowID
 
-          controller.subject.project = project
-          controller.classification.project = project
-          controller.classification.workflow = workflow
+          subject.workflow = workflow
+          controller.subject = subject
+
+          classification.workflow = workflow
+          controller.classification = classification
+
+          controllerInstance = new controller attributes
 
     initWidgets: =>
       for id, {controller, attributes} of @widgets

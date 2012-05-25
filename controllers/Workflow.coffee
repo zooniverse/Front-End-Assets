@@ -7,6 +7,7 @@ define (require, exports, module) ->
   class Workflow extends Spine.Controller
     @subject: null
     @classification: null
+
     @template: ''
 
     classification: null

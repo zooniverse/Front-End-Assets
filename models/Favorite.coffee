@@ -6,12 +6,9 @@ define (require, exports, module) ->
   User = require 'zooniverse/models/User'
 
   class Favorite extends Spine.Model
+    subjects: []
+    createdAt: new Date
     @configure 'Favorite', 'subjects', 'createdAt'
-
-    constructor: ->
-      super
-
-      @createdAt ?= new Date
 
     fromJSON: (raw) ->
       super
@@ -28,13 +25,23 @@ define (require, exports, module) ->
       handle = new $.Deferred
 
       request.done (response) =>
-        @trigger 'fetch'
         console.log response
-        # handle.resolve
+        newFavorites = (@fromJSON item for item in response)
+        favorite.save() for favorite in newFavorites
+        handle.resolve newFavorites
+        @trigger 'fetch'
+        User.current.trigger 'change'
 
-      request.fail @trigger 'error'
+      request.fail (args...) ->
+        handle.reject args...
+        @trigger 'error'
 
       handle.promise()
+
+    @reload: =>
+      @destroyAll()
+      return unless User.current?
+      @fetch()
 
     persist: =>
       @trigger 'persisting'
@@ -42,10 +49,11 @@ define (require, exports, module) ->
       post = $.post "#{Project.current.host}/projects/#{Project.current.id}/favorites",
         favorite:
           subject_ids: (subject.id for subject in @subjects)
+          subjects: (subject.toJSON() for subject in @subjects)
 
       post.done =>
         @trigger 'persist'
-        @fetch()
+        @constructor.reload()
 
       post.fail =>
         @trigger 'error'
@@ -69,5 +77,7 @@ define (require, exports, module) ->
       text = "I've classified something at #{Project.current.name}!"
 
       encodeURI "https://twitter.com/share?url=#{@href()}&text=#{text}&hashtags=#{Project.current.slug}"
+
+  User.bind 'sign-in', Favorite.reload
 
   module.exports = Favorite
