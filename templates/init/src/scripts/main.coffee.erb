@@ -1,0 +1,26 @@
+define (require, exports, module) ->
+  require 'amdShims'
+
+  App = require 'zooniverse/controllers/App'
+
+  <%= project_js %> = new App
+    projects:
+      'PROJECT_ID': # TODO
+        attributes:
+          name: '<%= project %>'
+          slug: '<%= project_dash %>'
+          description: 'A Zooniverse project'
+
+        workflows:
+          'WORKFLOW_ID': # TODO
+            controller: null
+            attributes:
+              el: null
+
+    widgets:
+      profile:
+        controller: null
+        attributes:
+          el: null
+
+  module.exports = <%= project_js %>

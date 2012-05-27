@@ -1,0 +1,7 @@
+define (require, exports, module) ->
+  Spine = require 'Spine'
+
+  class <%= name %> extends Spine.Controller
+    @configure '<%= name %>'
+
+  module.exports = <%= name %>
