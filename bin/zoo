@@ -85,7 +85,14 @@ when :generate, :g
   end
 
 when :dev
-  log '', 'TODO: Run a server in the current directory'
+  port = ARGV.shift || 8080
+
+  log '-=>', "Serving at http://localhost:#{port}/"
+
+  Process.spawn "python -m SimpleHTTPServer #{port}"
+  Process.spawn 'coffee --compile --output . --watch ./src'
+  Process.spawn 'sass --watch ./src:. --no-cache'
+  Process.wait
 
 when :build
   log '', 'TODO: Package everything up into a directory Jekyll-style'
