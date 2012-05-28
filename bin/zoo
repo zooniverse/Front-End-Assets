@@ -42,7 +42,9 @@ def run_templates (type, binding)
       log '', 'File already exists!'
     else
       FileUtils.mkdir_p File.dirname local_file
-      File.new(local_file, 'w').write(template.result binding)
+      new_file = File.new local_file, 'w'
+      new_file.write template.result binding
+      new_file.close
     end
   end
 
@@ -69,9 +71,11 @@ when :init
   log '-=>', "Initializing a new zoo: #{project}"
   run_templates command, binding
 
-  puts
-  log '-=>', 'Now run `bundle install` and `grabass assets.json`'
-  # TODO: Do that automatically.
+  log '-=>', 'Cloning front-end Zooniverse library into ./src/scripts/lib/zooniverse'
+  system 'git clone git@github.com:zooniverse/Front-End-Assets.git -b framework ./src/scripts/lib/zooniverse'
+
+  log '-=>', 'Installing third-party assets'
+  system 'grabass ./assets.json'
 
 when :generate, :g
   generator = ARGV.shift
