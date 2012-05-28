@@ -29,7 +29,7 @@ def run_templates (type, binding)
     local_file = local_file.sub '__NAME__', eval('name', binding).to_s
     local_file = local_file.sub TemplateExt, ''
 
-    log '-=>', "Rendering template to #{local_file}"
+    log '+', local_file
 
     if File.exists? local_file
       log '', 'File already exists!'
@@ -45,7 +45,7 @@ def run_templates (type, binding)
   directories.each do |dir|
     local_dir = dir.sub File.join(TemplateDir, type), '.'
     unless File.directory? local_dir
-      log '-=>', "Making directory #{local_dir}"
+      log '+', "#{local_dir}/"
       FileUtils.mkdir_p local_dir
     end
   end
@@ -67,9 +67,7 @@ when :init
 
 when :generate, :g
   generator = ARGV.shift
-  case generator.to_sym
-  when :model, :controller
-    name = ARGV.shift
+  ARGV.each do |name|
     log '-=>', "Generating a new #{generator}: #{name}"
     run_templates generator.to_s, binding
   end
