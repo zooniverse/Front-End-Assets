@@ -6,11 +6,15 @@ require 'fileutils'
 TemplateDir = File.join File.dirname(__FILE__), '..', 'templates'
 TemplateExt = '.erb'
 
-def dasherize (str)
+def to_dashed (str)
   str.downcase.gsub /\s+/, '-'
 end
 
-def javascriptize (str)
+def to_underscored (str)
+  str.downcase.gsub /\s+/, '_'
+end
+
+def to_camel_cased (str)
   str.downcase.gsub(/\s+\w/) {|x| x.upcase.sub /\s+/, ''}
 end
 
@@ -26,7 +30,10 @@ def run_templates (type, binding)
     template = ERB.new File.read file
 
     local_file = file.sub File.join(TemplateDir, type), '.'
-    local_file = local_file.sub '__NAME__', eval('name', binding).to_s
+    begin
+      local_file = local_file.sub '__NAME__', eval('name', binding).to_s
+    rescue
+    end
     local_file = local_file.sub TemplateExt, ''
 
     log '+', local_file
@@ -55,8 +62,9 @@ command = ARGV.shift
 case command.to_sym
 when :init
   project = ARGV.join ' '
-  project_js = javascriptize project
-  project_dash = dasherize project
+  project_js = to_camel_cased project
+  project_dash = to_dashed project
+  project_under = to_underscored project
 
   log '-=>', "Initializing a new zoo: #{project}"
   run_templates command, binding
