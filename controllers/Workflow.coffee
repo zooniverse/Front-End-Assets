@@ -26,7 +26,7 @@ define (require, exports, module) ->
         else
           @startTutorial()
 
-        Subject.fetch()
+        @constructor.subject.fetch()
 
     bindToSubject: =>
       @constructor.subject.bind 'fetching', =>
