@@ -6,6 +6,10 @@ require 'fileutils'
 TemplateDir = File.join File.dirname(__FILE__), '..', 'templates'
 TemplateExt = '.erb'
 
+Options = {
+  :templates_only => ARGV.delete('--templates') || ARGV.delete('-t') # Mainly for development of this tool
+}
+
 def to_dashed (str)
   str.downcase.gsub /\s+/, '-'
 end
@@ -76,11 +80,15 @@ when :init
   log '-=>', "Initializing a new zoo: #{project}"
   run_templates command, binding
 
-  log '-=>', 'Cloning front-end Zooniverse library into ./src/scripts/lib/zooniverse'
-  system 'git clone git@github.com:zooniverse/Front-End-Assets.git -b framework ./src/scripts/lib/zooniverse'
+  unless Options[:templates_only]
+    log '-=>', 'Cloning front-end Zooniverse library into ./src/scripts/lib/zooniverse'
+    system 'git clone git@github.com:zooniverse/Front-End-Assets.git -b framework ./src/scripts/lib/zooniverse'
+  end
 
-  log '-=>', 'Installing third-party assets'
-  system 'grabass ./assets.json'
+  unless Options[:templates_only]
+    log '-=>', 'Installing third-party assets'
+    system 'grabass ./assets.json'
+  end
 
 when :generate, :g
   generator = ARGV.shift
