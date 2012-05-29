@@ -30,11 +30,14 @@ def run_templates (type, binding)
     template = ERB.new File.read file
 
     local_file = file.sub File.join(TemplateDir, type), '.'
-    begin
-      local_file = local_file.sub '__NAME__', eval('name', binding).to_s
-    rescue
+
+    local_file.sub! /__([A-Z,_]+)__/ do |var|
+      var.gsub! /^__|__$/, ''
+      var.downcase!
+      eval(var, binding).to_s
     end
-    local_file = local_file.sub TemplateExt, ''
+
+    local_file.sub! TemplateExt, ''
 
     log '+', local_file
 
@@ -64,6 +67,8 @@ command = ARGV.shift
 case command.to_sym
 when :init
   project = ARGV.join ' '
+  project = 'New Zoo' if project.empty?
+
   project_js = to_camel_cased project
   project_dash = to_dashed project
   project_under = to_underscored project
