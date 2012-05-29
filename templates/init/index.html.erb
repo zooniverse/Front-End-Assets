@@ -9,6 +9,40 @@
   </head>
 
   <body>
+    <div class="<%= project_dash %> app">
+      <header>
+        <h1><%= project %></h1>
+        <nav>
+          <ul>
+            <li><a href="#!/home">Home</a></li>
+            <li><a href="#!/about">About</a></li>
+            <li><a href="#!/classify">Classify</a></li>
+            <li><a href="#!/profile">Profile</a></li>
+            <li><a href="http://talk.TODO.org/" target="_blank">Talk</a></li>
+            <li><a href="http://blog.TODO.org/" target="_blank">Blog</a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <div class="main">
+        <section data-page="home">
+          <p>Home</p>
+        </section>
+
+        <section data-page="about">
+          <p>About</p>
+        </section>
+
+        <section data-page="classify">
+          <p>Classify</p>
+        </section>
+
+        <section data-page="profile">
+          <p>Profile</p>
+        </section>
+      </div>
+    </div>
+
     <script src="scripts/lib/require.js"></script>
     <script>
       require.config({});
