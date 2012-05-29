@@ -104,7 +104,7 @@ when :dev
 
   Process.spawn "python -m SimpleHTTPServer #{port}"
   Process.spawn 'coffee --compile --output . --watch ./src'
-  Process.spawn 'sass --watch ./src:. --no-cache'
+  Process.spawn 'sass --watch ./src:. --no-cache --debug-info'
   Process.wait
 
 when :build
