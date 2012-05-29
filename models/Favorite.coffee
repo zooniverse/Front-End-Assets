@@ -25,7 +25,6 @@ define (require, exports, module) ->
       handle = new $.Deferred
 
       request.done (response) =>
-        console.log response
         newFavorites = (@fromJSON item for item in response)
         favorite.save() for favorite in newFavorites
         handle.resolve newFavorites
