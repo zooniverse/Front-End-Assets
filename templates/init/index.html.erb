@@ -57,6 +57,8 @@
         paths: {
           'jQuery': 'lib/jquery',
           'Spine': 'lib/spine/relation'
+          'Leaflet': 'lib/leaflet',
+
           'zooniverse': 'lib/zooniverse',
         },
 
@@ -70,8 +72,14 @@
           'Spine': {
             deps: ['jQuery', 'lib/spine/spine'],
             exports: 'Spine'
-          },
+          }
 
+          'Leaflet': {
+            exports: function() {
+              // TODO: Load CSS.
+              return L;
+            }
+          }
         }
       });
 
