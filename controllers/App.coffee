@@ -28,8 +28,8 @@ define (require, exports, module) ->
 
     setup: =>
       # Send cross-origin request headers when logged in.
-      $.ajaxSetup beforeSend: (xhr) ->
-        if User.current?
+      $.ajaxSetup beforeSend: (xhr, settings) ->
+        if User.current? and !!~settings.url.indexOf Project.current.host
           # TODO: Use a proper base-64 encoder.
           # http://stringencoders.googlecode.com/svn/trunk/javascript/base64.js
           auth = btoa "#{User.current.name}:#{User.current.apiKey}"
