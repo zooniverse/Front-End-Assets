@@ -45,7 +45,33 @@
 
     <script src="scripts/lib/require.js"></script>
     <script>
-      require.config({});
+      requirejs.config({
+        baseUrl: './scripts',
+
+        paths: {
+          'jQuery': 'lib/jquery',
+          'Spine': 'lib/spine/spine'
+          'zooniverse': 'lib/zooniverse',
+        },
+
+        shim: {
+          'jQuery': {
+            exports: function() {
+              return jQuery.noConflict();
+            }
+          },
+
+          'Spine': {
+            deps: ['jQuery'],
+            exports: 'Spine'
+          },
+
+          'lib/spine/relation': ['Spine']
+        },
+
+        deps: ['jQuery', 'Spine', 'lib/spine/relation']
+      });
+
       require(['<%= project_js%>']);
     </script>
   </body>

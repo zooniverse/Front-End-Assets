@@ -17,10 +17,6 @@ Files in these directories will be converted with CoffeeScript of SASS, respecti
 
 Scripts are [AMD modules](http://requirejs.org/docs/api.html#define). I like to format them [CommonJS-style](http://requirejs.org/docs/commonjs.html).
 
-### /src/scripts/amdShims.coffee
-
-Define AMD modules for third-party JavaScript libraries here. Eventually (with RequireJS 2.0) this shouldn't be necessary.
-
 ### /src/scripts/lib/zooniverse
 
 This is a **separate repo** shared across all project front-ends. Don't make any project-specific changes here. If you do need to make changes, make sure you push the back to the origin.
