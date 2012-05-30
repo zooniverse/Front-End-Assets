@@ -52,7 +52,7 @@
 
         paths: {
           'jQuery': 'lib/jquery',
-          'Spine': 'lib/spine/spine'
+          'Spine': 'lib/spine/relation'
           'zooniverse': 'lib/zooniverse',
         },
 
@@ -64,14 +64,11 @@
           },
 
           'Spine': {
-            deps: ['jQuery'],
+            deps: ['jQuery', 'lib/spine/spine'],
             exports: 'Spine'
           },
 
-          'lib/spine/relation': ['Spine']
-        },
-
-        deps: ['jQuery', 'Spine', 'lib/spine/relation']
+        }
       });
 
       require(['<%= project_js%>']);
