@@ -52,7 +52,12 @@ define (require, exports, module) ->
       @map.setZoom @zoom
 
     addLayer: (url) =>
-      @map.addLayer new L.TileLayer url
+      layer = new Leaflet.TileLayer url
+      @map.addLayer layer
+      layer
+
+    removeLayer: (layer) =>
+      @map.removeLayer layer
 
     resized: =>
       @map.invalidateSize()
