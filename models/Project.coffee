@@ -4,7 +4,7 @@ define (require, exports, module) ->
   Workflow = require 'zooniverse/models/Workflow'
 
   class Project extends Spine.Model
-    @configure 'Project', 'id', 'host', 'name', 'slug', 'description', 'facebookAppId'
+    @configure 'Project', 'id', 'host', 'name', 'slug', 'description', 'facebookAppId', 'cartoUser', 'cartoApiKey', 'cartoTable'
     @hasMany 'workflows', Workflow
 
     current: null
