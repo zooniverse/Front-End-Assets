@@ -10,6 +10,10 @@ Options = {
   :templates_only => ARGV.delete('--templates') || ARGV.delete('-t') # Mainly for development of this tool
 }
 
+def to_run_together (str)
+  str.downcase.gsub /\s+/, ''
+end
+
 def to_dashed (str)
   str.downcase.gsub /\s+/, '-'
 end
@@ -74,6 +78,7 @@ when :init
   project = 'New Zoo' if project.empty?
 
   project_js = to_camel_cased project
+  project_url = to_run_together project
   project_dash = to_dashed project
   project_under = to_underscored project
 
