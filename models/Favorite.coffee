@@ -10,7 +10,8 @@ define (require, exports, module) ->
     createdAt: new Date
     @configure 'Favorite', 'subjects', 'createdAt'
 
-    fromJSON: (raw) ->
+    @fromJSON: (raw) ->
+      console.log 'Favorite', raw
       super
         subjects: raw.subjects
         createdAt: raw.created_at
@@ -57,25 +58,24 @@ define (require, exports, module) ->
       post.fail =>
         @trigger 'error'
 
-    href: =>
-      "#{location.protocol}//#{location.host}/%23!/review/#{@zooniverseId}"
+    talkHref: =>
+      "#{Project.current.talkHost}/objects/#{@subjects[0].zooniverse_id}"
 
     facebookHref: =>
-      encodeURI ("""
+      """
         https://www.facebook.com/dialog/feed?
         app_id=#{Project.current.facebookAppId}&
-        link=#{@href()}&
+        link=#{@talkHref()}&
         picture=#{@subjects[0].location || @subjects[0].image || @subjects[0].location.image}&
         name=#{Project.current.name}&
         caption=A Zooniverse citizen science project&
         description=#{Project.current.description}&
         redirect_uri=#{location.href}
-      """).replace '\n', ''
+      """.replace '\n', ''
 
     twitterHref: =>
-      text = "I've classified something at #{Project.current.name}!"
-
-      encodeURI "https://twitter.com/share?url=#{@href()}&text=#{text}&hashtags=#{Project.current.slug}"
+      text = "I've classified something on #{Project.current.name}!"
+      "https://twitter.com/share?text=#{text}&url=#{@talkHref()}&hashtags=#{Project.current.slug}"
 
   User.bind 'sign-in', Favorite.reload
 
