@@ -33,12 +33,16 @@ define (require, exports, module) ->
       elAndLinks.removeClass AFTER_CLASS
       elAndLinks.addClass ACTIVE_CLASS
 
+      @el.trigger 'pager-activate'
+
     deactivate: (inactiveClass) =>
       elAndLinks = @el.add @links
       elAndLinks.removeClass BEFORE_CLASS
       elAndLinks.removeClass AFTER_CLASS
       elAndLinks.removeClass ACTIVE_CLASS
       elAndLinks.addClass inactiveClass
+
+      @el.trigger 'pager-deactivate'
 
   class Pager extends Spine.Controller
     pages: null

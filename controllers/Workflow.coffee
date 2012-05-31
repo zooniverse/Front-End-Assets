@@ -1,5 +1,8 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
+  $ = require 'jQuery'
+
+  Tutorial = require 'zooniverse/controllers/Tutorial'
 
   User = require 'zooniverse/models/User'
   {delay} = require 'zooniverse/util'
@@ -10,6 +13,9 @@ define (require, exports, module) ->
 
     @template: ''
 
+    tutorialSteps: null
+    tutorial: null
+
     classification: null
 
     constructor: ->
@@ -17,6 +23,19 @@ define (require, exports, module) ->
       @html @constructor.template if @constructor.template
 
       @bindToSubject()
+
+      @tutorial = new Tutorial steps: @tutorialSteps if @tutorialSteps
+
+      isInactive = (i, element) ->
+        element = $(element)
+        not element.hasClass 'active'
+
+      $(document).on 'pager-activate', =>
+        delay (e) =>
+          if @el.parents('[data-page]').filter(isInactive).length is 0
+            @tutorial.el.show()
+          else
+            @tutorial.el.hide()
 
       # Delay here so that extending classes can call "super" at
       # the top and not worry about a Subject loading immediately.
@@ -54,6 +73,7 @@ define (require, exports, module) ->
 
     startTutorial: =>
       @constructor.subject.setCurrent @constructor.subject.forTutorial()
+      delay 1000, @tutorial.start
 
     saveClassification: =>
       @classification.persist();
