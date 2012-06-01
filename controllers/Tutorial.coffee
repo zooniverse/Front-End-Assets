@@ -68,6 +68,7 @@ define (require, exports, module) ->
 
     start: =>
       @el.css display: ''
+      @steps[@current]?.leave()
       @current = -1
       @next()
 

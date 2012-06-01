@@ -60,7 +60,8 @@ define (require, exports, module) ->
       @classification.bind 'change', @render
       @classification.trigger 'change'
 
-    startTutorial: =>
+    startTutorial: (e) =>
+      e?.preventDefault?()
       @constructor.subject.setCurrent @constructor.subject.forTutorial()
       delay 1000, @tutorial.start
 
