@@ -23,7 +23,7 @@ define (require, exports, module) ->
     arrow: null
     blockers: null
 
-    current = -1
+    current: -1
 
     constructor: ({@target, @steps}) ->
       @steps ?= []
@@ -64,18 +64,18 @@ define (require, exports, module) ->
     probablyVisible: =>
       parentPages = @target.parents '[data-page]'
       inactiveParentPages = (el for el in parentPages when not $(el).hasClass 'active')
-      inactiveParentPages.length is 0 and 0 <= @current < @steps.length
+
+      inactiveParentPages.length is 0 and @current < @steps.length
 
     start: =>
       @el.css display: ''
-      @steps[@current]?.leave()
       @current = -1
       @next()
 
     next: (e) =>
       e?.stopPropagation()
 
-      if !!~@current then @steps[@current].leave()
+      @steps[@current]?.leave()
 
       @current += 1
       if @steps[@current]
@@ -85,6 +85,7 @@ define (require, exports, module) ->
 
     end: =>
       @steps[@current]?.leave()
+      @current = @steps.length
       @el.css display: 'none'
 
 
