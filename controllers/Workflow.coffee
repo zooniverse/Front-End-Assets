@@ -24,18 +24,7 @@ define (require, exports, module) ->
 
       @bindToSubject()
 
-      @tutorial = new Tutorial steps: @tutorialSteps if @tutorialSteps
-
-      isInactive = (i, element) ->
-        element = $(element)
-        not element.hasClass 'active'
-
-      $(document).on 'pager-activate', =>
-        delay (e) =>
-          if @el.parents('[data-page]').filter(isInactive).length is 0
-            @tutorial.el.show()
-          else
-            @tutorial.el.hide()
+      @tutorial = new Tutorial target: @el, steps: @tutorialSteps if @tutorialSteps
 
       # Delay here so that extending classes can call "super" at
       # the top and not worry about a Subject loading immediately.

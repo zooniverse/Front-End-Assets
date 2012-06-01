@@ -11,7 +11,6 @@ define (require, exports, module) ->
     @configure 'Favorite', 'subjects', 'createdAt'
 
     @fromJSON: (raw) ->
-      console.log 'Favorite', raw
       super
         subjects: raw.subjects
         createdAt: raw.created_at

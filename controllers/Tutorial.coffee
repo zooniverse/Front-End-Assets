@@ -3,26 +3,29 @@ define (require, exports, module) ->
   {delay} = require 'zooniverse/util'
 
   class Tutorial
+    target: null
     steps: null
-    className: 'tutorial-step'
-    controlsClass: 'tutorial-controls'
-    arrowClass: 'tutorial-arrow'
-    messageClass: 'tutorial-message'
-    continueClass: 'tutorial-continue'
-    blockerClass: 'tutorial-blocker'
 
     skipText: '&rarr;'
     skipTitle: 'Skip this step'
     exitText: '&times;'
     exitTitle: 'Exit tutorial'
 
+    className: 'tutorial-step'
+    controlsClass: 'controls'
+    arrowClass: 'arrow'
+    messageClass: 'message'
+    continueClass: 'continue'
+    blockerClass: 'tutorial-blocker'
+
     el: null
     message: null
     arrow: null
+    blockers: null
 
     current = -1
 
-    constructor: ({@steps}) ->
+    constructor: ({@target, @steps}) ->
       @steps ?= []
 
       @el = $("<div class='#{@className}'></div>")
@@ -47,8 +50,24 @@ define (require, exports, module) ->
 
       @el.appendTo $('body')
 
+      isInactive = (i, element) ->
+        element = $(element)
+        not element.hasClass 'active'
+
+      $(document).on 'pager-activate', =>
+        delay =>
+          if @probablyVisible()
+            @el.css display: ''
+          else
+            @el.css display: 'none'
+
+    probablyVisible: =>
+      parentPages = @target.parents '[data-page]'
+      inactiveParentPages = (el for el in parentPages when not $(el).hasClass 'active')
+      inactiveParentPages.length is 0 and 0 <= @current < @steps.length
+
     start: =>
-      @message.css display: ''
+      @el.css display: ''
       @current = -1
       @next()
 
@@ -64,32 +83,35 @@ define (require, exports, module) ->
         @end()
 
     end: =>
+      @steps[@current].leave()
       @el.css display: 'none'
 
 
   class Tutorial.Step
     content: ''
-    modal: false
     style: null
-    className: ''
     attach: null
-    nextOn: null
-    continueText: 'Next'
     block: ''
+    nextOn: null
+    continueText: ''
+    className: ''
+    arrowClass: ''
 
     tutorial: null
 
-    blockers: null
-
-    constructor: ({@content, @style, @attach, @nextOn, @className, @arrowClass, @block}) ->
+    constructor: ({@content, @style, @attach, @block, @nextOn, @continueText, @className, @arrowClass}) ->
       @content = [@content] if typeof @content is 'string'
       @content = $(("<p>#{line}<p>" for line in @content).join '') if @content instanceof Array
 
+      @attach ?= {}
       @attach.x ?= 'center'
       @attach.y ?= 'middle'
+      @attach.to ?= ''
       @attach.at ?= {}
       @attach.at.x ?= 'center'
       @attach.at.y ?= 'middle'
+
+      @continueText ?= 'Continue'
 
     enter: (@tutorial) =>
       @tutorial.message.html @content
@@ -104,47 +126,45 @@ define (require, exports, module) ->
       @tutorial.el.css @style if @style
       @tutorial.arrow.addClass @arrowClass if @arrowClass
 
-      delay => @moveMessage @attach.x, @attach.y, @attach.to, @attach.at.x, @attach.at.y if @attach
-
-      @createBlockers()
+      delay =>
+        @moveMessage()
+        @createBlockers()
 
       @tutorial.el.addClass @className if @className
 
-    moveMessage: (stepX, stepY, target, targetX, targetY) ->
+    moveMessage: () ->
       xStrings = left: 0, center: 0.5, right: 1
       yStrings = top: 0, middle: 0.5, bottom: 1
 
-      stepX = xStrings[stepX] if stepX of xStrings
-      stepY = yStrings[stepY] if stepY of yStrings
-      targetX = xStrings[targetX] if targetX of xStrings
-      targetY = yStrings[targetY] if targetY of yStrings
+      @attach.x = xStrings[@attach.x] if @attach.x of xStrings
+      @attach.y = yStrings[@attach.y] if @attach.y of yStrings
+      @attach.at.x = xStrings[@attach.at.x] if @attach.at.x of xStrings
+      @attach.at.y = yStrings[@attach.at.y] if @attach.at.y of yStrings
 
-      target = $(target).first()
+      target = $(@attach.to).first()
 
       targetSize = width: target.outerWidth(), height: target.outerHeight()
       targetOffset = target.offset()
 
       stepSize = width: @tutorial.el.outerWidth(), height: @tutorial.el.outerHeight()
       stepOffset =
-        left: targetOffset.left - (stepSize.width * stepX) + (targetSize.width * targetX)
-        top: targetOffset.top - (stepSize.height * stepY) + (targetSize.height * targetY)
+        left: targetOffset.left - (stepSize.width * @attach.x) + (targetSize.width * @attach.at.x)
+        top: targetOffset.top - (stepSize.height * @attach.y) + (targetSize.height * @attach.at.y)
 
       @tutorial.el.offset stepOffset
 
     createBlockers: =>
-      @blockers = $()
+      @tutorial.blockers = $()
 
       for element in $(@block)
         element = $(element)
-
         blocker = $("<div class='#{@tutorial.blockerClass}'></div>")
         blocker.width element.outerWidth()
         blocker.height element.outerHeight()
         blocker.offset element.offset()
-        @blockers = @blockers.add blocker
+        @tutorial.blockers = @tutorial.blockers.add blocker
 
-      @blockers.appendTo $('body')
-      window.blockers = @blockers
+      @tutorial.blockers.appendTo 'body'
 
     leave: =>
       @tutorial.message.html ''
@@ -157,6 +177,6 @@ define (require, exports, module) ->
       @tutorial.arrow.removeClass @arrowClass if @arrowClass
       @tutorial.el.removeClass @className if @className
 
-      @blockers.remove()
+      @tutorial.blockers.remove().empty()
 
   module.exports = Tutorial
