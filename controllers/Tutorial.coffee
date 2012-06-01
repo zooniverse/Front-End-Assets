@@ -83,7 +83,7 @@ define (require, exports, module) ->
         @end()
 
     end: =>
-      @steps[@current].leave()
+      @steps[@current]?.leave()
       @el.css display: 'none'
 
 
