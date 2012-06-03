@@ -2,80 +2,28 @@ define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
 
-  Project = require 'zooniverse/models/Project'
-  User = require 'zooniverse/models/User'
+  Subject = require './Subject'
+  App = require './App'
 
   class Favorite extends Spine.Model
-    subjects: []
     createdAt: new Date
-    @configure 'Favorite', 'subjects', 'createdAt'
+    @configure 'Favorite', 'createdAt', 'subjects'
 
     @fromJSON: (raw) ->
-      super
-        subjects: raw.subjects
+      @create
         createdAt: raw.created_at
+        subjects: (Subject.fromJSON subject for subject in raw.subjects)
 
-    @fetch: =>
-      return unless User.current?
-
-      @trigger 'fetching'
-
-      url = "#{Project.current.host}/projects/#{Project.current.id}/users/#{User.current.id}/favorites"
-      request = $.getJSON url
-      handle = new $.Deferred
-
-      request.done (response) =>
-        newFavorites = (@fromJSON item for item in response)
-        favorite.save() for favorite in newFavorites
-        handle.resolve newFavorites
-        @trigger 'fetch'
-        User.current.trigger 'change'
-
-      request.fail (args...) ->
-        handle.reject args...
-        @trigger 'error'
-
-      handle.promise()
-
-    @reload: =>
-      @destroyAll()
-      return unless User.current?
-      @fetch()
+    toJSON: =>
+      favorite:
+        subject_ids: (subject.id for subject in @subjects)
 
     persist: =>
       @trigger 'persisting'
 
-      post = $.post "#{Project.current.host}/projects/#{Project.current.id}/favorites",
-        favorite:
-          subject_ids: (subject.id for subject in @subjects)
-          subjects: (subject.toJSON() for subject in @subjects)
-
-      post.done =>
-        @trigger 'persist'
-        @constructor.reload()
-
-      post.fail =>
-        @trigger 'error'
-
-    talkHref: =>
-      "#{Project.current.talkHost}/objects/#{@subjects[0].zooniverse_id}"
-
-    facebookHref: =>
-      """
-        https://www.facebook.com/dialog/feed?
-        app_id=#{Project.current.facebookAppId}&
-        link=#{@talkHref()}&
-        picture=#{@subjects[0].location || @subjects[0].image || @subjects[0].location.image}&
-        name=#{Project.current.name}&
-        caption=A Zooniverse citizen science project&
-        description=#{Project.current.description}&
-        redirect_uri=#{location.href}
-      """.replace '\n', ''
-
-    twitterHref: =>
-      text = "I've classified something on #{Project.current.name}!"
-      "https://twitter.com/share?text=#{text}&url=#{@talkHref()}&hashtags=#{Project.current.slug}"
-
-  User.bind 'sign-in', Favorite.reload
+      url = "#{App.first().host}/projects/#{App.first().projects[0].id}/favorites"
+      post = $.post url, @toJSON()
+      post.done => @trigger 'persist'
+      post.fail => @trigger 'error'
 
   module.exports = Favorite

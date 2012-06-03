@@ -26,7 +26,6 @@ define (require, exports, module) ->
 
     # Event data comes as {command: '', response: {}}
     $(window).on 'message', ({originalEvent: e}) =>
-      # console.info 'Message from auth', e
       if e.data.response.success is true
         @trigger e.data.command, e.data.response
       else

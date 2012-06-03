@@ -1,67 +1,47 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
-  $ = require 'jQuery'
-
-  Project = require 'zooniverse/models/Project'
 
   class Subject extends Spine.Model
-    @configure 'Subject'
+    # Belongs to a workflow
+    @configure 'Subject', 'zooniverseID', 'location', 'coords', 'metadata', 'workflow'
 
     @current: null
     @queueLength: 3
 
-    @fromJSON: (raw...) ->
-      # Override this.
-      # Do whatever transforms you need to do
-      # on the raw data, then call super on it.
-      super raw...
+    @fromJSON: (raw) ->
+      created = @create
+        workflow: raw.workflow_ids[0] # Converted to a workflow at "from-json" trigger
+        id: raw.id
+        zooniverseID: raw.zooniverse_id
+        location: raw.location
+        coords: raw.coords
+        metadata: raw.metadata
 
-    @forTutorial: ->
-      # Override this.
-      # Return a preset instance (i.e. for a tutorial).
-      @create {}
+      @trigger 'from-json', created
 
-    @fetch: (group) ->
-      @trigger 'fetching'
+      created
 
-      handle = new $.Deferred
+    constructor: ->
+      super
+      throw new Error 'Subject created without a workflow' unless @workflow?
 
-      handle.done (subjects) =>
-        @trigger 'fetch', subjects
+    talkHref: =>
+      "#{@workflow.project.app.talkHost}/objects/#{@zooniverseID}"
 
-      handle.fail (args...) =>
-        @trigger 'error', args
+    facebookHref: =>
+      """
+        https://www.facebook.com/dialog/feed?
+        app_id=#{@workflow.project.facebookAppId}&
+        link=#{@talkHref()}&
+        picture=#{@location.image || @location}&
+        name=#{@workflow.project.name}&
+        caption=A Zooniverse citizen science project&
+        description=#{@workflow.project.description}&
+        redirect_uri=#{location.href}
+      """.replace '\n', '', 'g'
 
-      queue = (instance for instance in @all() when not instance.eql @current)
-
-      # If there's a big enough queue, resolve with that.
-      handle.resolve queue[0...@queueLength] if queue.length >= @queueLength
-
-      # If the queue is running low, get more from the server.
-      if queue.length < @queueLength
-        groupSegment = ''
-        groupSegment = "groups/#{group}/" if group?
-
-        url = "#{Project.current.host}/projects/#{Project.current.id}/#{groupSegment}subjects?limit=#{@queueLength - queue.length}"
-        request = $.getJSON url
-
-        request.done (response) =>
-          newSubjects = (@fromJSON item for item in response)
-          subject.save() for subject in newSubjects
-          handle.resolve newSubjects
-
-        request.fail (args...) ->
-          handle.reject args...
-
-      handle.promise()
-
-    @setCurrent: (newCurrent) ->
-      return if newCurrent is @current
-      @current?.destroy()
-      @current = newCurrent
-      @trigger 'change-current', newCurrent
-
-    goToTalk: =>
-      alert "TODO: Go to talk (#{@zooniverseId})"
+    twitterHref: =>
+      text = "I've classified something on #{@workflow.project.name}!"
+      "https://twitter.com/share?text=#{text}&url=#{@talkHref()}"
 
   module.exports = Subject

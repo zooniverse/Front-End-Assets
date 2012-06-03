@@ -2,9 +2,6 @@ define (require, exports, module) ->
   Spine = require 'Spine'
 
   User = require 'zooniverse/models/User'
-  Favorite = require 'zooniverse/models/Favorite'
-  Recent = require 'zooniverse/models/Recent'
-  Group = require 'zooniverse/models/Group'
 
   LoginForm = require 'zooniverse/controllers/LoginForm'
   TEMPLATE = require 'zooniverse/views/Profile'
@@ -27,8 +24,7 @@ define (require, exports, module) ->
 
       User.bind 'sign-in', @userChanged
       User.bind 'change', @userChanged
-      Favorite.bind 'fetch', @favoritesChanged
-      Recent.bind 'fetch', @recentsChanged
+      User.bind 'refresh-favorites', @favoritesChanged
 
     userChanged: =>
       @el.toggleClass 'signed-in', User.current?
@@ -42,7 +38,7 @@ define (require, exports, module) ->
     favoritesChanged: =>
       # TODO: Pagination
       @favoritesList.empty()
-      favorites = Favorite.all() || []
+      favorites = User.current.favorites
       @el.toggleClass 'has-favorites', favorites.length > 0
       @favoritesList.append @favoriteTemplate favorite for favorite in favorites
 
