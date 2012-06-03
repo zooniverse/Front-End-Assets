@@ -1,32 +1,48 @@
 define (require, exports, module) ->
-  App = require 'zooniverse/controllers/App'
+  App = require 'zooniverse/models/App'
+  Project = require 'zooniverse/models/Project'
+  Workflow = require 'zooniverse/models/Workflow'
   Subject = require 'zooniverse/models/Subject'
-  Classification = require 'zooniverse/models/Classification'
-  Workflow = require 'zooniverse/controllers/Workflow'
-  Profile = require 'zooniverse/controllers/Profile'
+
+  Classifier = require 'controllers/Classifier'
+  Profile = require 'controllers/Profile'
 
   <%= project_js %> = new App
+    talkHost: 'http://talk.<%= project_url %>.org'
+    cartoUser: 'CARTODB USER'
+    cartoApiKey: 'CARTODB API KEY'
+    cartoTable: 'CARTODB TABLE'
+    facebookId: 'FACEBOOK APP ID'
+
     languages: ['en']
 
-    projects:
-      PROJECT_ID:
-        attributes:
-          name: '<%= project %>'
-          slug: '<%= project_dash %>'
-          description: 'A Zooniverse project'
+    el: '.<%= project_dash %>.app'
 
-        workflows:
-          WORKFLOW_ID:
-            subject: Subject
-            classification: Classification
-            controller: Workflow
-            attributes:
+    projects: [
+      new Project
+        id: 'PROJECT ID'
+        name: '<%= project %>'
+        slug: '<%= project_dash %>'
+        description: 'PROJECT DESCRIPTION'
+
+        workflows: [
+          new Workflow
+            id: 'WORKFLOW ID'
+            controller: new Classifier
               el: '[data-page="classify"]'
+            tutorialSubjects: [
+              new Subject
+                location: 'TUTORIAL SUBJECT LOCATION'
+                coords: [0, 0]
+                workflow: {}
+            ]
+        ]
+    ]
 
-    widgets:
-      profile:
-        controller: Profile
-        attributes:
-          el: '[data-page="profile"]'
+  <%= project_js %>.save()
 
+  new Profile
+    el: '[data-page="profile"]'
+
+  window.app = <%= project_js %>
   module.exports = <%= project_js %>
