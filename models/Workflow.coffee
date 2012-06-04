@@ -36,6 +36,7 @@ define (require, exports, module) ->
 
       get.done (response) =>
         for raw in response
+          continue unless raw # TODO: Why am I getting some nulls back?
           subject = Subject.fromJSON raw
           subject.workflow = @
           @subjects.push subject
