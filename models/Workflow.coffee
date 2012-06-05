@@ -47,11 +47,17 @@ define (require, exports, module) ->
 
     nextSubjects: =>
       fetch = @fetchSubjects()
+      next = new $.Deferred
 
       if @subjects.length >= @selectionLength
         @changeSelection()
+        next.resolve @selection
       else
-        fetch.done @changeSelection
+        fetch.done =>
+          @changeSelection()
+          next.resolve @selection
+
+      next
 
     changeSelection: =>
       if @subjects.length < @selectionLength

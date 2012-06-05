@@ -12,17 +12,21 @@ define (require, exports, module) ->
   class Classifier extends Spine.Controller
     tutorialSteps: null
 
-    template: ''
+    template: null
 
     workflow: null
     tutorial: null
     classification: null
 
+    events: {}
+    elements: {}
+
     constructor: ->
       super
-      @html @template if @template
+      @html @template if typeof @template is 'string'
+      @html @template @ if typeof @template is 'function'
 
-      if @tutorialSteps
+      if @tutorialSteps?.length > 0
         @tutorial = new Tutorial
           target: @el
           steps: @tutorialSteps
@@ -51,10 +55,10 @@ define (require, exports, module) ->
       # Override this.
 
     startTutorial: (e) =>
+      return unless @tutorial?
       e?.preventDefault?()
       @workflow.subjects.unshift subject for subject in @workflow.tutorialSubjects
-      @nextSubjects()
-      delay 1000, @tutorial?.start
+      @nextSubjects().done @tutorial.start
 
     saveClassification: =>
       @classification.persist();
