@@ -1,5 +1,7 @@
 define (require, exports, module) ->
-  routes = []
+  Spine = require 'Spine'
+  $ = require 'jQuery'
+  {delay} = require 'zooniverse/util'
 
   # Redirect if we end up here from an escaped_fragment URL.
   # Breaks the back button!
@@ -7,14 +9,19 @@ define (require, exports, module) ->
   # if currentLocation.indexOf '?_escaped_fragment_='
   #   location.href = currentLocation.replace '?_escaped_fragment_=', '#!'
 
-  checkRoutes = ->
-    hash = location.hash.slice 2 # Slice off "#!"
+  class Route extends Spine.Module
+    @extend Spine.Events
+    @include Spine.Events
 
-    for route in routes
-      params = route.match hash
-      route.handler params... if params
+    @routes: []
 
-  class Route
+    @checkRoutes: =>
+      hash = location.hash.slice 2 # Slice off "#!"
+
+      for route in @routes
+        params = route.match hash
+        route.handler params... if params
+
     path: ''
     handler: null
     expression: null
@@ -24,9 +31,9 @@ define (require, exports, module) ->
     constructor: (@path, @handler) ->
       @expression = new RegExp '^' + @path.split(/\:[^\/]+/g).join '([^\\/]+)'
 
-      routes.push @
+      @constructor.routes.push @
 
-      routes.sort (a, b) ->
+      @constructor.routes.sort (a, b) ->
         a.path.split('/').length > b.path.split('/').length
 
     match: (hash) =>
@@ -39,22 +46,9 @@ define (require, exports, module) ->
       matches.slice 1
 
     destroy: =>
-      routes.splice i, 1 for route, i in routes when route is @
+      @constructor.routes.splice i, 1 for route, i in routes when route is @
 
-    @routes: routes
-
-    @checkRoutes: checkRoutes
-
-    @activate: =>
-      addEventListener? 'hashchange', checkRoutes, false
-      attachEvent? 'onhashchange', checkRoutes
-
-    @deactivate: =>
-      removeEventListener? 'hashchange', checkRoutes, false
-      detachEvent? 'onhashchange', checkRoutes
-
-  addEventListener? 'load', checkRoutes
-  attachEvent? 'onload', checkRoutes
-  Route.activate()
+    $ => delay @checkRoutes
+    $(window).on 'hashchange', @checkRoutes
 
   exports = Route
