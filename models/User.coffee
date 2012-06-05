@@ -1,6 +1,7 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
+  {remove} = require 'zooniverse/util'
 
   App = require './App'
   Authentication = require 'zooniverse/controllers/Authentication'
@@ -35,7 +36,11 @@ define (require, exports, module) ->
       @favorites ?= []
       @recents ?= []
 
-      Favorite.bind 'persist destroy', @refreshFavorites
+      Favorite.bind 'create', @onCreateFavorite
+      Favorite.bind 'destroy', @onDestroyFavorite
+      Recent.bind 'create', @onCreateRecent
+      Recent.bind 'destroy', @onDestroyRecent
+
       Recent.bind 'persist destroy', @refreshRecents
 
     refreshSomething: (attribute, model) =>
@@ -51,7 +56,7 @@ define (require, exports, module) ->
       get = $.getJSON url
 
       get.done (response) =>
-        @[attribute] = (model.fromJSON raw for raw in response)
+        model.fromJSON raw for raw in response.reverse()
         @trigger "refresh-#{attribute}"
 
         refresh.resolve @[attribute]
@@ -63,6 +68,22 @@ define (require, exports, module) ->
 
     refreshRecents: =>
       @refreshSomething 'recents', Recent
+
+    onCreateFavorite: (created) =>
+      @favorites.push created
+      @trigger 'change'
+
+    onDestroyFavorite: (destroyed) =>
+      remove destroyed, from: @favorites
+      @trigger 'change'
+
+    onCreateRecent: (created) =>
+      @recent.push created
+      @trigger 'change'
+
+    onDestroyRecent: (destroyed) =>
+      remove destroyed, from: @recents
+      @trigger 'change'
 
     # Send authentication header to Ouroboros when logged in.
     $.ajaxSetup beforeSend: (xhr, settings) =>

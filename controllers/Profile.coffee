@@ -24,31 +24,30 @@ define (require, exports, module) ->
 
       User.bind 'sign-in', @userChanged
       User.bind 'change', @userChanged
-      User.bind 'refresh-favorites', @favoritesChanged
 
     userChanged: =>
       @el.toggleClass 'signed-in', User.current?
-
-      # groups = User.current?.groups().all() || []
-      # @el.toggleClass 'has-groups', groups.length > 0
+      if User.current?
+        @updateFavorites()
+        @updateRecents()
 
     favoriteTemplate: (favorite) =>
       "<li>#{favorite.createdAt}</li>"
 
-    favoritesChanged: =>
+    updateFavorites: =>
       # TODO: Pagination
       @favoritesList.empty()
       favorites = User.current.favorites
       @el.toggleClass 'has-favorites', favorites.length > 0
-      @favoritesList.append @favoriteTemplate favorite for favorite in favorites
+      @favoritesList.prepend @favoriteTemplate favorite for favorite in favorites
 
     recentTemplate: (recent) =>
       "<li>#{recent.subjects[0].location}</li>"
 
-    recentsChanged: =>
-      # @recentsList.empty()
-      # recents = User.current?.recents().all() || []
-      # @el.toggleClass 'has-recents', recents.length > 0
-
+    updateRecents: =>
+      @recentsList.empty()
+      recents = User.current.recents
+      @el.toggleClass 'has-recents', recents.length > 0
+      @recentsList.prepend @recentTemplate recent for recent in recents
 
   module.exports = Profile

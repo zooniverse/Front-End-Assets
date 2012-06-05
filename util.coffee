@@ -1,4 +1,6 @@
 define (require, exports, module) ->
+  Spine = require 'Spine'
+
   days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
   months = [
@@ -19,6 +21,16 @@ define (require, exports, module) ->
     ampm: (date) -> if date.getUTCHours() >= 12 then 'am' else 'pm'
 
   module.exports =
+    remove: (thing, {from: array}) ->
+      for something, i in array
+        if thing instanceof Spine.Model
+          continue unless thing.eql something
+        else
+          continue unless thing is something
+
+        array.splice i, 1
+        break
+
     delay: (duration, callback) ->
       if typeof duration is 'function'
         callback = duration
