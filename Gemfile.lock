@@ -1,0 +1,14 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    colored (1.2)
+    grabass (0.2.0)
+    thor (0.15.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  colored
+  grabass
+  thor
