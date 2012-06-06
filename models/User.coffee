@@ -3,7 +3,6 @@ define (require, exports, module) ->
   $ = require 'jQuery'
   {remove} = require 'zooniverse/util'
 
-  App = require './App'
   Authentication = require 'zooniverse/controllers/Authentication'
   Favorite = require './Favorite'
   Recent = require './Recent'
@@ -16,9 +15,9 @@ define (require, exports, module) ->
     @signIn: (user) =>
       return if user is @current
       @current = user
+      @trigger 'sign-in', @current
       @current?.refreshFavorites()
       @current?.refreshRecents()
-      @trigger 'sign-in', @current
 
     @signOut: =>
       @current?.destroy()
@@ -47,8 +46,8 @@ define (require, exports, module) ->
       refresh = new $.Deferred
 
       url = """
-        #{App.first().host}
-        /projects/#{App.first().projects[0].id}
+        #{@app.host}
+        /projects/#{@app.projects[0].id}
         /users/#{@id}
         /#{attribute}
       """.replace '\n', '', 'g'
@@ -87,7 +86,7 @@ define (require, exports, module) ->
 
     # Send authentication header to Ouroboros when logged in.
     $.ajaxSetup beforeSend: (xhr, settings) =>
-      if @current? and !!~settings.url.indexOf App.first().host
+      if @current? and !!~settings.url.indexOf @current.app.host
         # TODO: Use a proper base-64 encoder.
         # http://stringencoders.googlecode.com/svn/trunk/javascript/base64.js
         auth = btoa "#{@current.name}:#{@current.apiKey}"

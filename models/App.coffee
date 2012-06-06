@@ -1,6 +1,7 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
 
+  User = require 'zooniverse/models/User'
   Authentication = require 'zooniverse/controllers/Authentication'
   AppController = require 'zooniverse/controllers/App'
 
@@ -19,6 +20,7 @@ define (require, exports, module) ->
     constructor: ->
       super
       Authentication.setSrc @authentication
+      User.bind 'sign-in', (user) => user.app = @
       @controller = new AppController app: @, el: @el, languages: @languages
       project.app = @ for project in @projects if @projects?
 
