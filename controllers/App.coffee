@@ -3,7 +3,7 @@ define (require, exports, module) ->
 
   Project = require 'zooniverse/models/Project'
 
-  # TopBar = require 'zooniverse/controllers/TopBar'
+  TopBar = require 'zooniverse/controllers/TopBar'
   Pager = require 'zooniverse/controllers/Pager'
 
   class App extends Spine.Controller
@@ -13,12 +13,14 @@ define (require, exports, module) ->
 
     constructor: ->
       super
-      # @initTopBar()
+      @initTopBar()
       @initPagers()
 
     initTopBar: =>
       @topBar = new TopBar
         languages: @languages
+
+      @topBar.el.appendTo 'body'
 
     initPagers: =>
       for pageContainer in @el.find('[data-page]').parent()

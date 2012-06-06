@@ -1,0 +1,71 @@
+$black: #000;
+$white: #fff;
+
+.zooniverse-top-bar {
+  background: $black;
+  color: white;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .wrapper {
+    > ul {
+      float: left;
+      margin: 0;
+      padding: 0;
+
+      &:last-child {
+        float: right;
+      }
+
+      > li {
+        display: block;
+        float: left;
+      }
+    }
+  }
+
+  .dropdown {
+    position: relative;
+
+    > :last-child {
+      -moz-transition:
+        opacity 0.2s ease-in-out,
+        top 0.2s ease-in-out;
+      background: $black;
+      margin: 0;
+      opacity: 0.5;
+      padding: 0;
+      position: absolute;
+      top: 50%;
+      z-index: -1;
+    }
+
+    &.open > :last-child {
+      opacity: 1;
+      top: 100%;
+      z-index: 2;
+    }
+
+    > ul > li {
+      display: block;
+    }
+  }
+
+  .accordion {
+    > :first-child {
+      cursor: pointer;
+    }
+
+    > :last-child {
+      overflow: hidden;
+    }
+  }
+}
