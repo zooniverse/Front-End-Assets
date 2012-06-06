@@ -9,7 +9,6 @@ define (require, exports, module) ->
   class App extends Spine.Controller
     app: null # Model
     languages: null
-    widgets: null
 
     constructor: ->
       super

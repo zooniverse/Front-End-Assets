@@ -19,8 +19,10 @@ define (require, exports, module) ->
 
     constructor: ->
       super
+      @languages ?= ['en']
+      @projects ?= []
       Authentication.setSrc @authentication
-      User.bind 'sign-in', (user) => user.app = @
+      User.bind 'sign-in', (user) => user?.app = @
       @controller = new AppController app: @, el: @el, languages: @languages
       project.app = @ for project in @projects if @projects?
 

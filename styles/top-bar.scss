@@ -1,11 +1,38 @@
-$black: #000;
+$black: transparentize(#000, 0.25);
 $white: #fff;
+$border-color: transparentize($white, 0.67);
+
+@mixin default-padding {
+  display: block;
+  padding: 4px 16px;
+}
+
+@mixin menu-item {
+  border-top: 1px solid $border-color;
+  cursor: pointer;
+
+  &:hover {
+    background: $black;
+  };
+
+  > em {
+    font-style: normal;
+    opacity: 0.67;
+  }
+}
 
 .zooniverse-top-bar {
   background: $black;
-  color: white;
+  border-bottom: 1px solid $border-color;
+  color: $white;
+  font: {
+    family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    size: 10px;
+  };
   left: 0;
+  letter-spacing: 1px;
   position: absolute;
+  text-transform: uppercase;
   top: 0;
   width: 100%;
   z-index: 1;
@@ -15,57 +42,90 @@ $white: #fff;
     text-decoration: none;
   }
 
-  .wrapper {
-    > ul {
-      float: left;
-      margin: 0;
-      padding: 0;
+  ul {
+    margin: 0;
+    padding: 0;
 
-      &:last-child {
-        float: right;
-      }
-
-      > li {
-        display: block;
-        float: left;
-      }
-    }
-  }
-
-  .dropdown {
-    position: relative;
-
-    > :last-child {
-      -moz-transition:
-        opacity 0.2s ease-in-out,
-        top 0.2s ease-in-out;
-      background: $black;
-      margin: 0;
-      opacity: 0.5;
-      padding: 0;
-      position: absolute;
-      top: 50%;
-      z-index: -1;
-    }
-
-    &.open > :last-child {
-      opacity: 1;
-      top: 100%;
-      z-index: 2;
-    }
-
-    > ul > li {
+    > li {
       display: block;
     }
   }
 
-  .accordion {
-    > :first-child {
-      cursor: pointer;
-    }
+  > div {
+    > ul {
+      float: left;
 
-    > :last-child {
-      overflow: hidden;
+      > li {
+        float: left;
+
+        > :first-child {
+          @include default-padding;
+          border-right: 1px solid $border-color;
+          cursor: pointer;
+        }
+      }
+
+      &:last-child {
+        float: right;
+
+        > li > :first-child {
+          border: {
+            left: 1px solid $border-color;
+            right: 0;
+          };
+        }
+      }
+
+      .z-dropdown {
+        position: relative;
+
+        > :last-child {
+          background: $black;
+          border: 1px solid $border-color {
+            top: 0;
+          };
+          left: -1px;
+          min-width: 100%;
+          overflow: hidden;
+          position: absolute;
+          white-space: nowrap;
+        }
+
+        > ul {
+          > li {
+            > a {
+              @include default-padding;
+              @include menu-item;
+            }
+          }
+        }
+      }
+
+      &:last-child .z-dropdown > :last-child {
+        left: auto;
+        right: -1px;
+      }
+
+      .z-accordion {
+        > :first-child {
+          @include default-padding;
+          @include menu-item;
+          font-size: 16px;
+          text-align: center;
+          text-transform: none;
+        }
+
+        > :last-child {
+          overflow: hidden;
+
+          > li {
+            a {
+              @include default-padding;
+              @include menu-item;
+            }
+          }
+        }
+      }
     }
   }
 }

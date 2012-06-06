@@ -8,7 +8,8 @@ define (require, exports, module) ->
   Recent = require './Recent'
 
   class User extends Spine.Model
-    @configure 'User', 'zooniverseId', 'name', 'apiKey', 'finishedTutorial', 'favorites', 'recents'
+    # Has many favorites and recents, also has a reference back to the app
+    @configure 'User', 'zooniverseId', 'name', 'apiKey', 'finishedTutorial', 'app', 'favorites', 'recents'
 
     @current: null
 
