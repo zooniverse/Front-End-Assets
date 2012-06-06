@@ -1,5 +1,6 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
+  $ = require 'jQuery'
 
   days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
@@ -25,6 +26,8 @@ define (require, exports, module) ->
       for something, i in array
         if thing instanceof Spine.Model
           continue unless thing.eql something
+        else if thing instanceof $
+          continue unless thing.is something
         else
           continue unless thing is something
 

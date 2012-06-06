@@ -1,7 +1,7 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
-  {delay} = require 'zooniverse/util'
+  {delay, remove} = require 'zooniverse/util'
 
   User = require 'zooniverse/models/User'
   LoginForm = require 'zooniverse/controllers/LoginForm'
@@ -16,6 +16,8 @@ define (require, exports, module) ->
       en: 'English'
       po: 'Polski'
       de: 'Deutsche'
+
+    dropdownsToHide: null
 
     className: 'zooniverse-top-bar'
     template: template
@@ -39,10 +41,11 @@ define (require, exports, module) ->
       @constructor.instance = @
 
       super
+      @dropdownsToHide = []
       @html @template
 
       dropdownContainers = @el.find('.z-dropdown').children ':last-child'
-      dropdownContainers.css height: 0, opacity: 0, top: '50%'
+      dropdownContainers.css display: 'none', opacity: 0, top: '50%'
 
       accordionContainers = @el.find '.z-accordion > :last-child'
       accordionContainers.css height: 0, opacity: 0
@@ -72,16 +75,22 @@ define (require, exports, module) ->
     onDropdownEnter: (e) ->
       target = $(e.currentTarget)
       container = target.children().last()
-      container.css height: ''
-      container.stop().animate opacity: 1, top: '100%'
 
+      remove target, from: @dropdownsToHide
+
+      container.css display: ''
+      container.stop().animate opacity: 1, top: '100%'
 
     onDropdownLeave: (e) ->
       target = $(e.currentTarget)
       container = target.children().last()
 
-      container.stop().animate opacity: 0, top: '50%', =>
-        delay => container.css height: 0
+      @dropdownsToHide.push target
+
+      delay 500, =>
+        return unless target in @dropdownsToHide
+        container.stop().animate opacity: 0, top: '50%', =>
+          delay => container.css display: 'none'
 
     onAccordionClick: (e) ->
       target = $(e.currentTarget).parent()

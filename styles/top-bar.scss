@@ -13,7 +13,7 @@ $border-color: transparentize($white, 0.67);
 
   &:hover {
     background: $black;
-  };
+  }
 
   > em {
     font-style: normal;
@@ -54,6 +54,7 @@ $border-color: transparentize($white, 0.67);
   > div {
     > ul {
       float: left;
+      margin-left: 1px;
 
       > li {
         float: left;
@@ -67,6 +68,7 @@ $border-color: transparentize($white, 0.67);
 
       &:last-child {
         float: right;
+        margin-right: 1px;
 
         > li > :first-child {
           border: {
@@ -89,6 +91,10 @@ $border-color: transparentize($white, 0.67);
           overflow: hidden;
           position: absolute;
           white-space: nowrap;
+        }
+
+        &:hover {
+          z-index: 1;
         }
 
         > ul {
@@ -124,6 +130,41 @@ $border-color: transparentize($white, 0.67);
               @include menu-item;
             }
           }
+        }
+      }
+
+      .z-login > .zooniverse-login-form {
+        border-top: 1px solid $border-color;
+
+        label {
+          display: block;
+          margin: 10px 0;
+
+          > span {
+            display: inline-block;
+            width: 10em;
+          }
+        }
+
+        p {
+          margin: 0;
+        }
+
+        button {
+          @include menu-item;
+          background: transparentize($white, 0.75);
+          border: 1px solid $white;
+          color: inherit;
+          font: {
+            family: inherit;
+            style: inherit;
+            weight: inherit;
+          };
+        }
+
+        > div {
+          margin: 20px;
+          text-align: center;
         }
       }
     }
