@@ -10,6 +10,8 @@ define (require, exports, module) ->
     className: 'zooniverse-profile'
     template: TEMPLATE
 
+    events: {}
+
     elements:
       '.login-form': 'loginFormContainer'
       '.favorites ul': 'favoritesList'
@@ -27,6 +29,7 @@ define (require, exports, module) ->
 
     userChanged: =>
       @el.toggleClass 'signed-in', User.current?
+
       if User.current?
         @updateFavorites()
         @updateRecents()
