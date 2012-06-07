@@ -23,7 +23,7 @@ module Zoo
       local_file.sub! TemplateExt, ''
 
       if File.exists? local_file
-        puts '#{local_file} already exists!'.red
+        puts "#{local_file} already exists!".red
       else
         puts "Adding #{local_file}"
 

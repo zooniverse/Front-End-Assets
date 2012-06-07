@@ -6,7 +6,8 @@
 
     <title><%= project %></title>
 
-    <link href="./styles/main.css" rel="stylesheet" />
+    <link href="./styles/zooniverse.css" rel="stylesheet" />
+    <link href="./styles/<%= project_dash %>.css" rel="stylesheet" />
 
     <!--[if lt IE 9]>
       <script src="./scripts/lib/html5shiv.js"></script>
@@ -23,14 +24,14 @@
             <li><a href="#!/about">About</a></li>
             <li><a href="#!/classify">Classify</a></li>
             <li><a href="#!/profile">Profile</a></li>
-            <li><a href="http://talk.<%= project_url %>.org/" target="_blank">Talk</a></li>
-            <li><a href="http://blog.<%= project_url %>.org/" target="_blank">Blog</a></li>
+            <li><a href="http://talk.<%= project_domain %>/" target="_blank">Talk</a></li>
+            <li><a href="http://blog.<%= project_domain %>/" target="_blank">Blog</a></li>
           </ul>
         </nav>
       </header>
 
       <div class="main">
-        <section data-page="home">
+        <section data-page="home" class="active">
           <p>Home</p>
         </section>
 

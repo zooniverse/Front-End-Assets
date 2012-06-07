@@ -13,9 +13,9 @@ class ZooApp < Thor
   def init(project = "New Project")
     project_js = project.camelize
     project_url = project.downcase.run_together
-    project_domain = options.domain || project.downcase.run_together
-    project_dash = project.dasherize
-    project_under = project.underscore
+    project_domain = options.domain || "#{project.downcase.run_together}.org"
+    project_dash = project.downcase.dasherize
+    project_under = project.downcase.underscore
 
     puts "=> Initializing #{project} at #{project_domain}".green
 
@@ -51,6 +51,8 @@ class ZooApp < Thor
   desc 'generate TYPE NAME', 'Generate a model or controller'
   def generate(type, name)
     puts "=> Generating a new #{type}: #{name}".green
+
+    name_dash = name.gsub(/([a-z])([A-Z])/, '\\1-\\2').downcase
     Zoo.run_templates type, binding
   end
 
@@ -60,7 +62,8 @@ class ZooApp < Thor
 
     Process.spawn "python -m SimpleHTTPServer #{port}"
     Process.spawn 'coffee --compile --output . --watch ./src'
-    Process.spawn 'sass --watch ./src:. --no-cache --debug-info'
+    Process.spawn 'sass --watch ./src/styles:./styles --no-cache --debug-info'
+    Process.spawn 'sass --watch ./src/scripts/lib/zooniverse/styles:./styles/zooniverse --no-cache --debug-info'
     Process.wait
   end
 
