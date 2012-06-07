@@ -1,6 +1,7 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
+  base64 = require 'base64'
   {remove} = require 'zooniverse/util'
 
   Authentication = require 'zooniverse/controllers/Authentication'
@@ -40,8 +41,6 @@ define (require, exports, module) ->
       Favorite.bind 'destroy', @onDestroyFavorite
       Recent.bind 'create', @onCreateRecent
       Recent.bind 'destroy', @onDestroyRecent
-
-      Recent.bind 'persist destroy', @refreshRecents
 
     refreshSomething: (attribute, model) =>
       refresh = new $.Deferred
@@ -88,9 +87,7 @@ define (require, exports, module) ->
     # Send authentication header to Ouroboros when logged in.
     $.ajaxSetup beforeSend: (xhr, settings) =>
       if @current? and !!~settings.url.indexOf @current.app.host
-        # TODO: Use a proper base-64 encoder.
-        # http://stringencoders.googlecode.com/svn/trunk/javascript/base64.js
-        auth = btoa "#{@current.name}:#{@current.apiKey}"
+        auth = base64.encode "#{@current.name}:#{@current.apiKey}"
         xhr.setRequestHeader 'Authorization', "Basic #{auth}"
 
     Authentication.bind 'login', (data) =>
