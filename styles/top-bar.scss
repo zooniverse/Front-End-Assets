@@ -1,6 +1,6 @@
-$black: transparentize(#000, 0.25);
+$black: #111;
 $white: #fff;
-$border-color: transparentize($white, 0.67);
+$border-color: darken($white, 50%);
 
 @mixin default-padding {
   display: block;
@@ -16,8 +16,8 @@ $border-color: transparentize($white, 0.67);
   }
 
   > em {
+    color: $border-color;
     font-style: normal;
-    opacity: 0.67;
   }
 }
 
@@ -70,7 +70,7 @@ $border-color: transparentize($white, 0.67);
         }
       }
 
-      &:last-child {
+      &.last-child {
         float: right;
         margin-right: 1px;
 
@@ -85,7 +85,7 @@ $border-color: transparentize($white, 0.67);
       .z-dropdown {
         position: relative;
 
-        > :last-child {
+        > .last-child {
           background: $black;
           border: 1px solid $border-color {
             top: 0;
@@ -111,7 +111,7 @@ $border-color: transparentize($white, 0.67);
         }
       }
 
-      &:last-child .z-dropdown > :last-child {
+      &.last-child .z-dropdown > .last-child {
         left: auto;
         right: -1px;
       }
@@ -125,7 +125,7 @@ $border-color: transparentize($white, 0.67);
           text-transform: none;
         }
 
-        > :last-child {
+        > .last-child {
           overflow: hidden;
 
           > li {

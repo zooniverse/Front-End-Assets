@@ -57,6 +57,8 @@ define (require, exports, module) ->
 
       @updateLogin()
 
+      @el.find(':last-child').addClass 'last-child'
+
     updateLanguages: =>
       @languageLabel.empty()
       @languageList.empty()
