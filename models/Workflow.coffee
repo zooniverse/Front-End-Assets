@@ -30,7 +30,7 @@ define (require, exports, module) ->
         /projects/#{@project.id}
         #{groupSegment}
         /subjects?limit=#{@queueLength - @subjects.length}
-      """.replace '\n', '', 'g'
+      """.replace /\n/g, ''
 
       get = $.getJSON url
 
@@ -42,6 +42,9 @@ define (require, exports, module) ->
           @subjects.push subject
 
         fetch.resolve @subjects
+
+      get.fail (response) =>
+        fetch.reject response
 
       fetch.promise()
 

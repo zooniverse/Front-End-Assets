@@ -38,7 +38,7 @@ define (require, exports, module) ->
         caption=A Zooniverse citizen science project&
         description=#{@workflow.project.description}&
         redirect_uri=#{location.href}
-      """.replace '\n', '', 'g'
+      """.replace /\n/g, ''
 
     twitterHref: =>
       text = "I've classified something on #{@workflow.project.name}!"

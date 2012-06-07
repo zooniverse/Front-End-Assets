@@ -20,7 +20,7 @@ define (require, exports, module) ->
         /projects/#{@subjects[0].workflow.project.id}
         /workflows/#{@subjects[0].workflow.id}
         /classifications
-      """.replace '\n', '', 'g'
+      """.replace /\n/g, ''
 
       request = $.post url, @toJSON()
       request.done => @trigger 'persist', @

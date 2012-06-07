@@ -50,7 +50,7 @@ define (require, exports, module) ->
         /projects/#{@app.projects[0].id}
         /users/#{@id}
         /#{attribute}
-      """.replace '\n', '', 'g'
+      """.replace /\n/g, ''
 
       get = $.getJSON url
 
