@@ -1,5 +1,6 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
+  $ = require 'jQuery'
 
   User = require 'zooniverse/models/User'
   Authentication = require 'zooniverse/controllers/Authentication'
@@ -19,6 +20,9 @@ define (require, exports, module) ->
 
     constructor: ->
       super
+
+      $.support.cors = true
+
       @languages ?= ['en']
       @projects ?= []
       Authentication.setSrc @authentication
