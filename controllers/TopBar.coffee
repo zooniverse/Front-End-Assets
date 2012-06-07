@@ -79,7 +79,7 @@ define (require, exports, module) ->
       remove target, from: @dropdownsToHide
 
       container.css display: ''
-      container.stop().animate opacity: 1, top: '100%'
+      container.stop().animate opacity: 1, top: '100%', 'fast'
 
     onDropdownLeave: (e) ->
       target = $(e.currentTarget)
@@ -87,9 +87,9 @@ define (require, exports, module) ->
 
       @dropdownsToHide.push target
 
-      delay 500, =>
+      delay 250, =>
         return unless target in @dropdownsToHide
-        container.stop().animate opacity: 0, top: '50%', =>
+        container.stop().animate opacity: 0, top: '50%', 'fast', =>
           delay => container.css display: 'none'
 
     onAccordionClick: (e) ->

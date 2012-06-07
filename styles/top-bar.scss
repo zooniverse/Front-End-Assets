@@ -37,6 +37,10 @@ $border-color: transparentize($white, 0.67);
   width: 100%;
   z-index: 1;
 
+  > div {
+    margin: 0 auto;
+  }
+
   a {
     color: inherit;
     text-decoration: none;
