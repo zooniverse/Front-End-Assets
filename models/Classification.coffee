@@ -28,11 +28,11 @@ define (require, exports, module) ->
       request
 
     toJSON: =>
-      json = classification:
-        subject_ids: (subject.id for subject in @subjects)
-        annotations: (annotation.toJSON() for annotation in @annotations)
-      $.extend json, @metadata
-      json
+      $.extend
+        classification:
+          subject_ids: (subject.id for subject in @subjects)
+          annotations: (annotation.toJSON() for annotation in @annotations)
+        @metadata
 
     destroy: =>
       # Copy the list first, since destroying an annotations removes it automatically.

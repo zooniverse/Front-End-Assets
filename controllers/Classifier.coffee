@@ -26,19 +26,21 @@ define (require, exports, module) ->
       @html @template if typeof @template is 'string'
       @html @template @ if typeof @template is 'function'
 
-      if @tutorialSteps?.length > 0
-        @tutorial = new Tutorial
-          target: @el
-          steps: @tutorialSteps
-
       # Delay here so that extending classes can call "super" at
       # the top and not worry about subjects loading immediately.
+      # Also give a chance for the workflow to attach itself.
       delay =>
         @workflow.bind 'change-selection', @reset
-        if User.current?.finishedTutorial
-          @nextSubjects()
-        else
+
+        if @workflow.tutorialSubjects?.length > 0 and @tutorialSteps?.length > 0
+          @tutorial = new Tutorial target: @el, steps: @tutorialSteps
+
+        shouldStartTutorial = @tutorial?
+
+        if @tutorial and not User.current?.finishedTutorial
           @startTutorial()
+        else
+          @nextSubjects()
 
     reset: =>
       @classification?.destroy()
@@ -55,7 +57,6 @@ define (require, exports, module) ->
       # Override this.
 
     startTutorial: (e) =>
-      return unless @tutorial?
       e?.preventDefault?()
       @workflow.subjects.unshift subject for subject in @workflow.tutorialSubjects
       @nextSubjects().done @tutorial.start

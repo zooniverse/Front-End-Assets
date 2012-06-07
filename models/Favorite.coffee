@@ -3,16 +3,19 @@ define (require, exports, module) ->
   $ = require 'jQuery'
 
   Subject = require './Subject'
-  App = require './App'
 
   class Favorite extends Spine.Model
-    createdAt: new Date
+    # Has many subjects
     @configure 'Favorite', 'createdAt', 'subjects'
 
     @fromJSON: (raw) ->
       @create
         createdAt: raw.created_at
         subjects: (Subject.fromJSON subject for subject in raw.subjects)
+
+    constructor: ->
+      super
+      @createdAt ?= new Date
 
     toJSON: =>
       favorite:
@@ -21,7 +24,8 @@ define (require, exports, module) ->
     persist: =>
       @trigger 'persisting'
 
-      url = "#{App.first().host}/projects/#{App.first().projects[0].id}/favorites"
+      project = @subjects[0].workflow.project
+      url = "#{project.app.host}/projects/#{project.id}/favorites"
       post = $.post url, @toJSON()
       post.done => @trigger 'persist'
       post.fail => @trigger 'error'
