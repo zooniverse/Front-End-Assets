@@ -84,6 +84,9 @@ define (require, exports, module) ->
       remove destroyed, from: @recents
       @trigger 'change'
 
+    persist: =>
+      # TODO
+
     # Send authentication header to Ouroboros when logged in.
     $.ajaxSetup beforeSend: (xhr, settings) =>
       if @current? and !!~settings.url.indexOf @current.app.host

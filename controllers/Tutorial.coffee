@@ -2,6 +2,8 @@ define (require, exports, module) ->
   $ = require 'jQuery'
   {delay} = require 'zooniverse/util'
 
+  User = require 'zooniverse/models/User'
+
   class Tutorial
     target: null
     steps: null
@@ -84,6 +86,9 @@ define (require, exports, module) ->
         @end()
 
     end: =>
+      # User.current?.finishedTutorial = true
+      # User.current?.persist()
+
       @steps[@current]?.leave()
       @current = @steps.length
       @el.css display: 'none'
