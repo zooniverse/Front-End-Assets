@@ -50,18 +50,11 @@ define (require, exports, module) ->
       @controls.on 'click', '[value="skip"]', @next
       @controls.on 'click', '[value="end"]', @end
 
-      @el.appendTo $('body')
+      @el.appendTo $(@target || 'body')
 
       isInactive = (i, element) ->
         element = $(element)
         not element.hasClass 'active'
-
-      $(document).on 'pager-activate', =>
-        delay =>
-          if @probablyVisible()
-            @el.css display: ''
-          else
-            @el.css display: 'none'
 
     probablyVisible: =>
       parentPages = @target.parents '[data-page]'
@@ -171,7 +164,7 @@ define (require, exports, module) ->
         blocker.offset element.offset()
         @tutorial.blockers = @tutorial.blockers.add blocker
 
-      @tutorial.blockers.appendTo 'body'
+      @tutorial.blockers.insertAfter @tutorial.el
 
     leave: =>
       @tutorial.message.html ''

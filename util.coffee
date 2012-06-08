@@ -41,7 +41,7 @@ define (require, exports, module) ->
 
       setTimeout callback, duration
 
-    formatDate: (date, format='(date) (month) (year), (time12) (ampm)') ->
+    formatDate: (date, format = '(date) (month) (year), (time12) (ampm)') ->
       date = new Date date unless date instanceof Date
 
       for word, convert of dateWords
