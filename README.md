@@ -1,6 +1,9 @@
 Zoo
 ===
 
+Installation
+------------
+
 Try `gem build zoo.gemspec && gem install zoo-0.0.1.gem`
 
 Then `zoo help`
@@ -25,7 +28,7 @@ This is a **separate repo** shared across all project front-ends. Don't make any
 
 Modules in the library are available under the `zooniverse` root.
 
-**TODO: Make this a Git submodule**
+TODO: Make this a Git submodule
 
 ### /assets.json
 
@@ -44,9 +47,9 @@ Generators
 
 ### Controller (and its view and style)
 
-`zoo generate controller Classifier` creates `/src/scripts/controllers/SomeClassifier.coffee`, `/src/scripts/views/SomeClassifier.coffee`, and `/src/styles/some-widget.scss`.
+`zoo generate controller SomeWidget` creates `/src/scripts/controllers/SomeWidget.coffee`, `/src/scripts/views/SomeWidget.coffee`, and `/src/styles/some-widget.scss`.
 
 Development server
 ------------------
 
-`zoo dev 8080`
+`zoo serve 8080`
