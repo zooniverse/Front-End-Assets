@@ -1,78 +1,80 @@
 #!/usr/bin/env ruby
 
-require 'thor'
-require 'colored'
-require 'grabass'
-require_relative '../lib/zoo'
+require "thor"
+require "colored"
+require "fileutils"
+require "grabass"
+require_relative "../lib/zoo"
 
 class ZooApp < Thor
-  desc 'init "PROJECT NAME"', 'Initialize a new Zooniverse project'
-  method_option :domain, type: :string, required: true, aliases: '-d'
-  method_option :templates_only, type: :boolean, aliases: '-t'
-
+  desc "init \"PROJECT NAME\"", "Initialize a new Zooniverse project"
+  method_option :domain, type: :string, aliases: "-d"
+  method_option :templates_only, type: :boolean, aliases: "-t"
   def init(project = "New Project")
     project_js = project.camelize
-    project_url = project.downcase.run_together
     project_domain = options.domain || "#{project.downcase.run_together}.org"
     project_dash = project.downcase.dasherize
     project_under = project.downcase.underscore
 
     puts "=> Initializing #{project} at #{project_domain}".green
 
-    unless options.templates_only or File.directory? '.git'
-      puts '=> Initializing Git repository'.green
-      system 'git init'
-      new_git_repo = true
+    if File.exists? project_dash
+      puts "Directory #{project_dash}/ already exists!".red
+      exit 1
     end
 
-    Zoo.run_templates 'init', binding
+    puts "=> Initializing Git repository in #{project_dash}".green
+    system "git init #{project_dash}"
+    FileUtils.cd project_dash
 
-    if new_git_repo
-      puts '=> Creating first commit'.green
-      system 'git add --all'
-      system "git commit --message \"New project: #{project}\""
-    end
+    Zoo.install_templates "init", binding
+
+    puts "=> Creating first commit".green
+    system "git add --all"
+    system "git commit --message \"New project: #{project}\""
 
     unless options.templates_only
-      puts '=> Cloning front-end Zooniverse library into ./src/scripts/lib/zooniverse'.green
+      puts "=> Cloning front-end Zooniverse library into #{project_dash}/src/scripts/lib/zooniverse".green
       # TODO: Make this a submodule
-      system 'git clone git@github.com:zooniverse/Front-End-Assets.git -b framework ./src/scripts/lib/zooniverse'
+      system "git clone git@github.com:zooniverse/Front-End-Assets.git -b framework #{project_dash}/src/scripts/lib/zooniverse"
     end
 
     unless options.templates_only
-      puts '=> Installing third-party assets'.green
-      system 'grabass ./assets.json'
+      puts "=> Installing third-party assets".green
+      system "grabass ./assets.json"
     end
 
     # TODO: Check to make sure everything worked.
+    puts "=> Finished initialization. Project is at ./#{project_dash}/".green
   end
 
-  map 'g' => :generate
-  desc 'generate TYPE NAME', 'Generate a model or controller'
+  desc "generate TYPE NAME", "Generate a model or controller"
+  map "g" => :generate
   def generate(type, name)
     puts "=> Generating a new #{type}: #{name}".green
 
-    name_dash = name.gsub(/([a-z])([A-Z])/, '\\1-\\2').downcase
-    Zoo.run_templates type, binding
+    name_dash = name.gsub(/([a-z])([A-Z])/, "\\1-\\2").downcase
+    Zoo.install_templates type, binding
   end
 
-  desc 'serve [PORT]', 'Run a local server'
+
+  desc "serve [PORT]", "Run a local server"
   def serve(port=8080)
     puts "=> Serving at http://localhost:#{port}/".green
 
     Process.spawn "python -m SimpleHTTPServer #{port}"
-    Process.spawn 'coffee --compile --output . --watch ./src'
-    Process.spawn 'sass --watch ./src/styles:./styles --no-cache --debug-info'
-    Process.spawn 'sass --watch ./src/scripts/lib/zooniverse/styles:./styles/zooniverse --no-cache --debug-info'
+    Process.spawn "coffee --compile --output . --watch ./src"
+    Process.spawn "sass --watch ./src/styles:./styles --no-cache --debug-info"
+    Process.spawn "sass --watch ./src/scripts/lib/zooniverse/styles:./styles/zooniverse --no-cache --debug-info"
     Process.wait
   end
 
-  desc 'bundle [OUTPUT_DIRECTORY]', 'Bundle and minify resources for deployment'
-  def bundle(output_dir="BUNDLE_#{Time.now.strftime '%Y_%m_%d_%H_%M_%S'}")
+  desc "bundle [OUTPUT_DIRECTORY]", "Bundle and minify resources for deployment"
+  def bundle(output_dir="BUNDLE_#{Time.now.strftime "%Y_%m_%d_%H_%M_%S"}")
     puts "=> TODO: Bundling into #{output_dir}".green
   end
 
-  desc 'deploy S3_BUCKET', 'Deploy to S3'
+  desc "deploy S3_BUCKET", "Deploy to S3"
   def deploy(s3_bucket)
     puts "=> TODO: Deploying to #{s3_bucket}".green
   end

@@ -5,7 +5,7 @@ TemplateDir = File.join File.dirname(__FILE__), '..', 'templates'
 TemplateExt = '.erb'
 
 module Zoo
-  def self.run_templates (type, binding)
+  def self.install_templates (type, binding)
     templates_search = File.join TemplateDir, type, '**', "*#{TemplateExt}"
     templates = Dir.glob(templates_search, File::FNM_DOTMATCH).select {|item| File.file? item}
 

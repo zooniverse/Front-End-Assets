@@ -8,7 +8,7 @@ define (require, exports, module) ->
   Profile = require 'controllers/Profile'
 
   <%= project_js %> = new App
-    talkHost: 'http://talk.<%= project_url %>.org'
+    talkHost: 'http://talk.<%= project_domain %>'
     cartoUser: 'CARTODB USER'
     cartoApiKey: 'CARTODB API KEY'
     cartoTable: 'CARTODB TABLE'
