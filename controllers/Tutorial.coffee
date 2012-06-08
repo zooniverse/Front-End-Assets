@@ -151,6 +151,7 @@ define (require, exports, module) ->
         left: targetOffset.left - (stepSize.width * @attach.x) + (targetSize.width * @attach.at.x)
         top: targetOffset.top - (stepSize.height * @attach.y) + (targetSize.height * @attach.at.y)
 
+      @tutorial.el.css position: 'absolute'
       @tutorial.el.offset stepOffset
 
     createBlockers: =>
@@ -159,12 +160,13 @@ define (require, exports, module) ->
       for element in $(@block)
         element = $(element)
         blocker = $("<div class='#{@tutorial.blockerClass}'></div>")
+        blocker.insertAfter @tutorial.el
+        @tutorial.blockers = @tutorial.blockers.add blocker
+
+        blocker.css position: 'absolute'
         blocker.width element.outerWidth()
         blocker.height element.outerHeight()
         blocker.offset element.offset()
-        @tutorial.blockers = @tutorial.blockers.add blocker
-
-      @tutorial.blockers.insertAfter @tutorial.el
 
     leave: =>
       @tutorial.message.html ''
