@@ -1,12 +1,14 @@
 Zoo
 ===
 
-Very unfinished. Most of it probably doesn't work yet.
+Try `gem build zoo.gemspec && gem install zoo-0.0.1.gem`
+
+Then `zoo help`
 
 Create a new project
 --------------------
 
-`zoo init Galaxy Zoo`
+`zoo init "Galaxy Zoo" --domain galaxyzoo.org`
 
 Important files
 ---------------
@@ -23,6 +25,8 @@ This is a **separate repo** shared across all project front-ends. Don't make any
 
 Modules in the library are available under the `zooniverse` root.
 
+**TODO: Make this a Git submodule**
+
 ### /assets.json
 
 List third-party asset sources and destinations here. Used with [Grabass](https://github.com/brian-c/grabass/).
@@ -38,9 +42,9 @@ Generators
 
 `zoo generate model Subject` creates `/src/scripts/models/Subject.coffee`.
 
-### Controller (and its view)
+### Controller (and its view and style)
 
-`zoo generate controller Classifier` creates `/src/scripts/controllers/Classifier.coffee` and `/src/scripts/views/Classifier.coffee`.
+`zoo generate controller Classifier` creates `/src/scripts/controllers/SomeClassifier.coffee`, `/src/scripts/views/SomeClassifier.coffee`, and `/src/styles/some-widget.scss`.
 
 Development server
 ------------------

@@ -3,7 +3,7 @@
 require 'thor'
 require 'colored'
 require 'grabass'
-require '../lib/zoo'
+require_relative '../lib/zoo'
 
 class ZooApp < Thor
   desc 'init "PROJECT NAME"', 'Initialize a new Zooniverse project'
