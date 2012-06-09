@@ -1,6 +1,6 @@
 define (require, exports, module) ->
   Spine = require 'spine'
-  Leaflet = require 'Leaflet'
+  Leaflet = require 'leaflet'
 
   {delay} = require 'zooniverse/util'
 
