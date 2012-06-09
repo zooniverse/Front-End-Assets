@@ -1,5 +1,5 @@
 define (require, exports, module) ->
-  Spine = require 'Spine'
+  Spine = require 'spine'
 
   Authentication = require 'zooniverse/controllers/Authentication'
   User = require 'zooniverse/models/User'
