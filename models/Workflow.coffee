@@ -1,6 +1,6 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
-  $ = require 'jQuery'
+  $ = require 'jquery'
   Subject = require './Subject'
 
   class Workflow extends Spine.Model

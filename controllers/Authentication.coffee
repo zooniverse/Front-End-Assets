@@ -1,6 +1,6 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
-  $ = require 'jQuery'
+  $ = require 'jquery'
 
   class Authentication extends Spine.Module
     @extend Spine.Events

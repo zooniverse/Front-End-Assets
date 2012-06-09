@@ -1,6 +1,6 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
-  $ = require 'jQuery'
+  $ = require 'jquery'
   Annotation = require './Annotation'
 
   class Classification extends Spine.Model
