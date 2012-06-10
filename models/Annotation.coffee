@@ -1,5 +1,5 @@
 define (require, exports, module) ->
-  Spine = require 'spine'
+  Spine = require 'Spine'
 
   class Annotation extends Spine.Model
     # Belongs to a classification

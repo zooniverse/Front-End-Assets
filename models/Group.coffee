@@ -1,5 +1,5 @@
 define (require, exports, module) ->
-  Spine = require 'spine'
+  Spine = require 'Spine'
 
   class Group extends Spine.Model
     @configure 'Group'

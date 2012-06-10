@@ -1,6 +1,6 @@
 define (require, exports, module) ->
-  Spine = require 'spine'
-  $ = require 'jquery'
+  Spine = require 'Spine'
+  $ = require 'jQuery'
   {delay} = require 'zooniverse/util'
 
   # Redirect if we end up here from an escaped_fragment URL.

@@ -1,6 +1,6 @@
 define (require, exports, module) ->
-  Spine = require 'spine'
-  $ = require 'jquery'
+  Spine = require 'Spine'
+  $ = require 'jQuery'
   base64 = require 'base64'
   {remove} = require 'zooniverse/util'
 

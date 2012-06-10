@@ -1,5 +1,5 @@
 define (require, exports, module) ->
-  Spine = require 'spine'
+  Spine = require 'Spine'
 
   class Project extends Spine.Model
     @configure 'Project', 'name', 'slug', 'description', 'app', 'workflows'

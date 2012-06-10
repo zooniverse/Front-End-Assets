@@ -1,6 +1,6 @@
 define (require, exports, module) ->
-  Spine = require 'spine'
-  $ = require 'jquery'
+  Spine = require 'Spine'
+  $ = require 'jQuery'
   {delay} = require 'zooniverse/util'
 
   TEMPLATE = require 'zooniverse/views/Dialog'
