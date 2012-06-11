@@ -34,9 +34,9 @@ class ZooApp < Thor
     system "git commit --message \"New project: #{project}\""
 
     unless options.templates_only
-      puts "=> Cloning front-end Zooniverse library into #{project_dash}/src/scripts/lib/zooniverse".green
+      puts "=> Cloning front-end Zooniverse library into src/scripts/lib/zooniverse".green
       # TODO: Make this a submodule
-      system "git clone git@github.com:zooniverse/Front-End-Assets.git -b framework #{project_dash}/src/scripts/lib/zooniverse"
+      system "git clone git@github.com:zooniverse/Front-End-Assets.git -b framework src/scripts/lib/zooniverse"
     end
 
     unless options.templates_only
