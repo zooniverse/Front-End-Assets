@@ -29,16 +29,17 @@ class ZooApp < Thor
     FileUtils.cd project_dash
 
     Zoo.install_templates "init", binding
-
-    puts "=> Creating first commit".green
     system "git add --all"
-    system "git commit --message \"New project: #{project}\""
 
     unless options.templates_only
-      puts "=> Cloning front-end Zooniverse library into src/scripts/lib/zooniverse".green
-      # TODO: Make this a submodule
-      system "git clone git@github.com:zooniverse/Front-End-Assets.git -b framework src/scripts/lib/zooniverse"
+      library_repo = 'git@github.com:zooniverse/Front-End-Assets.git'
+      library_destination = 'src/scripts/lib/zooniverse'
+      puts "=> Submodule-ing front-end Zooniverse library into #{library_destination}".green
+      system "git submodule add --branch framework #{library_repo} #{library_destination}"
     end
+
+    puts "=> Creating first commit".green
+    system "git commit --message \"New project: #{project}\""
 
     unless options.templates_only
       puts "=> Installing third-party assets".green
