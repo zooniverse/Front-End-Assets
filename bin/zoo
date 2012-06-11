@@ -64,11 +64,15 @@ class ZooApp < Thor
   def serve(port=8080)
     puts "=> Serving at http://localhost:#{port}/".green
 
-    Process.spawn "python -m SimpleHTTPServer #{port}"
-    Process.spawn "coffee --compile --output scripts --watch src/scripts"
-    Process.spawn "sass --watch src/styles:styles --no-cache --debug-info"
-    Process.spawn "sass --watch src/scripts/lib/zooniverse/styles:styles/zooniverse --no-cache --debug-info"
-    Process.wait
+    pids = [
+      Process.spawn("python -m SimpleHTTPServer #{port}"),
+      Process.spawn("coffee --compile --output scripts --watch src/scripts"),
+      Process.spawn("coffee --compile --watch login-frame"),
+      Process.spawn("sass --watch src/styles:styles --no-cache --debug-info"),
+      Process.spawn("sass --watch src/scripts/lib/zooniverse/styles:styles/zooniverse --no-cache --debug-info")
+    ]
+
+    puts "If it hangs, run `kill #{pids.join ' '}`"
   end
 
   desc "bundle [OUTPUT_DIRECTORY]", "Bundle and minify resources for deployment"
