@@ -77,7 +77,7 @@ define (require, exports, module) ->
       @trigger 'change'
 
     onCreateRecent: (created) =>
-      @recent.push created
+      @recents.push created
       @trigger 'change'
 
     onDestroyRecent: (destroyed) =>
