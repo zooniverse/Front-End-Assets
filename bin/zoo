@@ -25,6 +25,7 @@ class ZooApp < Thor
 
     puts "=> Initializing Git repository in #{project_dash}".green
     system "git init #{project_dash}"
+
     FileUtils.cd project_dash
 
     Zoo.install_templates "init", binding
@@ -63,9 +64,9 @@ class ZooApp < Thor
     puts "=> Serving at http://localhost:#{port}/".green
 
     Process.spawn "python -m SimpleHTTPServer #{port}"
-    Process.spawn "coffee --compile --output . --watch ./src"
-    Process.spawn "sass --watch ./src/styles:./styles --no-cache --debug-info"
-    Process.spawn "sass --watch ./src/scripts/lib/zooniverse/styles:./styles/zooniverse --no-cache --debug-info"
+    Process.spawn "coffee --compile --output scripts --watch src/scripts"
+    Process.spawn "sass --watch src/styles:styles --no-cache --debug-info"
+    Process.spawn "sass --watch src/scripts/lib/zooniverse/styles:styles/zooniverse --no-cache --debug-info"
     Process.wait
   end
 
