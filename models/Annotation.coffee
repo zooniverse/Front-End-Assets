@@ -14,12 +14,6 @@ define (require, exports, module) ->
       @bind 'change', =>
         @classification.trigger 'change'
 
-      @bind 'destroy', =>
-        for annotation, i in @classification.annotations when annotation is @
-          @classification.annotations.splice i, 1
-
-        @classification.trigger 'change'
-
       alreadyThere = false
       # NOTE: Spine seems to be running model constructors twice. Bug?
       for annotation in @classification.annotations
@@ -30,5 +24,13 @@ define (require, exports, module) ->
 
     toJSON: =>
       @value
+
+    destroy: =>
+      for annotation, i in @classification.annotations when annotation is @
+        @classification.annotations.splice i, 1
+
+      @classification.trigger 'change'
+
+      super
 
   module.exports = Annotation

@@ -9,6 +9,9 @@ define (require, exports, module) ->
     @configure 'Favorite', 'createdAt', 'subjects'
 
     @fromJSON: (raw) ->
+      for subject in raw.subjects
+        subject.workflow_ids = [raw.workflow_id]
+
       @create
         createdAt: raw.created_at
         subjects: (Subject.fromJSON subject for subject in raw.subjects)
