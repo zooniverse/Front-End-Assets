@@ -29,7 +29,6 @@ class ZooApp < Thor
     FileUtils.cd project_dash
 
     Zoo.install_templates "init", binding
-    system "git add --all"
 
     unless options.templates_only
       library_repo = 'git@github.com:zooniverse/Front-End-Assets.git'
@@ -39,6 +38,7 @@ class ZooApp < Thor
     end
 
     puts "=> Creating first commit".green
+    system "git add --all"
     system "git commit --message \"New project: #{project}\""
 
     unless options.templates_only
