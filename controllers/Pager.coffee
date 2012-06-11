@@ -11,6 +11,8 @@ define (require, exports, module) ->
   ACTIVE_CLASS = 'active'
   AFTER_CLASS = 'after'
 
+  FOCUSABLE = 'a, button, input, select, textarea'
+
   class Page extends Spine.Controller
     pager: null
 
@@ -28,6 +30,11 @@ define (require, exports, module) ->
       # console.log "New Page at #{hash} with #{@links.length} links"
 
     activate: =>
+      for element in @el.find(FOCUSABLE)
+        element = $(element)
+        element.attr 'tabindex', element.data('old-tabindex') || null
+        element.data 'old-tabindex', null
+
       elAndLinks = @el.add @links
       elAndLinks.removeClass BEFORE_CLASS
       elAndLinks.removeClass AFTER_CLASS
@@ -36,6 +43,12 @@ define (require, exports, module) ->
       @el.trigger 'pager-activate'
 
     deactivate: (inactiveClass) =>
+      for element in @el.find(FOCUSABLE)
+        element = $(element)
+        tabindex = element.attr 'tabindex'
+        element.data 'old-tabindex', tabindex if tabindex?
+        element.attr 'tabindex', -1
+
       elAndLinks = @el.add @links
       elAndLinks.removeClass BEFORE_CLASS
       elAndLinks.removeClass AFTER_CLASS
