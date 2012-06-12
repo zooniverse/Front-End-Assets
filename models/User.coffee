@@ -2,6 +2,8 @@ define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
   base64 = require 'base64'
+
+  config = require 'zooniverse/config'
   {remove} = require 'zooniverse/util'
 
   Authentication = require 'zooniverse/controllers/Authentication'
@@ -10,7 +12,7 @@ define (require, exports, module) ->
 
   class User extends Spine.Model
     # Has many favorites and recents, also has a reference back to the app
-    @configure 'User', 'zooniverseId', 'name', 'apiKey', 'finishedTutorial', 'app', 'favorites', 'recents'
+    @configure 'User', 'zooniverseId', 'name', 'apiKey', 'finishedTutorial', 'favorites', 'recents'
 
     @current: null
 
@@ -46,8 +48,8 @@ define (require, exports, module) ->
       refresh = new $.Deferred
 
       url = """
-        #{@app.host}
-        /projects/#{@app.projects[0].id}
+        #{config.host}
+        /projects/#{config.app.projects[0].id}
         /users/#{@id}
         /#{attribute}
       """.replace /\n/g, ''
@@ -89,7 +91,7 @@ define (require, exports, module) ->
 
     # Send authentication header to Ouroboros when logged in.
     $.ajaxSetup beforeSend: (xhr, settings) =>
-      if @current? and !!~settings.url.indexOf @current.app.host
+      if @current? and !!~settings.url.indexOf config.host
         auth = base64.encode "#{@current.name}:#{@current.apiKey}"
         xhr.setRequestHeader 'Authorization', "Basic #{auth}"
 

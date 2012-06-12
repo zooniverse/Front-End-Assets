@@ -1,11 +1,14 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
-  Subject = require './Subject'
+
+  {delay} = require 'zooniverse/util'
+
+  Subject = require 'zooniverse/models/Subject'
 
   class Workflow extends Spine.Model
     # Belongs to a project, has many subjects
-    @configure 'Workflow', 'controller', 'project', 'subjects', 'tutorialSubjects'
+    @configure 'Workflow', 'queueLength', 'selectionLength', 'tutorialSubjects', 'project', 'subjects'
 
     queueLength: 5
     selectionLength: 1
@@ -14,11 +17,11 @@ define (require, exports, module) ->
     constructor: ->
       super
 
-      @controller?.workflow = @
-      @subjects ?= []
       @tutorialSubjects ?= []
-
+      @subjects ?= []
       subject.workflow = @ for subject in @tutorialSubjects
+
+      @controller?.workflow = @
 
     fetchSubjects: (group) =>
       fetch = new $.Deferred
@@ -26,7 +29,7 @@ define (require, exports, module) ->
       groupSegment = '/#{group}' if group
 
       url = """
-        #{@project.app.host}
+        #{config.host}
         /projects/#{@project.id}
         #{groupSegment}
         /subjects?limit=#{@queueLength - @subjects.length}
@@ -66,13 +69,8 @@ define (require, exports, module) ->
       if @subjects.length < @selectionLength
         alert 'We\'ve run out of subjects for you to classify on this project!'
         throw new Error 'No more subjects'
+
       @selection = @subjects.splice 0, @selectionLength
       @trigger 'change-selection'
-
-  # When a subject is created from JSON, its workflow is just an ID.
-  Subject.bind 'from-json', (subject) =>
-    if typeof subject.workflow is 'string'
-      subject.workflow = Workflow.find subject.workflow
-      subject.save()
 
   module.exports = Workflow

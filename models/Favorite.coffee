@@ -2,6 +2,8 @@ define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
 
+  config = require 'zooniverse/config'
+
   Subject = require './Subject'
 
   class Favorite extends Spine.Model
@@ -27,8 +29,7 @@ define (require, exports, module) ->
     persist: =>
       @trigger 'persisting'
 
-      project = @subjects[0].workflow.project
-      url = "#{project.app.host}/projects/#{project.id}/favorites"
+      url = "#{config.host}/projects/#{config.app.projects[0].id}/favorites"
       post = $.post url, @toJSON()
       post.done => @trigger 'persist'
       post.fail => @trigger 'error'

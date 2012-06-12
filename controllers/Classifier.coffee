@@ -45,7 +45,8 @@ define (require, exports, module) ->
     reset: =>
       @classification?.destroy()
 
-      @classification = Classification.create
+      @classification = new Classification
+        workflow: @workflow
         subjects: @workflow.selection
 
       @classification.bind 'change', @render
@@ -62,7 +63,7 @@ define (require, exports, module) ->
       @nextSubjects().done @tutorial.start
 
     saveClassification: =>
-      @classification.persist();
+      @classification.persist() unless @classification.subjects[0].eql @workflow.tutorialSubjects[0];
 
     addFavorite: =>
       favorite = Favorite.create subjects: @workflow.selection

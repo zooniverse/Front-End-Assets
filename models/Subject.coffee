@@ -1,47 +1,36 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
 
-  class Subject extends Spine.Model
-    # Belongs to a workflow
-    @configure 'Subject', 'zooniverseID', 'location', 'coords', 'metadata', 'workflow'
+  config = require 'zooniverse/config'
 
-    @current: null
-    @queueLength: 3
+  class Subject extends Spine.Model
+    @configure 'Subject', 'zooniverseID', 'location', 'coords', 'metadata'
 
     @fromJSON: (raw) ->
-      created = @create
-        workflow: raw.workflow_ids[0] # Converted to a workflow at "from-json" trigger
+      @create
         id: raw.id
         zooniverseID: raw.zooniverse_id
         location: raw.location
         coords: raw.coords
         metadata: raw.metadata
 
-      @trigger 'from-json', created
-
-      created
-
-    constructor: ->
-      super
-      throw new Error 'Subject created without a workflow' unless @workflow?
-
     talkHref: =>
-      "#{@workflow.project.app.talkHost}/objects/#{@zooniverseID}"
+      "#{config.talkHost}/objects/#{@zooniverseID}"
 
     facebookHref: =>
       """
         https://www.facebook.com/dialog/feed?
-        app_id=#{@workflow.project.facebookAppId}&
+        app_id=#{config.facebookAppId}&
         link=#{@talkHref()}&
         picture=#{@location.image || @location}&
-        name=#{@workflow.project.name}&
+        name=#{config.name}&
         caption=A Zooniverse citizen science project&
-        description=#{@workflow.project.description}&
+        description=#{config.description}&
         redirect_uri=#{location.href}
       """.replace /\n/g, ''
 
     twitterHref: =>
-      text = "I've classified something on #{@workflow.project.name}!"
+      text = "I've classified something on #{config.name}!"
       "https://twitter.com/share?text=#{text}&url=#{@talkHref()}"
 
   module.exports = Subject

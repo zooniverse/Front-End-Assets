@@ -1,11 +1,14 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
+
+  config = require 'zooniverse/config'
+
   Annotation = require './Annotation'
 
   class Classification extends Spine.Model
     # Has a list of subjects and many annotations
-    @configure 'Classification', 'metadata', 'subjects', 'annotations'
+    @configure 'Classification', 'metadata', 'workflow', 'subjects', 'annotations'
 
     constructor: ->
       super
@@ -16,9 +19,9 @@ define (require, exports, module) ->
       @trigger 'persisting'
 
       url = """
-        #{@subjects[0].workflow.project.app.host}
-        /projects/#{@subjects[0].workflow.project.id}
-        /workflows/#{@subjects[0].workflow.id}
+        #{config.host}
+        /projects/#{@workflow.project.id}
+        /workflows/#{@workflow.id}
         /classifications
       """.replace /\n/g, ''
 
