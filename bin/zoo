@@ -11,7 +11,7 @@ ServerPidsFile = ".zoo_server_pids"
 class ZooApp < Thor
   desc "init \"PROJECT NAME\"", "Initialize a new Zooniverse project"
   method_option :domain, type: :string, aliases: "-d"
-  method_option :templates_only, type: :boolean, aliases: "-t"
+  method_option :here, type: :boolean, aliases: "-h"
   def init(project = "New Project")
     project_js = project.camelize
     project_domain = options.domain || "#{project.downcase.run_together}.org"
@@ -20,36 +20,44 @@ class ZooApp < Thor
 
     puts "=> Initializing #{project} at #{project_domain}".green
 
-    if File.exists? project_dash
-      puts "Directory #{project_dash}/ already exists!".red
-      exit 1
+    init_dir = "."
+
+    unless options.here
+      if File.exists? project_dash
+        puts "Directory #{project_dash}/ already exists!".red
+        exit 1
+      end
+      init_dir = project_dash
     end
 
-    puts "=> Initializing Git repository in #{project_dash}".green
-    system "git init #{project_dash}"
+    unless File.exists? File.join init_dir, ".git"
+      puts "=> Initializing Git repository in #{init_dir}".green
+      system "git init #{init_dir}"
+      new_repo = true
+    end
 
-    FileUtils.cd project_dash
+    FileUtils.cd init_dir
 
     Zoo.install_templates "init", binding
 
-    unless options.templates_only
-      library_repo = 'git@github.com:zooniverse/Front-End-Assets.git'
-      library_destination = 'src/scripts/lib/zooniverse'
-      puts "=> Submodule-ing front-end Zooniverse library into #{library_destination}".green
-      system "git submodule add --branch framework #{library_repo} #{library_destination}"
+    library_repo = 'git@github.com:zooniverse/Front-End-Assets.git'
+    library_destination = 'src/scripts/lib/zooniverse'
+    puts "=> Submodule-ing front-end Zooniverse library into #{library_destination}".green
+    system "git submodule add --branch framework #{library_repo} #{library_destination}"
+
+    if new_repo
+      puts "=> Creating first commit".green
+      system "git add --all"
+      system "git commit --message \"New project: #{project}\""
+    else
+      puts "=> Not creating an initial commit since there was already a repo.".yellow
     end
 
-    puts "=> Creating first commit".green
-    system "git add --all"
-    system "git commit --message \"New project: #{project}\""
-
-    unless options.templates_only
-      puts "=> Installing third-party assets".green
-      system "grabass ./assets.json"
-    end
+    puts "=> Installing third-party assets".green
+    system "grabass ./assets.json"
 
     # TODO: Check to make sure everything worked.
-    puts "=> Finished initialization. Project is at ./#{project_dash}/".green
+    puts "=> Finished initialization. Project is in \"#{init_dir}\".".green
   end
 
   desc "generate TYPE NAME", "Generate a model or controller"
@@ -119,7 +127,6 @@ class ZooApp < Thor
 
     puts "=> Compiling Zooniverse SASS (src/scripts/lib/zooniverse/styles to styles/zooniverse)".green
     system "sass --update --style compressed src/scripts/lib/zooniverse/styles:styles/zooniverse --no-cache"
-
 
     puts "=> Bundling into #{output_dir}".green
 
