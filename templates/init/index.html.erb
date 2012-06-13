@@ -7,7 +7,7 @@
     <title><%= project %></title>
 
     <link href="./styles/zooniverse/main.css" rel="stylesheet" />
-    <link href="./styles/<%= project_dash %>.css" rel="stylesheet" />
+    <link href="./styles/main.css" rel="stylesheet" />
 
     <!--[if lt IE 9]>
       <script src="./scripts/lib/html5shiv.js"></script>
@@ -50,7 +50,7 @@
     </div>
 
     <script>
-      var development = '<script src="scripts/lib/require.js" data-main="scripts/main"><'+'/script>';
+      var development = '<script src="scripts/lib/require.js" data-main="scripts/lib/zooniverse/main"><'+'/script>';
       var production = '<script src="scripts/build/seafloorExplorer.js"><'+'/script>';
 
       // Being on port 80 loads the production JS.
