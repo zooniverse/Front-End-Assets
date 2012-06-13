@@ -6,6 +6,8 @@ require "fileutils"
 require "grabass"
 require_relative "../lib/zoo"
 
+ServerPidsFile = ".zoo_server_pids"
+
 class ZooApp < Thor
   desc "init \"PROJECT NAME\"", "Initialize a new Zooniverse project"
   method_option :domain, type: :string, aliases: "-d"
@@ -62,22 +64,36 @@ class ZooApp < Thor
 
   desc "serve [PORT]", "Run a local server"
   method_option :port, type: :string, default: '8080', aliases: "-p"
+  method_option :force, type: :boolean, aliases: "-f"
   def server(command="start")
-    if command == 'start'
+    case command.to_sym
+    when :start
+      if options.force
+        FileUtils.rm ServerPidsFile
+      end
+
+      if File.exists? ServerPidsFile
+        puts "=> A server is already running here. Try `zoo server stop`"
+        exit 1
+      end
+
       puts "=> Serving at http://localhost:#{options.port}/".green
+
       pids = [
         Process.spawn("coffee --compile --output scripts --watch src/scripts"),
+        Process.spawn("coffee --compile --output scripts --watch src/scripts/lib/zooniverse/main.coffee"),
         Process.spawn("sass --watch src/styles:styles --no-cache --debug-info"),
         Process.spawn("sass --watch src/scripts/lib/zooniverse/styles:styles/zooniverse --no-cache --debug-info"),
         Process.spawn("python -m SimpleHTTPServer #{options.port}")
       ]
 
-      system "echo \"#{pids.join ' '}\" > .zoo_server_pids"
-    elsif command == "stop"
-      pids = File.read ".zoo_server_pids"
+      File.write ServerPidsFile, pids.join(' ')
+
+    when :stop
+      pids = File.read ServerPidsFile
       puts "=> Killing #{pids}".green
       system "kill #{pids}"
-      FileUtils.rm ".zoo_server_pids"
+      FileUtils.rm ServerPidsFile
     end
   end
 
