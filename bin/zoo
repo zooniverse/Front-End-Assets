@@ -56,6 +56,11 @@ class ZooApp < Thor
     puts "=> Installing third-party assets".green
     system "grabass ./assets.json"
 
+    puts "=> Installing Bourbon SASS mixins".green
+    FileUtils.cd File.join('src', 'styles', 'lib')
+    system "bourbon install"
+    FileUtils.cd File.join('..', '..', '..')
+
     # TODO: Check to make sure everything worked.
     puts "=> Finished initialization. Project is in \"#{init_dir}\".".green
   end
@@ -90,7 +95,7 @@ class ZooApp < Thor
       pids = [
         Process.spawn("coffee --compile --output scripts --watch src/scripts"),
         Process.spawn("coffee --compile --output scripts --watch src/scripts/lib/zooniverse/main.coffee"),
-        Process.spawn("sass --watch src/styles:styles --no-cache --debug-info"),
+        Process.spawn("sass --watch src/styles:styles --require bourbon --no-cache --debug-info"),
         Process.spawn("sass --watch src/scripts/lib/zooniverse/styles/main.scss:styles/zooniverse.css --no-cache --debug-info"),
         Process.spawn("python -m SimpleHTTPServer #{options.port}")
       ]
@@ -123,7 +128,7 @@ class ZooApp < Thor
     system "r.js -o scripts/build.json"
 
     puts "=> Compiling site SASS (src/styles to styles)".green
-    system "sass --update --style compressed src/styles:styles --no-cache"
+    system "sass --update src/styles:styles --require bourbon --style compressed  --no-cache"
 
     puts "=> Compiling Zooniverse SASS (src/scripts/lib/zooniverse/styles/main.scss to styles/zooniverse.css)".green
     system "sass --update src/scripts/lib/zooniverse/styles/main.scss:styles/zooniverse.css --style compressed --no-cache"
