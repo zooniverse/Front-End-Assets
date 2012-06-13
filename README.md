@@ -24,11 +24,9 @@ Scripts are [AMD modules](http://requirejs.org/docs/api.html#define). I like to 
 
 ### /src/scripts/lib/zooniverse
 
-This is a **separate repo** shared across all project front-ends. Don't make any project-specific changes here. If you do need to make changes, make sure you push the back to the origin.
+This is a Git submodule shared across all project front-ends. Don't make any project-specific changes here. If you do need to make changes, make sure you push the back to the origin before you and update and commit the parent's repo.
 
 Modules in the library are available under the `zooniverse` root.
-
-TODO: Make this a Git submodule
 
 ### /assets.json
 
@@ -52,4 +50,4 @@ Generators
 Development server
 ------------------
 
-`zoo serve 8080`
+Start with `zoo server start --port 8080`, stop with `zoo server stop`

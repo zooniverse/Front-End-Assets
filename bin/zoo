@@ -61,18 +61,24 @@ class ZooApp < Thor
 
 
   desc "serve [PORT]", "Run a local server"
-  def serve(port=8080)
-    puts "=> Serving at http://localhost:#{port}/".green
+  method_option :port, type: :string, default: '8080', aliases: "-p"
+  def server(command="start")
+    if command == 'start'
+      puts "=> Serving at http://localhost:#{options.port}/".green
+      pids = [
+        Process.spawn("coffee --compile --output scripts --watch src/scripts"),
+        Process.spawn("sass --watch src/styles:styles --no-cache --debug-info"),
+        Process.spawn("sass --watch src/scripts/lib/zooniverse/styles:styles/zooniverse --no-cache --debug-info"),
+        Process.spawn("python -m SimpleHTTPServer #{options.port}")
+      ]
 
-    pids = [
-      Process.spawn("python -m SimpleHTTPServer #{port}"),
-      Process.spawn("coffee --compile --output scripts --watch src/scripts"),
-      Process.spawn("coffee --compile --watch login-frame"),
-      Process.spawn("sass --watch src/styles:styles --no-cache --debug-info"),
-      Process.spawn("sass --watch src/scripts/lib/zooniverse/styles:styles/zooniverse --no-cache --debug-info")
-    ]
-
-    puts "If it hangs, run `kill #{pids.join ' '}`"
+      system "echo \"#{pids.join ' '}\" > .zoo_server_pids"
+    elsif command == "stop"
+      pids = File.read ".zoo_server_pids"
+      puts "=> Killing #{pids}".green
+      system "kill #{pids}"
+      FileUtils.rm ".zoo_server_pids"
+    end
   end
 
   desc "bundle [OUTPUT_DIRECTORY]", "Bundle and minify resources for deployment"
