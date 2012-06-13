@@ -49,4 +49,4 @@ require.config
         console.error 'Raphael needs its own <script> tag before RequireJS.' unless Raphael?
         Raphael
 
-  deps: ['setup']
+  deps: ['site']
