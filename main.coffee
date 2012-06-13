@@ -1,6 +1,4 @@
 require.config
-  baseUrl: 'scripts'
-
   paths:
     base64: 'lib/base64'
     jquery: 'lib/jquery'
