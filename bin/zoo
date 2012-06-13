@@ -91,7 +91,7 @@ class ZooApp < Thor
         Process.spawn("coffee --compile --output scripts --watch src/scripts"),
         Process.spawn("coffee --compile --output scripts --watch src/scripts/lib/zooniverse/main.coffee"),
         Process.spawn("sass --watch src/styles:styles --no-cache --debug-info"),
-        Process.spawn("sass --watch src/scripts/lib/zooniverse/styles:styles/zooniverse --no-cache --debug-info"),
+        Process.spawn("sass --watch src/scripts/lib/zooniverse/styles/main.scss:styles/zooniverse.css --no-cache --debug-info"),
         Process.spawn("python -m SimpleHTTPServer #{options.port}")
       ]
 
@@ -125,8 +125,8 @@ class ZooApp < Thor
     puts "=> Compiling site SASS (src/styles to styles)".green
     system "sass --update --style compressed src/styles:styles --no-cache"
 
-    puts "=> Compiling Zooniverse SASS (src/scripts/lib/zooniverse/styles to styles/zooniverse)".green
-    system "sass --update --style compressed src/scripts/lib/zooniverse/styles:styles/zooniverse --no-cache"
+    puts "=> Compiling Zooniverse SASS (src/scripts/lib/zooniverse/styles/main.scss to styles/zooniverse.css)".green
+    system "sass --update src/scripts/lib/zooniverse/styles/main.scss:styles/zooniverse.css --style compressed --no-cache"
 
     puts "=> Bundling into #{output_dir}".green
 
