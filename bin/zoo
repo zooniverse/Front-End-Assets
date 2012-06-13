@@ -98,6 +98,7 @@ class ZooApp < Thor
   end
 
   desc "build [OUTPUT_DIRECTORY]", "Bundle and minify resources for deployment"
+  method_option :all, type: :boolean, aliases: "-a"
   def build(output_dir="build-#{Time.now.strftime "%Y.%m.%d-%H.%M.%S"}")
     unless system 'which r.js'
       puts "=> You need to install the RequireJS optimizer. Try `npm install -g requirejs`.".red
@@ -114,12 +115,23 @@ class ZooApp < Thor
     system "r.js -o scripts/build.json"
 
     puts "=> Compiling site SASS (src/styles to styles)".green
-    system "sass --update src/styles:styles --style compressed --no-cache"
+    system "sass --update --style compressed src/styles:styles --no-cache"
 
     puts "=> Compiling Zooniverse SASS (src/scripts/lib/zooniverse/styles to styles/zooniverse)".green
-    system "sass --update src/scripts/lib/zooniverse/styles:styles/zooniverse --style compressed --no-cache"
+    system "sass --update --style compressed src/scripts/lib/zooniverse/styles:styles/zooniverse --no-cache"
 
-    puts "=> TODO: Bundling into #{output_dir}".red
+
+    puts "=> Bundling into #{output_dir}".green
+
+    ignore_these = ['assets.json', 'bin', 'Gemfile', 'Gemfile.lock', 'README.md', 'src']
+    items_to_copy = Dir['*']
+
+    items_to_copy = items_to_copy - ignore_these unless options.all
+
+    FileUtils.mkdir_p output_dir
+    items_to_copy.each do |item|
+      FileUtils.cp_r item, File.join(output_dir, item)
+    end
   end
 
   desc "deploy S3_BUCKET", "Deploy to S3"
