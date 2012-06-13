@@ -97,14 +97,34 @@ class ZooApp < Thor
     end
   end
 
-  desc "bundle [OUTPUT_DIRECTORY]", "Bundle and minify resources for deployment"
-  def bundle(output_dir="BUNDLE_#{Time.now.strftime "%Y_%m_%d_%H_%M_%S"}")
-    puts "=> TODO: Bundling into #{output_dir}".green
+  desc "build [OUTPUT_DIRECTORY]", "Bundle and minify resources for deployment"
+  def build(output_dir="build-#{Time.now.strftime "%Y.%m.%d-%H.%M.%S"}")
+    unless system 'which r.js'
+      puts "=> You need to install the RequireJS optimizer. Try `npm install -g requirejs`.".red
+      exit 1
+    end
+
+    puts "=> Compiling CoffeeScript (src/scripts to scripts)".green
+    system "coffee --compile --output scripts src/scripts"
+
+    puts "=> Compiling RequireJS config (src/scripts/lib/zooniverse/main.coffee to scripts/main.js)".green
+    system "coffee --compile --output scripts src/scripts/lib/zooniverse/main.coffee"
+
+    puts "=> Optimizing JavaScript (building to scripts/build/main.js)".green
+    system "r.js -o scripts/build.json"
+
+    puts "=> Compiling site SASS (src/styles to styles)".green
+    system "sass --update src/styles:styles --style compressed --no-cache"
+
+    puts "=> Compiling Zooniverse SASS (src/scripts/lib/zooniverse/styles to styles/zooniverse)".green
+    system "sass --update src/scripts/lib/zooniverse/styles:styles/zooniverse --style compressed --no-cache"
+
+    puts "=> TODO: Bundling into #{output_dir}".red
   end
 
   desc "deploy S3_BUCKET", "Deploy to S3"
   def deploy(s3_bucket)
-    puts "=> TODO: Deploying to #{s3_bucket}".green
+    puts "=> TODO: Deploying to #{s3_bucket}".red
   end
 end
 
