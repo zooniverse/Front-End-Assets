@@ -38,7 +38,7 @@ require.config
         '''
 
         head = $('head')
-        head.append styleTags unless ~head.html().indexOf 'leaflet.css'
+        head.prepend styleTags unless ~head.html().indexOf 'leaflet.css'
 
         L # Leaflet goes by "L". Its noConflict method is broken as of 3.1.
 
