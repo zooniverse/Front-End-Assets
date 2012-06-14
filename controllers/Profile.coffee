@@ -10,9 +10,11 @@ define (require, exports, module) ->
     className: 'zooniverse-profile'
     template: TEMPLATE
 
-    events: {}
+    events:
+      'click .sign-out': 'signOut'
 
     elements:
+      '.username': 'usernameContainer'
       '.login-form': 'loginFormContainer'
       '.favorites ul': 'favoritesList'
       '.recents ul': 'recentsList'
@@ -31,6 +33,7 @@ define (require, exports, module) ->
       @el.toggleClass 'signed-in', User.current?
 
       if User.current?
+        @usernameContainer.html User.current.name
         @updateFavorites()
         @updateRecents()
 
@@ -52,5 +55,9 @@ define (require, exports, module) ->
       recents = User.current.recents
       @el.toggleClass 'has-recents', recents.length > 0
       @recentsList.prepend @recentTemplate recent for recent in recents
+
+    signOut: (e) =>
+      e.preventDefault()
+      User.signOut()
 
   module.exports = Profile
