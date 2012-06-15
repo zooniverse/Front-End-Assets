@@ -48,3 +48,6 @@ define (require, exports, module) ->
         format = format.replace "(#{word})", convert date if ~format.indexOf "(#{word})"
 
       format
+
+    clamp: (n, {min, max} = {min: 0, max: 1}) ->
+      Math.min Math.max(n, min), max
