@@ -11,6 +11,7 @@ require.config
     # Make sure it's loaded in its own script tag before RequireJS.
     # Again we'll use a blank file and a shim to refer to it.
     Raphael: 'lib/zooniverse/blanks/Raphael'
+    soundManager: 'lib/soundmanager/soundmanager2'
     zooniverse: 'lib/zooniverse'
 
   shim:
@@ -46,5 +47,18 @@ require.config
       exports: ->
         console.error 'Raphael needs its own <script> tag before RequireJS.' unless Raphael?
         Raphael
+
+    soundManager:
+      exports: ->
+        unless window.SM2_DEFER is true
+          throw new Error 'window.SM2_DEFER must be true before loading SoundManager'
+
+        window.soundManager = new SoundManager()
+        window.soundManager.url = 'scripts/lib/soundmanager/swf'
+        window.soundManager.html5PollingInterval = 50
+        window.soundManager.debugMode = false
+        window.soundManager.beginDelayedInit()
+
+        window.soundManager
 
   deps: ['site']
