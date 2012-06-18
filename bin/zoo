@@ -9,10 +9,13 @@ require_relative "../lib/zoo"
 ServerPidsFile = ".zoo_server_pids"
 
 class ZooApp < Thor
-  desc "init \"PROJECT NAME\"", "Initialize a new Zooniverse project"
+  desc "init PROJECT NAME", "Initialize a new Zooniverse project"
   method_option :domain, type: :string, aliases: "-d"
   method_option :here, type: :boolean, aliases: "-h"
-  def init(project = "New Project")
+  def init(*project)
+    project = project.join ' '
+    project = 'New Project' if project.empty?
+
     project_js = project.camelize
     project_domain = options.domain || "#{project.downcase.run_together}.org"
     project_dash = project.downcase.dasherize
