@@ -82,7 +82,7 @@ class ZooApp < Thor
   end
 
   desc "serve start [PORT]", "Run a local server"
-  def serve(port=8080)
+  def serve(port='8080')
     server_env = {"ZOO_SERVER_PORT" => port}
     procfile = File.join File.dirname(File.dirname(__FILE__)), "lib", "server", "Procfile"
     directory = Dir.pwd
