@@ -1,7 +1,18 @@
 define (require, exports, module) ->
+  $ = require 'jQuery'
+
   BaseProfile = require 'zooniverse/controllers/Profile'
 
   class Profile extends BaseProfile
-    # TODO
+    events: $.extend
+      'click .example': -> alert 'Example clicked'
+      BaseProfile::events
+
+    elements: $.extend
+      '.example': 'exampleNode'
+      BaseProfile::elements
+
+    constructor: ->
+      super
 
   module.exports = Profile
