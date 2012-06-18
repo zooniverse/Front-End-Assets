@@ -47,7 +47,7 @@ Generators
 
 ### Controller (and its view and style)
 
-`zoo generate controller SomeWidget` creates `/src/scripts/controllers/SomeWidget.coffee`, `/src/scripts/views/SomeWidget.coffee`, and `/src/styles/some-widget.scss`.
+`zoo generate controller SomeWidget` creates `/src/scripts/controllers/SomeWidget.coffee`, `/src/scripts/views/SomeWidget.coffee`, and `/src/styles/_some-widget.scss`.
 
 Development server
 ------------------

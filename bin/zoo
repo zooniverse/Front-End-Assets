@@ -73,10 +73,13 @@ class ZooApp < Thor
   def generate(type, name)
     puts "=> Generating a new #{type}: #{name}".green
 
-    name_dash = name.gsub(/([a-z])([A-Z])/, "\\1-\\2").downcase
+    style_name = name.gsub(/([a-z])([A-Z])/, "\\1-\\2").downcase
+    style_filename = "_#{style_name}"
     Zoo.install_templates type, binding
+    File.open File.join("src", "styles", "main.scss"), "a" do |file|
+      file.puts "@import \"#{style_name}\";"
+    end
   end
-
 
   desc "serve start [PORT]", "Run a local server"
   def serve(port=8080)

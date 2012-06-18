@@ -4,6 +4,7 @@ define (require, exports, module) ->
   template = require 'views/<&= name &>'
 
   class <%= name %> extends Spine.Controller
+    className: '<%= style_name %>'
     template: template
 
     events: null
