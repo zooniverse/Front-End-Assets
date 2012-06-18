@@ -78,10 +78,9 @@ class ZooApp < Thor
   end
 
 
-  desc "serve [PORT]", "Run a local server"
-  method_option :port, type: :string, default: '8080', aliases: "-p"
+  desc "server start [PORT]", "Run a local server"
   method_option :force, type: :boolean, aliases: "-f"
-  def server(command="start")
+  def server(command="start", port=8080)
     case command.to_sym
     when :start
       if options.force
@@ -93,14 +92,14 @@ class ZooApp < Thor
         exit 1
       end
 
-      puts "=> Serving at http://localhost:#{options.port}/".green
+      puts "=> Serving at http://localhost:#{port}/".green
 
       pids = [
         Process.spawn("coffee --compile --output scripts --watch src/scripts"),
         Process.spawn("coffee --compile --output scripts --watch src/scripts/lib/zooniverse/main.coffee"),
         Process.spawn("sass --watch src/styles:styles --require bourbon --no-cache --debug-info"),
         Process.spawn("sass --watch src/scripts/lib/zooniverse/styles/main.scss:styles/zooniverse.css --no-cache --debug-info"),
-        Process.spawn("python -m SimpleHTTPServer #{options.port}")
+        Process.spawn("python -m SimpleHTTPServer #{port}")
       ]
 
       File.write ServerPidsFile, pids.join(' ')
@@ -116,8 +115,9 @@ class ZooApp < Thor
   desc "build [OUTPUT_DIRECTORY]", "Bundle and minify resources for deployment"
   method_option :all, type: :boolean, aliases: "-a"
   def build(output_dir="build-#{Time.now.strftime "%Y.%m.%d-%H.%M.%S"}")
+    puts "=> Checking for RequireJS optimizer".green
     unless system 'which r.js'
-      puts "=> You need to install the RequireJS optimizer. Try `npm install -g requirejs`.".red
+      puts "=> RequireJS optimizer not found. Try `npm install -g requirejs`.".red
       exit 1
     end
 
