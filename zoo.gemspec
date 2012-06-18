@@ -16,4 +16,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'grabass'
   s.add_dependency 'coffee-script'
   s.add_dependency 'sass'
+  s.add_dependency 'bourbon'
 end
