@@ -1,0 +1,5 @@
+python: python -m SimpleHTTPServer $ZOO_SERVER_PORT
+coffee: coffee --compile --output scripts --watch src/scripts/lib/zooniverse/main.coffee
+sass:   sass --watch src/scripts/lib/zooniverse/styles/main.scss:styles/zooniverse.css --no-cache --debug-info
+coffee: coffee --compile --output scripts --watch src/scripts
+sass:   sass --watch src/styles:styles --require bourbon --no-cache --debug-info

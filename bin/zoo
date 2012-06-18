@@ -78,38 +78,14 @@ class ZooApp < Thor
   end
 
 
-  desc "server start [PORT]", "Run a local server"
-  method_option :force, type: :boolean, aliases: "-f"
-  def server(command="start", port=8080)
-    case command.to_sym
-    when :start
-      if options.force
-        FileUtils.rm ServerPidsFile
-      end
+  desc "serve start [PORT]", "Run a local server"
+  def serve(port=8080)
+    server_env = {"ZOO_SERVER_PORT" => port}
+    procfile = File.join File.dirname(File.dirname(__FILE__)), "lib", "server", "Procfile"
+    directory = Dir.pwd
 
-      if File.exists? ServerPidsFile
-        puts "=> A server is already running here. Try `zoo server stop`"
-        exit 1
-      end
-
-      puts "=> Serving at http://localhost:#{port}/".green
-
-      pids = [
-        Process.spawn("coffee --compile --output scripts --watch src/scripts"),
-        Process.spawn("coffee --compile --output scripts --watch src/scripts/lib/zooniverse/main.coffee"),
-        Process.spawn("sass --watch src/styles:styles --require bourbon --no-cache --debug-info"),
-        Process.spawn("sass --watch src/scripts/lib/zooniverse/styles/main.scss:styles/zooniverse.css --no-cache --debug-info"),
-        Process.spawn("python -m SimpleHTTPServer #{port}")
-      ]
-
-      File.write ServerPidsFile, pids.join(' ')
-
-    when :stop
-      pids = File.read ServerPidsFile
-      puts "=> Killing #{pids}".green
-      system "kill #{pids}"
-      FileUtils.rm ServerPidsFile
-    end
+    puts "=> Starting up a server at http://localhost:#{port}".green
+    exec server_env, "foreman start --app-root #{directory} --procfile #{procfile}"
   end
 
   desc "build [OUTPUT_DIRECTORY]", "Bundle and minify resources for deployment"

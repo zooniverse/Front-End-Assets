@@ -4,14 +4,14 @@ Zoo
 Installation
 ------------
 
-Try `gem build zoo.gemspec && gem install zoo-0.0.1.gem`
+Try `gem build zoo.gemspec && gem install zoo-x.y.z.gem`.
 
-Then `zoo help`
+Then `zoo help` should work.
 
 Create a new project
 --------------------
 
-`zoo init "Galaxy Zoo" --domain galaxyzoo.org`
+`zoo init Galaxy Zoo --domain galaxyzoo.org`
 
 Important files
 ---------------
@@ -31,6 +31,8 @@ Modules in the library are available under the `zooniverse` root.
 ### /assets.json
 
 List third-party asset sources and destinations here. Used with [Grabass](https://github.com/brian-c/grabass/).
+
+Update an asset by changing its source in the file and running `grabass update jquery`, for example.
 
 ### /scripts/lib and /styles/lib
 
