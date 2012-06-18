@@ -1,0 +1,63 @@
+@import "common";
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+}
+
+.zooniverse-top-bar > div {
+  width: $full-width + 34;
+}
+
+.<%= project_dash %>.app {
+  > header {
+    h1 {
+      > a {
+        &.active {}
+      }
+    }
+
+    nav {
+      > ul {
+        > li {
+          > a {}
+        }
+      }
+    }
+  }
+
+  > .main {
+    > [data-page] {
+      display: none;
+
+      &.active {
+        display: block;
+      }
+    }
+
+    h2 {}
+
+    h3 {}
+
+    h4 {}
+
+    hr {}
+
+    p {}
+
+    ul {
+      > li {}
+    }
+
+    a {
+      &:visited {}
+
+      &:hover {}
+
+      &:active {}
+    }
+  }
+}
