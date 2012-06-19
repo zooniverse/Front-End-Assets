@@ -4,15 +4,15 @@ define (require, exports, module) ->
     host: 'https://api.zooniverse.org'
     authentication: "https://zooniverse-login.s3.amazonaws.com/login.html"
 
-  if config.dev
-    config.host = "//#{location.hostname}:3000"
-    config.authentication = "//#{location.host}/src/scripts/lib/zooniverse/login-frame/login.html"
-
   # Shortcut for setting a bunch of options
   config.set = (options) ->
     for own key, value of options
       throw new Error 'Don\'t overwrite "set" in config.' if key is 'set'
       config[key] = value
 
-  window.config = config if config.dev
+  if config.dev
+    config.set
+      host: "//#{location.hostname}:3000"
+      authentication: "//#{location.host}/src/scripts/lib/zooniverse/login-frame/login.html"
+
   module.exports = config
