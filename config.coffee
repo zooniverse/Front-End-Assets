@@ -1,8 +1,8 @@
 define (require, exports, module) ->
   config =
     dev: +location.port isnt 80 or !!~location.hostname.indexOf '.dev'
-    host: 'TODO: http://some.ouroboros.server'
-    authentication: "TODO: http://some.s3.bucket/path/to/auth.html"
+    host: 'https://api.zooniverse.org'
+    authentication: "https://zooniverse-login.s3.amazonaws.com/login.html"
 
   if config.dev
     config.host = "//#{location.hostname}:3000"
