@@ -9,7 +9,7 @@ define (require, exports, module) ->
 
   class Workflow extends Spine.Model
     # Belongs to a project, has many subjects
-    @configure 'Workflow', 'queueLength', 'selectionLength', 'tutorialSubjects', 'project', 'subjects'
+    @configure 'Workflow', 'devID', 'queueLength', 'selectionLength', 'tutorialSubjects', 'project', 'subjects'
 
     queueLength: 5
     selectionLength: 1
@@ -17,6 +17,8 @@ define (require, exports, module) ->
 
     constructor: ->
       super
+
+      @id = @devID if config.dev
 
       @tutorialSubjects ?= []
       @subjects ?= []
