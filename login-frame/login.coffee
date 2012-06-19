@@ -1,19 +1,22 @@
-$ = parent.jQuery
+$ = window.jQuery
 
 apiHost = 'https://api.zooniverse.org'
-apiHost = "//#{location.hostname}:3000" unless +location.port is 80
+apiHost = "//#{location.hostname}:3000" unless +location.port < 1024
 
 # Check message origins against these for development.
 localHosts = [
-  ///^https?://localhost:\d+$///
-  ///^https?://0.0.0.0:\d+$///
+  ///^https?://localhost:?\d*$///
+  ///^https?://0.0.0.0:?\d*$///
 ]
 
 # Check message origins against these for production.
 # Keep this up-to-date.
 validMessageOrigins = [
-  'http://www.seafloorexplorer.org:80'
+  'http://www.seafloorexplorer.org'
 ]
+
+# This is the parent's origin, set when we recieve a message from it.
+recipient = ''
 
 # Make a request from the frame to the API host.
 issueCommand = (command, params = {}, options = {}) ->
@@ -29,7 +32,7 @@ issueCommand = (command, params = {}, options = {}) ->
 # Post a message from the frame to the parent window.
 postBack = (command, response) ->
   data = JSON.stringify {command, response}
-  parent.postMessage data, "#{location.protocol}//#{location.host}"
+  parent.postMessage data, recipient
 
 # Respond to messages from the parent window (if it's a valid origin).
 # They should be in the format "{COMMAND: {PARAMS}}"
@@ -40,8 +43,11 @@ $(window).on 'message', ({originalEvent: e}) ->
     throw new Error 'Invalid message origin'
     return
 
+  recipient = e.origin
   data = JSON.parse e.data
-  issueCommand command, params for command, params of data
 
-# Start by seeing if anybody's logged in already.
-issueCommand 'current_user', {}, postAs: 'login', ignoreFailure: true
+  if 'current_user' of data
+    issueCommand 'current_user', {}, postAs: 'login', ignoreFailure: true
+    return
+
+  issueCommand command, params for command, params of data
