@@ -6,7 +6,7 @@ define (require, exports, module) ->
 
   if config.dev
     config.host = "//#{location.hostname}:3000"
-    config.authentication = "//#{location.host}/src/scripts/lib/zooniverse/login-frame/index.html"
+    config.authentication = "//#{location.host}/src/scripts/lib/zooniverse/login-frame/login.html"
 
   # Shortcut for setting a bunch of options
   config.set = (options) ->
