@@ -4,7 +4,7 @@ define (require, exports, module) ->
   base64 = require 'base64'
 
   config = require 'zooniverse/config'
-  {remove} = require 'zooniverse/util'
+  {delay, remove} = require 'zooniverse/util'
 
   Authentication = require 'zooniverse/controllers/Authentication'
   Favorite = require './Favorite'
@@ -101,6 +101,6 @@ define (require, exports, module) ->
     Authentication.bind 'logout', =>
       @signOut()
 
-  $.ready -> Authentication.checkCurrent()
+  $.ready -> delay 333, Authentication.checkCurrent # TODO: Why the big delay?
 
   module.exports = User
