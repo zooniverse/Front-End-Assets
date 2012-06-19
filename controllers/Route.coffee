@@ -1,18 +1,9 @@
 define (require, exports, module) ->
-  Spine = require 'Spine'
   $ = require 'jQuery'
+
   {delay} = require 'zooniverse/util'
 
-  # Redirect if we end up here from an escaped_fragment URL.
-  # Breaks the back button!
-  # currentLocation = location.toString()
-  # if currentLocation.indexOf '?_escaped_fragment_='
-  #   location.href = currentLocation.replace '?_escaped_fragment_=', '#!'
-
-  class Route extends Spine.Module
-    @extend Spine.Events
-    @include Spine.Events
-
+  class Route
     @routes: []
 
     @checkRoutes: =>
@@ -48,7 +39,7 @@ define (require, exports, module) ->
     destroy: =>
       @constructor.routes.splice i, 1 for route, i in routes when route is @
 
-    $ => delay @checkRoutes
     $(window).on 'hashchange', @checkRoutes
+    $ => delay 333, @checkRoutes # TODO: Why do we need this big delay now?
 
   exports = Route
