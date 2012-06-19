@@ -4,6 +4,7 @@ define (require, exports, module) ->
 
   User = require 'zooniverse/models/User'
   Authentication = require 'zooniverse/controllers/Authentication'
+  Analytics = require 'zooniverse/controllers/Analytics'
   AppController = require 'zooniverse/controllers/App'
 
   class App extends Spine.Model
@@ -21,5 +22,7 @@ define (require, exports, module) ->
         app: @
         el: @el
         languages: @languages
+
+      @analytics = new Analytics
 
   module.exports = App
