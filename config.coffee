@@ -1,6 +1,6 @@
 define (require, exports, module) ->
   config =
-    dev: +location.port isnt 80 or !!~location.hostname.indexOf '.dev'
+    dev: +location.port > 1023 or !!~location.hostname.indexOf '.dev'
     host: 'https://api.zooniverse.org'
     authentication: "https://zooniverse-login.s3.amazonaws.com/login.html"
 
