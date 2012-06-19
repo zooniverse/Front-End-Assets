@@ -101,4 +101,6 @@ define (require, exports, module) ->
     Authentication.bind 'logout', =>
       @signOut()
 
+  $.ready -> Authentication.checkCurrent()
+
   module.exports = User
