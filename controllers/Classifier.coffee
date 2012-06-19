@@ -5,6 +5,7 @@ define (require, exports, module) ->
   User = require 'zooniverse/models/User'
   Classification = require 'zooniverse/models/Classification'
   Favorite = require 'zooniverse/models/Favorite'
+  Recent = require 'zooniverse/models/Recent'
   {delay} = require 'zooniverse/util'
 
   Tutorial = require 'zooniverse/controllers/Tutorial'
@@ -63,7 +64,9 @@ define (require, exports, module) ->
       @nextSubjects().done @tutorial.start
 
     saveClassification: =>
-      @classification.persist() unless @classification.subjects[0].eql @workflow.tutorialSubjects[0];
+      unless @classification.subjects[0].eql @workflow.tutorialSubjects[0]
+        @classification.persist()
+        Recent.create subjects: @workflow.selection
 
     addFavorite: =>
       favorite = Favorite.create subjects: @workflow.selection
