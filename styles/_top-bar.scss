@@ -54,11 +54,12 @@ $border-color: #555;
 
   a.z-logo {
     background: url("lib/zooniverse/zooniverse-logo.png") center center no-repeat;
+    color: transparent;
     display: inline-block;
     height: 14px;
     letter-spacing: -2em;
     overflow: hidden;
-    text-indent: -2em;
+    text-indent: -4em;
     width: 120px;
   }
 
