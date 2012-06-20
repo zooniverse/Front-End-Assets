@@ -76,7 +76,7 @@ define (require, exports, module) ->
 
     # params to pass to the tracking pixel
     params: -> @serialize
-      project: config.slug
+      project_id: config.app.projects[0].id
       path: document.location.pathname
       hash: document.location.hash
       'u[u]': @test 'u'
