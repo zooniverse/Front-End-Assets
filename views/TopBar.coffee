@@ -2,7 +2,7 @@ define (require, exports, module) ->
   module.exports = """
     <div>
       <ul>
-        <li><a href="https://www.zooniverse.org/">Zooniverse</a></li>
+        <li><a href="https://www.zooniverse.org/" class="z-logo">Zooniverse</a></li>
 
         <li class="z-languages z-dropdown">
           <span>

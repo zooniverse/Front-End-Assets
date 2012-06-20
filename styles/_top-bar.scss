@@ -1,10 +1,15 @@
 $black: #111;
 $white: #fff;
-$border-color: darken($white, 50%);
+$text-color: #ddd;
+$border-color: #555;
 
 @mixin default-padding {
   display: block;
-  padding: 4px 16px;
+  padding: 6px 16px;
+
+  &:hover {
+    color: $white;
+  }
 }
 
 @mixin menu-item {
@@ -23,11 +28,12 @@ $border-color: darken($white, 50%);
 
 .zooniverse-top-bar {
   background: $black;
-  border-bottom: 1px solid $border-color;
-  color: $white;
+  // border-bottom: 1px solid $border-color;
+  color: $text-color;
   font: {
     family: "Helvetica Neue", Arial, Helvetica, sans-serif;
     size: 10px;
+    weight: 500;
   };
   left: 0;
   letter-spacing: 1px;
@@ -44,6 +50,16 @@ $border-color: darken($white, 50%);
   a {
     color: inherit;
     text-decoration: none;
+  }
+
+  a.z-logo {
+    background: url("../src/scripts/lib/zooniverse/images/zooniverse-logo.png") center center no-repeat;
+    display: inline-block;
+    height: 14px;
+    letter-spacing: -2em;
+    overflow: hidden;
+    text-indent: -2em;
+    width: 120px;
   }
 
   ul {
@@ -88,12 +104,15 @@ $border-color: darken($white, 50%);
         > .last-child {
           background: $black;
           border: 1px solid $border-color {
+            radius: 0 0 4px 4px;
             top: 0;
           };
           left: -1px;
+          margin-top: 1px;
           min-width: 100%;
           overflow: hidden;
           position: absolute;
+          top: 100%;
           white-space: nowrap;
         }
 
@@ -142,7 +161,8 @@ $border-color: darken($white, 50%);
 
         label {
           display: block;
-          margin: 10px 0;
+          margin: 15px 0;
+          text-align: center;
 
           > span {
             display: inline-block;
@@ -156,19 +176,20 @@ $border-color: darken($white, 50%);
 
         button {
           @include menu-item;
-          background: transparentize($white, 0.75);
-          border: 1px solid $white;
+          background: transparent;
+          border: 1px solid $border-color;
           color: inherit;
           font: {
             family: inherit;
             style: inherit;
             weight: inherit;
           };
+          padding: 0.25em 1.5em;
         }
 
         > div {
           margin: 20px;
-          text-align: center;
+          text-align: right;
         }
       }
     }

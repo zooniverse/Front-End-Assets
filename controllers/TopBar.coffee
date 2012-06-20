@@ -45,7 +45,7 @@ define (require, exports, module) ->
       @html @template
 
       dropdownContainers = @el.find('.z-dropdown').children ':last-child'
-      dropdownContainers.css display: 'none', opacity: 0, top: '50%'
+      dropdownContainers.css display: 'none', opacity: 0
 
       accordionContainers = @el.find '.z-accordion > :last-child'
       accordionContainers.css height: 0, opacity: 0
@@ -81,7 +81,7 @@ define (require, exports, module) ->
       remove target, from: @dropdownsToHide
 
       container.css display: ''
-      container.stop().animate opacity: 1, top: '100%', 'fast'
+      container.stop().animate opacity: 1, 1
 
     onDropdownLeave: (e) ->
       target = $(e.currentTarget)
@@ -89,9 +89,9 @@ define (require, exports, module) ->
 
       @dropdownsToHide.push target
 
-      delay 250, =>
+      delay 1, =>
         return unless target in @dropdownsToHide
-        container.stop().animate opacity: 0, top: '50%', 'fast', =>
+        container.stop().animate opacity: 0, 1, =>
           delay => container.css display: 'none'
 
     onAccordionClick: (e) ->
