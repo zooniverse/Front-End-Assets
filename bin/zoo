@@ -3,10 +3,7 @@
 require "thor"
 require "colored"
 require "fileutils"
-require "grabass"
 require_relative "../lib/zoo"
-
-ServerPidsFile = ".zoo_server_pids"
 
 class ZooApp < Thor
   desc "init PROJECT NAME", "Initialize a new Zooniverse project"
