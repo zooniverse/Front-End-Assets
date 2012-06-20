@@ -81,6 +81,10 @@ define (require, exports, module) ->
     end: =>
       # User.current?.finishedTutorial = true
       # User.current?.persist()
+      if User.current?
+        finishers = JSON.parse(localStorage.finishedTutorial) || []
+        finishers.push User.current.zooniverseId unless User.current.zooniverseId in finishers
+        localStorage.finishedTutorial = JSON.stringify finishers
 
       @steps[@current]?.leave()
       @current = @steps.length

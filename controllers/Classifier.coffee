@@ -30,15 +30,17 @@ define (require, exports, module) ->
       # Delay here so that extending classes can call "super" at
       # the top and not worry about subjects loading immediately.
       # Also give a chance for the workflow to attach itself.
-      delay =>
+      # TODO: Adding time to the delay so the user has a chance to log in. Not great.
+      delay 2500, =>
         @workflow.bind 'change-selection', @reset
 
         if @workflow.tutorialSubjects?.length > 0 and @tutorialSteps?.length > 0
           @tutorial = new Tutorial target: @el, steps: @tutorialSteps
 
-        shouldStartTutorial = @tutorial?
+        tutorialFinishers = JSON.parse(localStorage.finishedTutorial) || []
+        finished = User.current? and User.current.zooniverseId in tutorialFinishers
 
-        if @tutorial and not User.current?.finishedTutorial
+        if @tutorial and not finished
           @startTutorial()
         else
           @nextSubjects()
