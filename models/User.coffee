@@ -101,6 +101,6 @@ define (require, exports, module) ->
     Authentication.bind 'logout', =>
       @signOut()
 
-  $.ready -> delay 667, Authentication.checkCurrent # TODO: Why the big delay?
+  $ -> Authentication.checkCurrent()
 
   module.exports = User

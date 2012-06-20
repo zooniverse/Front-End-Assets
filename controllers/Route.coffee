@@ -40,6 +40,6 @@ define (require, exports, module) ->
       @constructor.routes.splice i, 1 for route, i in routes when route is @
 
     $(window).on 'hashchange', @checkRoutes
-    $.ready => delay 333, @checkRoutes # TODO: Why do we need this big delay now?
+    $ => @checkRoutes()
 
   exports = Route
