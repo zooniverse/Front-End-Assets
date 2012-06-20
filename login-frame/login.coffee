@@ -1,4 +1,4 @@
-$ = window.jQuery
+$ = window.jQuery || parent.jQuery
 
 apiHost = 'https://api.zooniverse.org'
 apiHost = "//#{location.hostname}:3000" unless +location.port < 1024
