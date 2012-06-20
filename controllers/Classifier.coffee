@@ -37,7 +37,7 @@ define (require, exports, module) ->
         if @workflow.tutorialSubjects?.length > 0 and @tutorialSteps?.length > 0
           @tutorial = new Tutorial target: @el, steps: @tutorialSteps
 
-        tutorialFinishers = JSON.parse(localStorage.finishedTutorial) || []
+        tutorialFinishers = JSON.parse localStorage.finishedTutorial || '[]'
         finished = User.current? and User.current.zooniverseId in tutorialFinishers
 
         if @tutorial and not finished
