@@ -26,7 +26,7 @@ define (require, exports, module) ->
       @value
 
     destroy: =>
-      for annotation, i in @classification.annotations when annotation is @
+      for annotation, i in @classification.annotations when annotation.eql @
         @classification.annotations.splice i, 1
 
       @classification.trigger 'change'
