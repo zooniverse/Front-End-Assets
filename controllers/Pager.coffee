@@ -32,7 +32,13 @@ define (require, exports, module) ->
     activate: =>
       for element in @el.find(FOCUSABLE)
         element = $(element)
-        element.attr 'tabindex', element.data('old-tabindex') || null
+
+        oldTabIndex = element.data 'old-tabindex'
+        if oldTabIndex
+          element.attr 'tabindex', oldTabIndex
+        else
+          element.removeAttr 'tabindex'
+
         element.data 'old-tabindex', null
 
       elAndLinks = @el.add @links
@@ -46,7 +52,7 @@ define (require, exports, module) ->
       for element in @el.find(FOCUSABLE)
         element = $(element)
         tabindex = element.attr 'tabindex'
-        element.data 'old-tabindex', tabindex if tabindex?
+        element.data 'old-tabindex', tabindex || null
         element.attr 'tabindex', -1
 
       elAndLinks = @el.add @links
