@@ -1,45 +1,52 @@
 define (require, exports, module) ->
   $ = require 'jQuery'
-
-  {delay} = require 'zooniverse/util'
+  {remove} = require 'zooniverse/util'
 
   class Route
     @routes: []
-
-    @checkRoutes: =>
-      hash = location.hash.slice 2 # Slice off "#!"
+    @lastCheckedHash = ''
+    @checkHash: (hash) =>
+      # Slice off "#!" from the hash.
+      hash = location.hash.slice 2 unless typeof hash is 'string'
 
       for route in @routes
-        params = route.match hash
-        route.handler params... if params
+        params = route.test hash
+        route.handler params... if params?
 
-    path: ''
+      @lastCheckedHash = hash
+
+    path: '' # Like "/foo/:bar"
     handler: null
-    expression: null
-
-    disabled: false
 
     constructor: (@path, @handler) ->
-      @expression = new RegExp '^' + @path.split(/\:[^\/]+/g).join '([^\\/]+)'
-
       @constructor.routes.push @
 
+      # Sort by number of segments so more generic routes fire before more specific ones.
       @constructor.routes.sort (a, b) ->
         a.path.split('/').length > b.path.split('/').length
 
-    match: (hash) =>
-      return false if @disabled
+    test: (hash) =>
+      pathSegments = @path.split '/'
+      hashSegments = hash.split '/'
 
-      matches = @expression.exec hash
+      # The hash must be as long or longer than the path.
+      return if pathSegments.length > hashSegments.length
 
-      return false unless matches
+      params = []
+      for pathSegment, i in pathSegments
+        if pathSegment.charAt(0) is ':'
+          params.push hashSegments[i]
+        else if hashSegments[i] in [pathSegments[i], '...']
+          continue
+        else
+          return
 
-      matches.slice 1
+      params
 
     destroy: =>
-      @constructor.routes.splice i, 1 for route, i in routes when route is @
+      remove @, from: @constructor.routes
 
-    $(window).on 'hashchange', @checkRoutes
-    $ => @checkRoutes()
+    $(window).on 'hashchange', @checkHash
+    $ => @checkHash()
 
   exports = Route
