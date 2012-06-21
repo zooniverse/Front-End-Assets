@@ -89,6 +89,7 @@ class ZooApp < Thor
   end
 
   desc "build [OUTPUT_DIRECTORY]", "Bundle and minify resources for deployment"
+  method_option :no_copy, type: :boolean, aliases: "-n"
   method_option :all, type: :boolean, aliases: "-a"
   def build(output_dir="build-#{Time.now.strftime "%Y.%m.%d-%H.%M.%S"}")
     puts "=> Checking for RequireJS optimizer".green
@@ -112,16 +113,18 @@ class ZooApp < Thor
     puts "=> Compiling Zooniverse SASS (src/scripts/lib/zooniverse/styles/main.scss to styles/zooniverse.css)".green
     system "sass --update src/scripts/lib/zooniverse/styles/main.scss:styles/zooniverse.css --style compressed --no-cache"
 
-    puts "=> Bundling into #{output_dir}".green
+    unless options.no_copy
+      puts "=> Bundling into #{output_dir}".green
 
-    ignore_these = ['assets.json', 'bin', 'Gemfile', 'Gemfile.lock', 'README.md', 'src']
-    items_to_copy = Dir['*']
+      ignore_these = ['assets.json', 'bin', 'Gemfile', 'Gemfile.lock', 'README.md', 'src']
+      items_to_copy = Dir['*']
 
-    items_to_copy = items_to_copy - ignore_these unless options.all
+      items_to_copy = items_to_copy - ignore_these unless options.all
 
-    FileUtils.mkdir_p output_dir
-    items_to_copy.each do |item|
-      FileUtils.cp_r item, File.join(output_dir, item)
+      FileUtils.mkdir_p output_dir
+      items_to_copy.each do |item|
+        FileUtils.cp_r item, File.join(output_dir, item)
+      end
     end
   end
 
