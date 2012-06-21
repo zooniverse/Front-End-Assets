@@ -30,6 +30,11 @@ define (require, exports, module) ->
 
     # Event data comes as {command: '', response: {}}
     $(window).on 'message', ({originalEvent: e}) =>
+      # Initial ready notification from the iframe
+      if e.data is 'READY'
+        @checkCurrent()
+        return
+
       data = JSON.parse e.data
 
       if data.response.success is true

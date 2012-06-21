@@ -1,4 +1,8 @@
 $ = window.jQuery || parent.jQuery
+$.support.cors = true
+
+# Notify any parent that the authentication iframe is ready.
+$ -> parent.postMessage 'READY', '*'
 
 apiHost = 'https://api.zooniverse.org'
 apiHost = "//#{location.hostname}:3000" unless +location.port < 1024
