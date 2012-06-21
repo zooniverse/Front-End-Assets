@@ -1,6 +1,8 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
 
+  {remove} = require 'zooniverse/util'
+
   class Annotation extends Spine.Model
     # Belongs to a classification
     @configure 'Annotation', 'value', 'classification'
@@ -26,9 +28,7 @@ define (require, exports, module) ->
       @value
 
     destroy: =>
-      for annotation, i in @classification.annotations when annotation.eql @
-        @classification.annotations.splice i, 1
-
+      remove @, from: @classification.annotations
       @classification.trigger 'change'
 
       super
