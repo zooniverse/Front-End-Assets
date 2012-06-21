@@ -15,7 +15,6 @@ define (require, exports, module) ->
 
     @post = (message) =>
       message = JSON.stringify message
-      console.log "Auth origin is #{config.authHost}"
       @external.postMessage message, config.authHost
 
     @logIn: (username, password) =>
@@ -31,7 +30,6 @@ define (require, exports, module) ->
     $(window).on 'message', ({originalEvent: e}) =>
       # Initial ready notification from the iframe
       if e.data is 'READY'
-        console.log 'Auth frame ready, checking current user'
         @checkCurrent()
         return
 
