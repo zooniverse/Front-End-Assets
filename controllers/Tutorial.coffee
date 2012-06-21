@@ -69,7 +69,7 @@ define (require, exports, module) ->
       @next()
 
     next: (e) =>
-      e?.stopPropagation()
+      # e?.stopPropagation()
 
       @steps[@current]?.leave()
 
@@ -93,6 +93,7 @@ define (require, exports, module) ->
 
 
   class Tutorial.Step
+    heading: ''
     content: ''
     style: null
     attach: null
@@ -104,9 +105,10 @@ define (require, exports, module) ->
 
     tutorial: null
 
-    constructor: ({@content, @style, @attach, @block, @nextOn, @continueText, @className, @arrowClass}) ->
+    constructor: ({@heading, @content, @style, @attach, @block, @nextOn, @continueText, @className, @arrowClass}) ->
       @content = [@content] if typeof @content is 'string'
-      @content = $(("<p>#{line}<p>" for line in @content).join '') if @content instanceof Array
+      @content = $(("<p>#{line}</p>" for line in @content).join '') if @content instanceof Array
+      @content = $("<p class='heading'>#{@heading}</p>").add @content if @heading
 
       @attach ?= {}
       @attach.x ?= 'center'
