@@ -2,7 +2,8 @@ define (require, exports, module) ->
   config =
     dev: +location.port > 1023 or !!~location.hostname.indexOf '.dev'
     host: 'https://api.zooniverse.org'
-    authentication: "https://zooniverse-login.s3.amazonaws.com/login.html"
+    authHost: 'https://zooniverse-login.s3.amazonaws.com'
+    authPath: '/login.html'
 
   # Shortcut for setting a bunch of options
   config.set = (options) ->
@@ -12,7 +13,8 @@ define (require, exports, module) ->
 
   if config.dev
     config.set
-      host: "//#{location.hostname}:3000"
-      authentication: "//#{location.host}/src/scripts/lib/zooniverse/login-frame/login.html"
+      host: "http://#{location.hostname}:3000"
+      authHost: "http://#{location.host}"
+      authPath: '/src/scripts/lib/zooniverse/login-frame/login.html'
 
   module.exports = config

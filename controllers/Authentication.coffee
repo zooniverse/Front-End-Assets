@@ -4,20 +4,19 @@ define (require, exports, module) ->
 
   {delay} = require 'zooniverse/util'
   config = require 'zooniverse/config'
-  authLink = $("<a href='#{config.authentication}'></a>").get(0)
-  authOrigin = "#{authLink.protocol}//#{authLink.host}"
 
   class Authentication extends Spine.Module
     @extend Spine.Events
 
-    @iframe = $("<iframe src='#{config.authentication}'></iframe>")
+    @iframe = $("<iframe src='#{config.authHost}#{config.authPath}'></iframe>")
     @iframe.css display: 'none'
     @iframe.appendTo 'body'
     @external = @iframe.get(0).contentWindow # Do we need to wait for load?
 
     @post = (message) =>
       message = JSON.stringify message
-      @external.postMessage message, authOrigin
+      console.log "Auth origin is #{config.authHost}"
+      @external.postMessage message, config.authHost
 
     @logIn: (username, password) =>
       @post login: {username, password}
@@ -32,6 +31,7 @@ define (require, exports, module) ->
     $(window).on 'message', ({originalEvent: e}) =>
       # Initial ready notification from the iframe
       if e.data is 'READY'
+        console.log 'Auth frame ready, checking current user'
         @checkCurrent()
         return
 

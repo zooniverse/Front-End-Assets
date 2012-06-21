@@ -10,6 +10,8 @@ apiHost = "//#{location.hostname}:3000" unless +location.port < 1024
 # Check message origins against these for development.
 localHosts = [
   ///^https?://localhost:?\d*$///
+  ///^https?://hosthost:?\d*$/// # Brian maps this to 10.0.2.2 in VMs.
+  ///^https?://\w+\.dev:?\d*$/// # Pow
   ///^https?://0.0.0.0:?\d*$///
 ]
 
