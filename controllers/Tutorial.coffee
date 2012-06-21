@@ -31,6 +31,7 @@ define (require, exports, module) ->
       @steps ?= []
 
       @el = $("<div class='#{@className}'></div>")
+      @el.css display: 'none'
 
       @controls = $("""
         <div class="#{@controlsClass}">
