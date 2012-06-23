@@ -11,7 +11,9 @@ Then `zoo help` should work.
 Create a new project
 --------------------
 
-`zoo init Galaxy Zoo --domain galaxyzoo.org`
+`zoo create Galaxy Zoo`
+
+You can set the domain with `--domain`. It'll assume it's `(projectname).org`.
 
 Important files
 ---------------
@@ -24,7 +26,7 @@ Scripts are [AMD modules](http://requirejs.org/docs/api.html#define). I like to 
 
 ### /src/scripts/lib/zooniverse
 
-This is a Git submodule shared across all project front-ends. Don't make any project-specific changes here. If you do need to make changes, make sure you push the back to the origin before you and update and commit the parent's repo.
+This is a Git submodule shared across all project front-ends. **Don't make any project-specific changes here.** If you do need to make changes, make sure you push the back to the origin before you and update and commit the parent's repo.
 
 Modules in the library are available under the `zooniverse` root.
 
@@ -52,4 +54,24 @@ Generators
 Development server
 ------------------
 
-Start with `zoo server start --port 8080`, stop with `zoo server stop`
+`zoo serve 8080` runs an HTTP server with CoffeeScript and SASS watchers in the right places.
+
+Clone an existing project
+-------------------------
+
+`zoo clone Repo-Name`
+
+You can also give it a directory.
+
+Set the user with `--user`. The default is "zooniverse".
+
+Set the branch with `--branch`. The default is "master"
+
+Build a project for deployment
+------------------------------
+
+`zoo build` produces a directory containing everything needed for the site to run.  You can also pass in a name for the directory (like "beta").
+
+Deploy to S3
+
+`zoo deploy` does not work yet.
