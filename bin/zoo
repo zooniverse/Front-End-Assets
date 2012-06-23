@@ -7,8 +7,8 @@ require_relative "../lib/zoo"
 
 class ZooApp < Thor
   desc "create PROJECT NAME", "Initialize a new Zooniverse project"
-  method_option :domain, type: :string, aliases: "-d"
-  method_option :here, type: :boolean, aliases: "-h"
+  method_option :domain, type: :string, aliases: "-d", desc: "Set a different domain"
+  method_option :here, type: :boolean, aliases: "-h", desc: "Create a project in the current directory"
   def create(*project)
     project = project.join ' '
     project = 'New Project' if project.empty?
@@ -60,8 +60,8 @@ class ZooApp < Thor
   end
 
   desc "clone REPO", "Clone an existing repo from GitHub"
-  method_option :user, type: :string, default: "zooniverse", aliases: "-u"
-  method_option :branch, type: :string, default: "master", aliases: "-b"
+  method_option :user, type: :string, default: "zooniverse", aliases: "-u", desc: "Specify a GitHub user to clone from"
+  method_option :branch, type: :string, default: "master", aliases: "-b", desc: "Specify a branch"
   def clone(repository, destination="")
     destination = repository if destination.empty?
     puts "=> Cloning #{options.user}/#{repository} into #{destination}".green
@@ -115,8 +115,8 @@ class ZooApp < Thor
   end
 
   desc "build [OUTPUT_DIRECTORY]", "Bundle and minify resources for deployment"
-  method_option :no_copy, type: :boolean, aliases: "-n"
-  method_option :all, type: :boolean, aliases: "-a"
+  method_option :no_copy, type: :boolean, aliases: "-n", desc: "Don't create a bundled directory"
+  method_option :all, type: :boolean, aliases: "-a", desc: "Bundle all the files, even the ones we'd noramlly ignore"
   def build(output_dir="build-#{Time.now.strftime "%Y.%m.%d-%H.%M.%S"}")
     puts "=> Checking for RequireJS optimizer".green
     unless system 'which r.js'
