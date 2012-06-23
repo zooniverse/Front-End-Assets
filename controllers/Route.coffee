@@ -4,10 +4,16 @@ define (require, exports, module) ->
 
   class Route
     @routes: []
-    @lastCheckedHash = ''
+    @lastCheckedHash = '' # Used for replacing ellipses
+
     @checkHash: (hash) =>
       # Slice off "#!" from the hash.
       hash = location.hash.slice 2 unless typeof hash is 'string'
+
+      # Ellipses are replaced with whatever segment is currently in that position.
+      if ~location.hash.indexOf '...'
+        location.hash = @replaceEllipses location.hash, @lastCheckedHash
+        return
 
       for route in @routes
         params = route.test hash
@@ -15,13 +21,22 @@ define (require, exports, module) ->
 
       @lastCheckedHash = hash
 
+    @replaceEllipses: (hash) ->
+      hashSegments = hash.split '/'
+      pathSegments = @lastCheckedHash.split '/'
+
+      for hashSegment, i in hashSegments
+        hashSegments[i] = pathSegments[i] if hashSegment is '...'
+
+      hashSegments.join '/'
+
     path: '' # Like "/foo/:bar"
     handler: null
 
     constructor: (@path, @handler) ->
       @constructor.routes.push @
 
-      # Sort by number of segments so more generic routes fire before more specific ones.
+      # Sort by number of segments to maintain hierarchy.
       @constructor.routes.sort (a, b) ->
         a.path.split('/').length > b.path.split('/').length
 
@@ -30,16 +45,16 @@ define (require, exports, module) ->
       hashSegments = hash.split '/'
 
       # The hash must be as long or longer than the path.
-      return if pathSegments.length > hashSegments.length
+      return unless hashSegments.length >= pathSegments.length
 
       params = []
       for pathSegment, i in pathSegments
         if pathSegment.charAt(0) is ':'
           params.push hashSegments[i]
-        else if hashSegments[i] in [pathSegments[i], '...']
+        else if hashSegments[i] is pathSegments[i]
           continue
         else
-          return
+          return # Not a match
 
       params
 
@@ -49,4 +64,4 @@ define (require, exports, module) ->
     $(window).on 'hashchange', @checkHash
     $ => @checkHash()
 
-  exports = Route
+  module.exports = Route
