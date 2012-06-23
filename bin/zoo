@@ -6,7 +6,7 @@ require "fileutils"
 require_relative "../lib/zoo"
 
 class ZooApp < Thor
-  desc "create PROJECT NAME", "Initialize a new Zooniverse project"
+  desc "create PROJECT NAME", "Create a new Zooniverse project"
   method_option :domain, type: :string, aliases: "-d", desc: "Set a different domain"
   method_option :here, type: :boolean, aliases: "-h", desc: "Create a project in the current directory"
   def create(*project)
@@ -20,25 +20,25 @@ class ZooApp < Thor
 
     puts "=> Creating #{project} at #{project_domain}".green
 
-    init_dir = "."
+    create_dir = "."
 
     unless options.here
       if File.exists? project_dash
         puts "Directory #{project_dash}/ already exists!".red
         exit 1
       end
-      init_dir = project_dash
+      create_dir = project_dash
     end
 
-    unless File.exists? File.join init_dir, ".git"
-      puts "=> Initializing Git repository in #{init_dir}".green
-      system "git init #{init_dir}"
+    unless File.exists? File.join create_dir, ".git"
+      puts "=> Initializing Git repository in #{create_dir}".green
+      system "git init #{create_dir}"
       new_repo = true
     end
 
-    FileUtils.cd init_dir
+    FileUtils.cd create_dir
 
-    Zoo.install_templates "init", binding
+    Zoo.install_templates "create", binding
 
     library_repo = 'git@github.com:zooniverse/Front-End-Assets.git'
     library_destination = 'src/scripts/lib/zooniverse'
@@ -56,7 +56,7 @@ class ZooApp < Thor
     install()
 
     # TODO: Check to make sure everything worked.
-    puts "=> New project is in \"#{init_dir}\".".green
+    puts "=> New project is in \"#{create_dir}\".".green
   end
 
   desc "clone REPO", "Clone an existing repo from GitHub"
