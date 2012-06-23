@@ -6,10 +6,10 @@ require "fileutils"
 require_relative "../lib/zoo"
 
 class ZooApp < Thor
-  desc "init PROJECT NAME", "Initialize a new Zooniverse project"
+  desc "create PROJECT NAME", "Initialize a new Zooniverse project"
   method_option :domain, type: :string, aliases: "-d"
   method_option :here, type: :boolean, aliases: "-h"
-  def init(*project)
+  def create(*project)
     project = project.join ' '
     project = 'New Project' if project.empty?
 
@@ -18,7 +18,7 @@ class ZooApp < Thor
     project_dash = project.downcase.dasherize
     project_under = project.downcase.underscore
 
-    puts "=> Initializing #{project} at #{project_domain}".green
+    puts "=> Creating #{project} at #{project_domain}".green
 
     init_dir = "."
 
@@ -53,17 +53,43 @@ class ZooApp < Thor
       puts "=> Not creating an initial commit since there was already a repo.".yellow
     end
 
-    puts "=> Installing third-party assets".green
-    system "grabass ./assets.json"
-
-    puts "=> Installing Bourbon SASS mixins".green
-    FileUtils.cd File.join('src', 'styles', 'lib')
-    system "bourbon install"
-    FileUtils.cd File.join('..', '..', '..')
+    install()
 
     # TODO: Check to make sure everything worked.
-    puts "=> Finished initialization. Project is in \"#{init_dir}\".".green
+    puts "=> New project is in \"#{init_dir}\".".green
   end
+
+  desc "clone REPO", "Clone an existing repo from GitHub"
+  method_option :user, type: :string, default: "zooniverse", aliases: "-u"
+  method_option :branch, type: :string, default: "master", aliases: "-b"
+  def clone(repository, destination="")
+    destination = repository if destination.empty?
+    puts "=> Cloning #{options.user}/#{repository} into #{destination}".green
+    system "git clone git@github.com:#{options.user}/#{repository}.git #{destination} --branch #{options.branch}"
+    FileUtils.cd destination
+    system "git submodule init"
+    system "git submodule update"
+    install()
+
+    puts "=> Project is in \"#{destination}\".".green
+  end
+
+  no_tasks {
+    def install()
+      puts "=> Moving images from Zooniverse library".green
+      images_destination = File.join("styles", "lib")
+      FileUtils.mkdir_p images_destination
+      FileUtils.cp_r File.join("src", "scripts", "lib", "zooniverse", "images"), File.join(images_destination, "zooniverse")
+
+      puts "=> Installing third-party assets".green
+      system "grabass ./assets.json"
+
+      puts "=> Installing Bourbon SASS mixins".green
+      FileUtils.cd File.join('src', 'styles', 'lib')
+      system "bourbon install"
+      FileUtils.cd File.join('..', '..', '..')
+    end
+  }
 
   desc "generate TYPE NAME", "Generate a model or controller"
   map "g" => :generate
@@ -78,7 +104,7 @@ class ZooApp < Thor
     end
   end
 
-  desc "serve start [PORT]", "Run a local server"
+  desc "serve [PORT]", "Run a local server"
   def serve(port='8080')
     server_env = {"ZOO_SERVER_PORT" => port}
     procfile = File.join File.dirname(File.dirname(__FILE__)), "lib", "server", "Procfile"
