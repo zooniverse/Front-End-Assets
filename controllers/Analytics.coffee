@@ -4,6 +4,7 @@ define (require, exports, module) ->
   config = require 'zooniverse/config'
 
   User = require 'zooniverse/models/User'
+  GoogleAnalytics = require 'zooniverse/controllers/GoogleAnalytics'
 
   # A simple cookie-based tracking pixel
   # The uniqueness of a visit is determined by expiring cookie values
@@ -43,6 +44,8 @@ define (require, exports, module) ->
 
     # track a user visit
     visit: =>
+      return if ~location.hash.indexOf '...' # This will be replaced immediately.
+
       if User.current?
         # set the pixel url including user id
         @setUrl "&user=#{ User.current.id }"
@@ -52,6 +55,8 @@ define (require, exports, module) ->
 
       # set the cookies
       @setTimes()
+
+      GoogleAnalytics.instance?.track location.href
 
     # set the pixel url (triggers the request) with optional params
     setUrl: (extras = '') -> @image.src = "#{ @url() }#{ extras }"

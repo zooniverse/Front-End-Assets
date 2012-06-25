@@ -2,10 +2,13 @@ define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
 
+  config = require 'zooniverse/config'
+
   User = require 'zooniverse/models/User'
   Authentication = require 'zooniverse/controllers/Authentication'
-  Analytics = require 'zooniverse/controllers/Analytics'
   AppController = require 'zooniverse/controllers/App'
+  GoogleAnalytics = require 'zooniverse/controllers/GoogleAnalytics'
+  Analytics = require 'zooniverse/controllers/Analytics'
 
   class App extends Spine.Model
     @configure 'App', 'languages', 'el', 'controller', 'projects'
@@ -22,6 +25,10 @@ define (require, exports, module) ->
         app: @
         el: @el
         languages: @languages
+
+      @googleAnalytics = new GoogleAnalytics
+        account: config.googleAnalytics
+        domain: config.domain
 
       @analytics = new Analytics
 
