@@ -41,7 +41,6 @@ define (require, exports, module) ->
       get = $.getJSON url
 
       get.done (response) =>
-        img = new Image
         for raw in response
           continue unless raw # TODO: Why am I getting some nulls back?
           subject = Subject.fromJSON raw
@@ -49,7 +48,13 @@ define (require, exports, module) ->
           @subjects.push subject
 
           if subject.location.standard
-            img.src = subject.location.standard # Preload
+            img = $("<img src='#{subject.location.standard}' />")
+            img.css
+              height: 0
+              opacity: 0
+              position: 'absolute'
+              width: 0
+            img.appendTo 'body'
 
         fetch.resolve @subjects
 
