@@ -41,11 +41,15 @@ define (require, exports, module) ->
       get = $.getJSON url
 
       get.done (response) =>
+        img = new Image
         for raw in response
           continue unless raw # TODO: Why am I getting some nulls back?
           subject = Subject.fromJSON raw
           subject.workflow = @
           @subjects.push subject
+
+          if subject.location.standard
+            img.src = subject.location.standard # Preload
 
         fetch.resolve @subjects
 
