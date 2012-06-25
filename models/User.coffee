@@ -39,6 +39,9 @@ define (require, exports, module) ->
       @favorites ?= []
       @recents ?= []
 
+      tutorialFinishers = JSON.parse localStorage.finishedTutorial || '[]'
+      @finishedTutorial = @zooniverseId in tutorialFinishers
+
       Favorite.bind 'create', @onCreateFavorite
       Favorite.bind 'destroy', @onDestroyFavorite
       Recent.bind 'create', @onCreateRecent
@@ -85,6 +88,16 @@ define (require, exports, module) ->
     onDestroyRecent: (destroyed) =>
       remove destroyed, from: @recents
       @trigger 'change'
+
+    setFinishedTutorial: (@finished) ->
+      finishers = JSON.parse localStorage.finishedTutorial || '[]'
+
+      if @finished
+        finishers.push @zooniverseId unless @zooniverseId in finishers
+      else
+        remove @zooniverseId, from: finishers
+
+      localStorage.finishedTutorial = JSON.stringify finishers
 
     persist: =>
       # TODO

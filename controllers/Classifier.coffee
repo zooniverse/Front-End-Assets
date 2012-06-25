@@ -31,19 +31,29 @@ define (require, exports, module) ->
       # the top and not worry about subjects loading immediately.
       # Also give a chance for the workflow to attach itself.
       # TODO: Adding time to the delay so the user has a chance to log in. Not great.
-      delay 2500, =>
+      delay =>
         @workflow.bind 'change-selection', @reset
 
         if @workflow.tutorialSubjects?.length > 0 and @tutorialSteps?.length > 0
           @tutorial = new Tutorial target: @el, steps: @tutorialSteps
 
-        tutorialFinishers = JSON.parse localStorage.finishedTutorial || '[]'
-        finished = User.current? and User.current.zooniverseId in tutorialFinishers
-
-        if @tutorial and not finished
+        if @tutorial
           @startTutorial()
         else
           @nextSubjects()
+
+      User.bind 'sign-in', =>
+        if User.current?
+          if @tutorial?
+            if User.current.finishedTutorial
+              @tutorial.end()
+              @nextSubjects()
+            else
+              @startTutorial()
+          else
+            @nextSubjects()
+        else
+          @startTutorial()
 
     reset: =>
       @classification?.destroy()
