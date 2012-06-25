@@ -27,7 +27,6 @@ define (require, exports, module) ->
       @constructor.instance = @
 
     track: (location) =>
-      console.log 'Tracking', location
       @queue.push ['_trackPageview', location]
 
   module.exports = GoogleAnalytics
