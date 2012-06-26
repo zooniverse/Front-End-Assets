@@ -4,7 +4,7 @@ Zoo
 Installation
 ------------
 
-Try `gem build zoo.gemspec && gem install zoo-x.y.z.gem`.
+Clone it and make sure you're on the "app" branch. Try `gem build zoo.gemspec && gem install zoo-*.gem`.
 
 Then `zoo help` should work.
 
@@ -75,3 +75,33 @@ Build a project for deployment
 Deploy to S3
 
 `zoo deploy` does not work yet.
+
+* * *
+
+Project layout
+==============
+
+Each project is its own independent entity. A new project comes with:
+
+* `assets.json`: Used by `grabass` to install third-party assets:
+  * **RequireJS**: Used to load JavaScript files. Also used to concat and minify JavaScript files for production.
+  * **Almond**: Replaces RequireJS in production. Loads already defined AMD modules without loading any files.
+  * **jQuery**
+  * **Spine**
+  * **base64**: A cross-browser base-64 en/decoder (used for authentication)
+  * **Leaflet**: Map library, since most projects are gping to be using maps somehow.
+  * **HTML5 shiv** For making IE8 play nice.
+
+  Remember to keep `assets.json` file up to date with the assets you're using.
+
+* `index.html`: A basic structure for the site is provided. Change whatever you want. `data-page="..."` attributes determine the navigation hierarchy.
+
+* `src/scripts/site.coffee`: This is where the project comes together. Instantate your app, its projects, and their workflows, along with any other interactive bits you need.
+
+* `src/scripts/controllers/Classifier.coffee`: This controller inherits from the base `zooniverse/controllers/Classifier` class. It is the hub for activity involving subject selection and classification creation and persistence. Put the interesting interactive bits of the project here.
+
+* `src/scripts/tutorialSteps.coffee`: Set up your tutorial here.
+
+* `src/scripts/controllers/Profile.coffee`: The base `zooniverse/controllers/Profile` class already provides a basic profile, but I suspects most sites will want to customize it a bit. Do that here.
+
+* `src/styles/main.scss`: This should usually only import other files. You can store your colors in `_colors.scss`, set up a grid in `_grid.scss`, and start blocking out your layout in `_layout.scss`. Add files as you identify independent layout contexts. The `bourbon` SASS library includes some handy cross-browser CSS3 mixins.
