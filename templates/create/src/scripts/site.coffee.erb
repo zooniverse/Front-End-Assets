@@ -15,13 +15,16 @@ define (require, exports, module) ->
     slug: '<%= project_dash %>'
     description: 'PROJECT DESCRIPTION'
 
+    domain: '<%= project_domain %>'
     talkHost: 'http://talk.<%= project_domain %>'
+
+    googleAnalytics: 'UA-0000000-00'
 
     cartoUser: 'CARTODB USER'
     cartoApiKey: 'CARTODB API KEY'
     cartoTable: 'CARTODB TABLE'
-    facebookId: 'FACEBOOK APP ID'
 
+  config.set
     app: new App
       el: '.<%= project_dash %>.app'
       languages: ['en']
@@ -47,5 +50,6 @@ define (require, exports, module) ->
           ]
       ]
 
+  config.set
     profile: new Profile
       el: '[data-page="profile"]'
