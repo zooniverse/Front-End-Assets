@@ -51,7 +51,7 @@ define (require, exports, module) ->
       refresh = new $.Deferred
 
       url = """
-        #{config.host}
+        #{config.apiHost}
         /projects/#{config.app.projects[0].id}
         /users/#{@id}
         /#{attribute}
@@ -104,7 +104,7 @@ define (require, exports, module) ->
 
     # Send authentication header to Ouroboros when logged in.
     $.ajaxSetup beforeSend: (xhr, settings) =>
-      if @current? and !!~settings.url.indexOf config.host
+      if @current? and !!~settings.url.indexOf config.apiHost
         auth = base64.encode "#{@current.name}:#{@current.apiKey}"
         xhr.setRequestHeader 'Authorization', "Basic #{auth}"
 

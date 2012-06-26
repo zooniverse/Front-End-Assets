@@ -62,7 +62,7 @@ define (require, exports, module) ->
     setUrl: (extras = '') -> @image.src = "#{ @url() }#{ extras }"
 
     # the url of the pixel
-    url: -> "#{ config.host }/analytics/visit?#{ @params() }"
+    url: -> "#{ config.apiHost }/analytics/visit?#{ @params() }"
 
     # prefix cookie key names with 'zooniverse_'
     zoo: (key) -> "zooniverse_#{ key }"

@@ -22,7 +22,7 @@ define (require, exports, module) ->
       @trigger 'persisting'
 
       url = """
-        #{config.host}
+        #{config.apiHost}
         /projects/#{@workflow.project.id}
         /workflows/#{@workflow.id}
         /classifications

@@ -1,7 +1,7 @@
 define (require, exports, module) ->
   config =
     dev: +location.port > 1023 or !!~location.hostname.indexOf '.dev'
-    host: 'https://api.zooniverse.org'
+    apiHost: 'https://api.zooniverse.org'
     authHost: 'https://zooniverse-login.s3.amazonaws.com'
     authPath: '/login.html'
 
@@ -13,7 +13,7 @@ define (require, exports, module) ->
 
   if config.dev
     config.set
-      host: "http://#{location.hostname}:3000"
+      apiHost: "http://#{location.hostname}:3000"
       authHost: "http://#{location.host}"
       authPath: '/src/scripts/lib/zooniverse/login-frame/login.html'
 

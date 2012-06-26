@@ -29,7 +29,7 @@ define (require, exports, module) ->
     persist: =>
       @trigger 'persisting'
 
-      url = "#{config.host}/projects/#{config.app.projects[0].id}/favorites"
+      url = "#{config.apiHost}/projects/#{config.app.projects[0].id}/favorites"
       post = $.post url, @toJSON()
       post.done => @trigger 'persist'
       post.fail => @trigger 'error'

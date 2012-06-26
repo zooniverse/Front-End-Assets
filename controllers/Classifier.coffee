@@ -77,9 +77,8 @@ define (require, exports, module) ->
       @nextSubjects().done @tutorial.start
 
     saveClassification: =>
-      unless @classification.subjects[0].eql @workflow.tutorialSubjects[0]
-        @classification.persist()
-        Recent.create subjects: @workflow.selection
+      @classification.persist()
+      Recent.create subjects: @workflow.selection
 
     addFavorite: =>
       favorite = Favorite.create subjects: @workflow.selection

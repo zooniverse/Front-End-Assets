@@ -32,7 +32,7 @@ define (require, exports, module) ->
       groupSegment = '/#{group}' if group
 
       url = """
-        #{config.host}
+        #{config.apiHost}
         /projects/#{@project.id}
         #{groupSegment}
         /subjects?limit=#{@queueLength - @subjects.length}
