@@ -64,6 +64,8 @@ define (require, exports, module) ->
       inactiveParentPages.length is 0 and @current < @steps.length
 
     start: =>
+      @steps[@current]?.leave()
+
       @el.css display: ''
       @current = -1
       @next()
