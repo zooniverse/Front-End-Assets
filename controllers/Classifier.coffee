@@ -9,6 +9,7 @@ define (require, exports, module) ->
   {delay} = require 'zooniverse/util'
 
   Tutorial = require 'zooniverse/controllers/Tutorial'
+  Dialog = require 'zooniverse/controllers/Dialog'
 
   class Classifier extends Spine.Controller
     tutorialSteps: null
@@ -85,7 +86,13 @@ define (require, exports, module) ->
       favorite.persist()
 
     goToTalk: =>
-      open @workflow.selection[0].talkHref()
+      if @workflow.selection[0].eql @workflow.tutorialSubjects[0]
+        new Dialog
+          content: 'Tutorial subjects are not available in Talk at this time.'
+          className: 'classifier'
+          target: @el
+      else
+        open @workflow.selection[0].talkHref()
 
     nextSubjects: =>
       @workflow.nextSubjects()
