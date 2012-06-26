@@ -117,7 +117,10 @@ class ZooApp < Thor
   desc "build [OUTPUT_DIRECTORY]", "Bundle and minify resources for deployment"
   method_option :no_copy, type: :boolean, aliases: "-n", desc: "Don't create a bundled directory"
   method_option :all, type: :boolean, aliases: "-a", desc: "Bundle all the files, even the ones we'd noramlly ignore"
-  def build(output_dir="build-#{Time.now.strftime "%Y.%m.%d-%H.%M.%S"}")
+  def build(output_dir="")
+    timestamp = Time.now.strftime "%Y-%m-%d-%H-%M-%S"
+    output_dir = "build-#{timestamp}" if output_dir.empty?
+
     puts "=> Checking for RequireJS optimizer".green
     unless system 'which r.js'
       puts "=> RequireJS optimizer not found. Try `npm install -g requirejs`.".red
@@ -140,6 +143,11 @@ class ZooApp < Thor
     system "sass --update src/scripts/lib/zooniverse/styles/main.scss:styles/zooniverse.css --style compressed --no-cache"
 
     unless options.no_copy
+      if File.exists? output_dir
+        puts "Directory \"#{output_dir}\" already exists.".red
+        exit 1
+      end
+
       puts "=> Bundling into #{output_dir}".green
 
       ignore_these = ['assets.json', 'bin', 'Gemfile', 'Gemfile.lock', 'README.md', 'src']
@@ -151,6 +159,12 @@ class ZooApp < Thor
       items_to_copy.each do |item|
         FileUtils.cp_r item, File.join(output_dir, item)
       end
+
+      puts "=> Applying timestamps to index.html".green
+      index_file = File.join output_dir, "index.html"
+      input = File.read index_file
+      output = input.gsub "__ZOO_BUILD_TIMESTAMP__", timestamp
+      File.write index_file, output
     end
   end
 
