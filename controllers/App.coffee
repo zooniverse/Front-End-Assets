@@ -19,7 +19,7 @@ define (require, exports, module) ->
       @topBar = new TopBar
         languages: @languages
 
-      @topBar.el.appendTo 'body'
+      @topBar.el.prependTo 'body'
 
     initPagers: =>
       for pageContainer in @el.find('[data-page]').parent()

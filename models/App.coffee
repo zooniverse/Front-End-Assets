@@ -4,14 +4,12 @@ define (require, exports, module) ->
 
   config = require 'zooniverse/config'
 
-  User = require 'zooniverse/models/User'
-  Authentication = require 'zooniverse/controllers/Authentication'
   AppController = require 'zooniverse/controllers/App'
   GoogleAnalytics = require 'zooniverse/controllers/GoogleAnalytics'
   Analytics = require 'zooniverse/controllers/Analytics'
 
   class App extends Spine.Model
-    @configure 'App', 'languages', 'el', 'controller', 'projects'
+    @configure 'App', 'el', 'languages', 'controller', 'projects'
 
     constructor: ->
       super
