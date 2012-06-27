@@ -26,9 +26,10 @@ define (require, exports, module) ->
         el: @el
         languages: @languages
 
-      @googleAnalytics = new GoogleAnalytics
-        account: config.googleAnalytics
-        domain: config.domain
+      if config.googleAnalytics
+        @googleAnalytics = new GoogleAnalytics
+          account: config.googleAnalytics
+          domain: config.domain
 
       @analytics = new Analytics
 

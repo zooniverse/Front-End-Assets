@@ -24,6 +24,10 @@ define (require, exports, module) ->
       src = src.replace 'http://www', 'https://ssl' if location.protocol is 'https:'
       $("<script src='#{src}'></script>").appendTo 'head'
 
+      @track location.href
+      $(window).on 'hashchange', =>
+        @track location.href
+
       @constructor.instance = @
 
     track: (location) =>
