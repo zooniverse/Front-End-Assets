@@ -8,8 +8,8 @@ define (require, exports, module) ->
       throw new Error 'Don\'t overwrite "set" in config.' if key is 'set'
       config[key] = value
 
-    # Determine if we're running on a development server.
-    config.set dev: +location.port > 1023 or !!~location.hostname.indexOf '.dev'
+  # Determine if we're running on a development server.
+  config.set dev: +location.port > 1023 or !!~location.hostname.indexOf '.dev'
 
   # We can assume some hosts if we're on a dev server.
   if config.dev
