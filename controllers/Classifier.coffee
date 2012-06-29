@@ -45,11 +45,9 @@ define (require, exports, module) ->
           @nextSubjects()
 
       User.bind 'add-favorite', (user,favorite) =>
-        console.log 'Added favorite', @workflow.selection[0].id, arraysMatch favorite.subjects, @workflow.selection
         @el.addClass 'is-favored', arraysMatch favorite.subjects, @workflow.selection
 
       User.bind 'remove-favorite', (user, favorite) =>
-        console.log 'Removed favorite', arraysMatch favorite.subjects, @workflow.selection
         @el.removeClass 'is-favored', arraysMatch favorite.subjects, @workflow.selection
 
       User.bind 'sign-in', =>
