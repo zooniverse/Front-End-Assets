@@ -2,11 +2,12 @@ define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
 
+  {delay, arraysMatch} = require 'zooniverse/util'
+
   User = require 'zooniverse/models/User'
   Classification = require 'zooniverse/models/Classification'
   Favorite = require 'zooniverse/models/Favorite'
   Recent = require 'zooniverse/models/Recent'
-  {delay} = require 'zooniverse/util'
 
   Tutorial = require 'zooniverse/controllers/Tutorial'
   Dialog = require 'zooniverse/controllers/Dialog'
@@ -42,6 +43,14 @@ define (require, exports, module) ->
           @startTutorial()
         else
           @nextSubjects()
+
+      User.bind 'add-favorite', (user,favorite) =>
+        console.log 'Added favorite', @workflow.selection[0].id, arraysMatch favorite.subjects, @workflow.selection
+        @el.addClass 'is-favored', arraysMatch favorite.subjects, @workflow.selection
+
+      User.bind 'remove-favorite', (user, favorite) =>
+        console.log 'Removed favorite', arraysMatch favorite.subjects, @workflow.selection
+        @el.removeClass 'is-favored', arraysMatch favorite.subjects, @workflow.selection
 
       User.bind 'sign-in', =>
         if User.current?
@@ -80,9 +89,13 @@ define (require, exports, module) ->
       @classification.persist()
       Recent.create subjects: @workflow.selection
 
-    addFavorite: =>
+    createFavorite: =>
       favorite = Favorite.create subjects: @workflow.selection
       favorite.persist()
+
+    destroyFavorite: =>
+      favorite = (fav for fav in User.current.favorites when arraysMatch fav.subjects, @workflow.selection)[0]
+      favorite.destroy()
 
     goToTalk: =>
       if @workflow.selection[0].eql @workflow.tutorialSubjects[0]

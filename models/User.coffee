@@ -74,10 +74,12 @@ define (require, exports, module) ->
 
     onCreateFavorite: (created) =>
       @favorites.push created
+      @trigger 'add-favorite', created
       @trigger 'change'
 
     onDestroyFavorite: (destroyed) =>
       remove destroyed, from: @favorites
+      @trigger 'remove-favorite', destroyed
       @trigger 'change'
 
     onCreateRecent: (created) =>

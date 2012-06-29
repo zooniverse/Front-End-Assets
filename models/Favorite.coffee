@@ -30,7 +30,16 @@ define (require, exports, module) ->
 
       url = "#{config.apiHost}/projects/#{config.app.projects[0].id}/favorites"
       post = $.post url, @toJSON()
-      post.done => @trigger 'persist'
+
+      post.done (response) =>
+        response = JSON.parse response
+        @id = response.id
+        @trigger 'persist'
+
       post.fail => @trigger 'error'
+
+    destroy: =>
+      super
+      $.ajax type: 'DELETE', url: "#{config.apiHost}/projects/#{config.app.projects[0].id}/favorites/#{@id}"
 
   module.exports = Favorite

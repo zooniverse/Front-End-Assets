@@ -27,6 +27,17 @@ define (require, exports, module) ->
     joinLines: (string) ->
       string.replace /\n/g, ''
 
+    arraysMatch: (first, second) ->
+      return false if first.length isnt second.length
+      for item, i in first
+        if first[i] instanceof Spine.Model
+          return false unless first[i].eql second[i]
+        else if first[i] instanceof $
+          return false unless first[i].is second[i]
+        else
+          return false unless first[i] is second[i]
+      return true
+
     # Sugar for splicing values out of an array. Can compare Spine models and jQuery instances.
     # Call like `remove thing, from: listOfThings`
     remove: (thing, {from: array}) ->
