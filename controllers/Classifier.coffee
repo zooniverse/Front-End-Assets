@@ -75,6 +75,8 @@ define (require, exports, module) ->
       # Delay so extending classes can modify the classification before rendering
       delay => @classification.trigger 'change'
 
+      @el.removeClass 'is-favored'
+
     render: =>
       # Override this.
 
