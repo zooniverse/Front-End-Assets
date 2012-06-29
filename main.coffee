@@ -18,8 +18,12 @@ require.config
     base64:
       exports: 'base64'
 
-    jQuery:
+    'lib/xdr':
       deps: ['jquery']
+      exports: 'jQuery'
+
+    jQuery:
+      deps: ['jquery', 'lib/xdr']
       exports: ($) ->
         $.support.cors = true
         $.noConflict()
