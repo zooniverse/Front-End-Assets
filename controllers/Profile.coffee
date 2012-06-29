@@ -1,7 +1,9 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
+  $ = require 'jQuery'
 
   User = require 'zooniverse/models/User'
+  Favorite = require 'zooniverse/models/Favorite'
 
   LoginForm = require 'zooniverse/controllers/LoginForm'
   TEMPLATE = require 'zooniverse/views/Profile'
@@ -12,6 +14,7 @@ define (require, exports, module) ->
 
     events:
       'click .sign-out': 'signOut'
+      'click .favorites .delete': 'onFavoriteDeleteClick'
 
     elements:
       '.username': 'usernameContainer'
@@ -59,5 +62,15 @@ define (require, exports, module) ->
     signOut: (e) =>
       e.preventDefault()
       User.signOut()
+
+    onFavoriteDeleteClick: (e) =>
+      # TODO: This is kinda hacky. This should be a list of controllers,
+      # and destroying a model should remove its controller/view automatically.
+      target = $(e.target)
+      favoriteID = target.data 'favorite'
+      favorite = Favorite.find favoriteID
+
+      favorite.destroy()
+      target.parent('li').remove()
 
   module.exports = Profile

@@ -14,6 +14,7 @@ define (require, exports, module) ->
         subject.workflow_ids = [raw.workflow_id]
 
       @create
+        id: raw.id
         createdAt: raw.created_at
         subjects: (Subject.fromJSON subject for subject in raw.subjects)
 
