@@ -11,7 +11,6 @@ define (require, exports, module) ->
   Recent = require './Recent'
 
   class User extends Spine.Model
-    # Has many favorites and recents, also has a reference back to the app
     @configure 'User', 'zooniverseId', 'name', 'apiKey', 'finishedTutorial', 'favorites', 'recents'
 
     @current: null

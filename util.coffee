@@ -10,18 +10,25 @@ define (require, exports, module) ->
   ]
 
   dateWords =
-    year: (date) -> "#{date.getUTCFullYear()}"
-    y: (date) -> "#{date.getUTCFullYear()}".slice 0, 2
-    month: (date) -> months[date.getUTCMonth()]
-    m: (date) -> months[date.getUTCMonth()].slice 0, 3
-    date: (date) -> "#{date.getUTCDate()}"
-    day: (date) -> days[date.getUTCDay()]
-    d: (date) -> days[date.getUTCDay()].slice 0, 3
-    time24: (date) -> "#{date.getUTCHours()}:#{('0' + date.getUTCMinutes()).slice -2}"
-    time12: (date) -> "#{(((date.getUTCHours() % 12) + 12) % 12)}:#{('0' + date.getUTCMinutes()).slice -2}"
-    ampm: (date) -> if date.getUTCHours() >= 12 then 'am' else 'pm'
+    year: (date) -> "#{date.getUTCFullYear()}" # 1984
+    y: (date) -> "#{date.getUTCFullYear()}".slice 0, 2 # 84
+    month: (date) -> months[date.getUTCMonth()] # February
+    mon: (date) -> months[date.getUTCMonth()].slice 0, 3 # Feb
+    m: (date) -> date.getUTCMonth() + 1 # 2
+    date: (date) -> "#{date.getUTCDate()}" # 25
+    day: (date) -> days[date.getUTCDay()] # Thursday
+    d: (date) -> days[date.getUTCDay()].slice 0, 3 # Thu
+    time24: (date) -> "#{date.getUTCHours()}:#{('0' + date.getUTCMinutes()).slice -2}" # 15:00
+    time12: (date) -> "#{(((date.getUTCHours() % 12) + 12) % 12)}:#{('0' + date.getUTCMinutes()).slice -2}" # 3:00
+    ampm: (date) -> if date.getUTCHours() >= 12 then 'am' else 'pm' # pm
 
   module.exports =
+    # Join a line-broken string.
+    joinLines: (string) ->
+      string.replace /\n/g, ''
+
+    # Sugar for splicing values out of an array. Can compare Spine models and jQuery instances.
+    # Call like `remove thing, from: listOfThings`
     remove: (thing, {from: array}) ->
       for something, i in array
         if thing instanceof Spine.Model
@@ -34,6 +41,8 @@ define (require, exports, module) ->
         array.splice i, 1
         break
 
+    # Backward (callback last) `setTimeout` works better with CoffeeScript.
+    # If not given a delay, works like Node's `nextTick`.
     delay: (duration, callback) ->
       if typeof duration is 'function'
         callback = duration
@@ -41,6 +50,7 @@ define (require, exports, module) ->
 
       setTimeout callback, duration
 
+    # Format a date. See the `dateWords` object for symbols.
     formatDate: (date, format = '(date) (month) (year), (time12) (ampm)') ->
       date = new Date date unless date instanceof Date
 
@@ -49,5 +59,6 @@ define (require, exports, module) ->
 
       format
 
+    # Keep a number between two other numbers.
     clamp: (n, {min, max} = {min: 0, max: 1}) ->
       Math.min Math.max(n, min), max

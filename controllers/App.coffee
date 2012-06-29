@@ -26,9 +26,7 @@ define (require, exports, module) ->
       @initAnalytics()
 
     initTopBar: =>
-      @topBar = new TopBar
-        languages: @languages
-
+      @topBar = new TopBar languages: @languages
       @topBar.el.prependTo 'body'
 
     initPagers: =>

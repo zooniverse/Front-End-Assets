@@ -8,7 +8,6 @@ define (require, exports, module) ->
 
     constructor: ->
       super
-
       @id = @devID if config.dev
 
       @workflows ?= []

@@ -3,11 +3,11 @@ define (require, exports, module) ->
   $ = require 'jQuery'
 
   config = require 'zooniverse/config'
+  {joinLines} = require 'zooniverse/util'
 
   Annotation = require './Annotation'
 
   class Classification extends Spine.Model
-    # Has a list of subjects and many annotations
     @configure 'Classification', 'workflow', 'subjects', 'annotations'
 
     constructor: ->
@@ -21,12 +21,12 @@ define (require, exports, module) ->
     persist: =>
       @trigger 'persisting'
 
-      url = """
+      url = joinLines """
         #{config.apiHost}
         /projects/#{@workflow.project.id}
         /workflows/#{@workflow.id}
         /classifications
-      """.replace /\n/g, ''
+      """
 
       request = $.post url, @toJSON()
       request.done => @trigger 'persist', @

@@ -16,8 +16,8 @@ define (require, exports, module) ->
       @bind 'change', =>
         @classification.trigger 'change'
 
-      alreadyThere = false
       # NOTE: Spine seems to be running model constructors twice. Bug?
+      alreadyThere = false
       for annotation in @classification.annotations
         alreadyThere ||= annotation.eql @
 

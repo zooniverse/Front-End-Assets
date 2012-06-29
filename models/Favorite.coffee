@@ -7,7 +7,6 @@ define (require, exports, module) ->
   Subject = require './Subject'
 
   class Favorite extends Spine.Model
-    # Has many subjects
     @configure 'Favorite', 'createdAt', 'subjects'
 
     @fromJSON: (raw) ->
