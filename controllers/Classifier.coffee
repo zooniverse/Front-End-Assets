@@ -44,11 +44,11 @@ define (require, exports, module) ->
         else
           @nextSubjects()
 
-      User.bind 'add-favorite', (user,favorite) =>
-        @el.addClass 'is-favored', arraysMatch favorite.subjects, @workflow.selection
+      User.bind 'add-favorite', (user, favorite) =>
+        @el.toggleClass 'is-favored', arraysMatch favorite.subjects, @workflow.selection
 
       User.bind 'remove-favorite', (user, favorite) =>
-        @el.removeClass 'is-favored', arraysMatch favorite.subjects, @workflow.selection
+        @el.toggleClass 'is-favored', not arraysMatch favorite.subjects, @workflow.selection
 
       User.bind 'sign-in', =>
         if User.current?
@@ -64,6 +64,8 @@ define (require, exports, module) ->
           @startTutorial()
 
     reset: =>
+      @el.removeClass 'is-favored'
+
       @classification?.destroy()
 
       @classification = new Classification
@@ -74,8 +76,6 @@ define (require, exports, module) ->
 
       # Delay so extending classes can modify the classification before rendering
       delay => @classification.trigger 'change'
-
-      @el.removeClass 'is-favored'
 
     render: =>
       # Override this.
