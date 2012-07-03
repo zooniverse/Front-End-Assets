@@ -46,4 +46,4 @@ $(window).on 'message', ({originalEvent: e}) ->
     parent.postMessage JSON.stringify({id, response}), recipient
 
   request.fail (response) ->
-    parent.postMessage JSON.stringify({id, failure: true, response}), recipient
+    parent.postMessage JSON.stringify({id, response, failure: true}), recipient

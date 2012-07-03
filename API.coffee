@@ -25,11 +25,16 @@ define (require, exports, module) ->
           @ready = true
           @post message for message in @readyQueue
 
-    @request: (method, url, options..., done, fail) =>
+    @request: (method, url, options, done, fail) =>
+      if typeof options is 'function'
+        fail = done
+        done = options
+        options = null
+
       id = Math.floor Math.random() * 99999999
       @requests[id] = new $.Deferred -> @then done, fail
 
-      message = {id, method, url, options: options[0]}
+      message = {id, method, url, options}
 
       if @ready
         @post message
