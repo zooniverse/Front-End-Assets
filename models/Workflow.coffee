@@ -2,6 +2,7 @@ define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
 
+  API = require 'zooniverse/API'
   config = require 'zooniverse/config'
   {joinLines} = require 'zooniverse/util'
 
@@ -33,14 +34,13 @@ define (require, exports, module) ->
       groupSegment = '/#{group}' if typeof group is 'string'
 
       url = joinLines """
-        #{config.apiHost}
         /projects/#{@project.id}
         #{groupSegment}
         /subjects
         ?limit=#{@queueLength - @subjects.length}
       """
 
-      get = $.getJSON url
+      get = API.getJSON url
 
       get.done (response) =>
         for raw in response

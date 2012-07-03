@@ -2,6 +2,7 @@ define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
 
+  API = require 'zooniverse/API'
   config = require 'zooniverse/config'
 
   Subject = require './Subject'
@@ -29,8 +30,8 @@ define (require, exports, module) ->
     persist: =>
       @trigger 'persisting'
 
-      url = "#{config.apiHost}/projects/#{config.app.projects[0].id}/favorites"
-      post = $.post url, @toJSON()
+      url = "/projects/#{config.app.projects[0].id}/favorites"
+      post = API.post url, @toJSON()
 
       post.done (response) =>
         response = JSON.parse response
@@ -41,6 +42,6 @@ define (require, exports, module) ->
 
     destroy: =>
       super
-      $.ajax type: 'DELETE', url: "#{config.apiHost}/projects/#{config.app.projects[0].id}/favorites/#{@id}"
+      API.delete "/projects/#{config.app.projects[0].id}/favorites/#{@id}"
 
   module.exports = Favorite

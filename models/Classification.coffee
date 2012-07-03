@@ -2,6 +2,7 @@ define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
 
+  API = require 'zooniverse/API'
   config = require 'zooniverse/config'
   {joinLines} = require 'zooniverse/util'
 
@@ -22,13 +23,12 @@ define (require, exports, module) ->
       @trigger 'persisting'
 
       url = joinLines """
-        #{config.apiHost}
         /projects/#{@workflow.project.id}
         /workflows/#{@workflow.id}
         /classifications
       """
 
-      request = $.post url, @toJSON()
+      request = API.post url, @toJSON()
       request.done => @trigger 'persist', @
       request.fail => @trigger 'error', @
       request

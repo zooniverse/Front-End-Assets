@@ -23,7 +23,7 @@ define (require, exports, module) ->
       READY: new $.Deferred (deferred) =>
         deferred.done =>
           @ready = true
-          @post message for message in @readyQueue
+          @postMessage message for message in @readyQueue
 
     # Headers to send along with requests (e.g. for authentication)
     @headers: {}
@@ -40,7 +40,7 @@ define (require, exports, module) ->
       message = {id, type, url, data, @headers}
 
       if @ready
-        @post message
+        @postMessage message
       else
         @readyQueue.push message
 
@@ -54,7 +54,7 @@ define (require, exports, module) ->
     @post: => @request 'post', arguments...
     @delete: => @request 'delete', arguments...
 
-    @post: (message) =>
+    @postMessage: (message) =>
       @external.postMessage JSON.stringify(message), config.proxyHost
 
     $(window).on 'message', ({originalEvent: e}) =>
