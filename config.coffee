@@ -15,8 +15,8 @@ define (require, exports, module) ->
   if config.dev
     config.set
       apiHost: "http://#{location.hostname}:3000" # TODO: What if Ouroboros isn't on 3000?
-      proxyHost: "http://#{location.host}"
-      proxyPath: '/src/scripts/lib/zooniverse/proxy/index.html'
+      proxyHost: "http://#{location.hostname}:3000"
+      proxyPath: '/proxy/index.html'
   else
     config.set
       apiHost: 'https://api.zooniverse.org'
