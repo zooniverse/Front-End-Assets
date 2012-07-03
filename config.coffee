@@ -23,7 +23,7 @@ define (require, exports, module) ->
     config.set
       apiHost: 'https://api.zooniverse.org'
       proxyHost: 'https://api.zooniverse.org'
-      proxyPath: '/proxy.html'
+      proxyPath: '/proxy/index.html'
       authHost: 'https://zooniverse-login.s3.amazonaws.com'
       authPath: '/login.html'
 
