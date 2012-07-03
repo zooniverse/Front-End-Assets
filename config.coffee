@@ -16,15 +16,11 @@ define (require, exports, module) ->
     config.set
       apiHost: "http://#{location.hostname}:3000" # TODO: What if Ouroboros isn't on 3000?
       proxyHost: "http://#{location.host}"
-      proxyPath: '/src/scripts/lib/zooniverse/proxy/proxy.html'
-      authHost: "http://#{location.host}"
-      authPath: '/src/scripts/lib/zooniverse/proxy/login.html'
+      proxyPath: '/src/scripts/lib/zooniverse/proxy/index.html'
   else
     config.set
       apiHost: 'https://api.zooniverse.org'
       proxyHost: 'https://api.zooniverse.org'
       proxyPath: '/proxy/index.html'
-      authHost: 'https://zooniverse-login.s3.amazonaws.com'
-      authPath: '/login.html'
 
   module.exports = config
