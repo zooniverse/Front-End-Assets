@@ -3,8 +3,9 @@ define (require, exports, module) ->
   $ = require 'jQuery'
   base64 = require 'base64'
 
+  API = require 'zooniverse/API'
   config = require 'zooniverse/config'
-  {delay, remove} = require 'zooniverse/util'
+  {delay, joinLines, remove} = require 'zooniverse/util'
 
   Authentication = require 'zooniverse/controllers/Authentication'
   Favorite = require './Favorite'
@@ -18,6 +19,13 @@ define (require, exports, module) ->
     @signIn: (user) =>
       return if user is @current
       @current = user
+
+      if @current?
+        auth = base64.encode "#{@current.name}:#{@current.apiKey}"
+        API.headers['Authorization'] = "Basic #{auth}"
+      else
+        delete API.headers['Authorization']
+
       @trigger 'sign-in', @current
       @current?.refreshFavorites()
       @current?.refreshRecents()
@@ -49,16 +57,13 @@ define (require, exports, module) ->
     refreshSomething: (attribute, model) =>
       refresh = new $.Deferred
 
-      url = """
-        #{config.apiHost}
+      url = joinLines """
         /projects/#{config.app.projects[0].id}
         /users/#{@id}
         /#{attribute}
-      """.replace /\n/g, ''
+      """
 
-      get = $.getJSON url
-
-      get.done (response) =>
+      API.get url, (response) =>
         model.fromJSON raw for raw in response.reverse()
         @trigger "refresh-#{attribute}"
 
@@ -103,16 +108,12 @@ define (require, exports, module) ->
     persist: =>
       # TODO
 
-    # Send authentication header to Ouroboros when logged in.
-    $.ajaxSetup beforeSend: (xhr, settings) =>
-      if @current? and !!~settings.url.indexOf config.apiHost
-        auth = base64.encode "#{@current.name}:#{@current.apiKey}"
-        xhr.setRequestHeader 'Authorization', "Basic #{auth}"
-
     Authentication.bind 'login', (data) =>
       @signIn @fromJSON data
 
     Authentication.bind 'logout', =>
       @signOut()
+
+    $ -> Authentication.checkCurrent()
 
   module.exports = User
