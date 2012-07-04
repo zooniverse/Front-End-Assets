@@ -7,7 +7,6 @@ define (require, exports, module) ->
   config = require 'zooniverse/config'
   {joinLines, remove} = require 'zooniverse/util'
 
-  Authentication = require 'zooniverse/controllers/Authentication'
   Favorite = require './Favorite'
   Recent = require './Recent'
 
@@ -16,9 +15,23 @@ define (require, exports, module) ->
 
     @current: null
 
+    @fromJSON: (raw) ->
+      super
+        id: raw.id
+        zooniverseId: raw.zooniverse_id
+        name: raw.name
+        apiKey: raw.api_key
+
+    @authenticate: (username, password) =>
+      API.getJSON '/login', {username, password}, (response) =>
+        if response.success
+          @signIn @fromJSON response
+        else
+          @trigger 'authentication-error', response.message
+
     @signIn: (user) =>
       # Always sign out, but only sign in if the user has changed.
-      return if user is @current unless @current is null
+      return if user is @current and @current isnt null
       @current = user
 
       if @current?
@@ -31,16 +44,13 @@ define (require, exports, module) ->
       @current?.refreshFavorites()
       @current?.refreshRecents()
 
+    @deauthenticate: =>
+      API.getJSON '/logout', =>
+        @signOut()
+
     @signOut: =>
       @current?.destroy()
       @signIn null
-
-    @fromJSON: (raw) ->
-      super
-        id: raw.id
-        zooniverseId: raw.zooniverse_id
-        name: raw.name
-        apiKey: raw.api_key
 
     constructor: ->
       super
@@ -106,15 +116,12 @@ define (require, exports, module) ->
 
       localStorage.finishedTutorial = JSON.stringify finishers
 
-    persist: =>
-      # TODO
-
-    Authentication.bind 'login', (data) =>
-      @signIn @fromJSON data
-
-    Authentication.bind 'logout', =>
-      @signOut()
-
-    $ -> Authentication.checkCurrent()
+    # Check for a signed-in user at startup.
+    $ =>
+      API.getJSON '/current_user', (response) =>
+        if response.success
+          @signIn @fromJSON response
+        else
+          @signOut()
 
   module.exports = User

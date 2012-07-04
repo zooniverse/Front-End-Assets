@@ -1,14 +1,13 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
 
-  Authentication = require 'zooniverse/controllers/Authentication'
   User = require 'zooniverse/models/User'
 
-  TEMPLATE = require 'zooniverse/views/LoginForm'
+  template = require 'zooniverse/views/LoginForm'
 
   class LoginForm extends Spine.Controller
     className: 'zooniverse-login-form'
-    template: TEMPLATE
+    template: template
 
     events:
       'submit .sign-in form': 'onSubmit'
@@ -25,13 +24,13 @@ define (require, exports, module) ->
       @html @template
 
       User.bind 'sign-in', @onSignIn
-      Authentication.bind 'error', @onError
+      User.bind 'authentication-error', @onError
 
     onSubmit: (e) =>
       @el.removeClass 'has-error'
       @el.addClass 'waiting'
       @errors.empty()
-      Authentication.logIn @usernameField.val(), @passwordField.val()
+      User.authenticate @usernameField.val(), @passwordField.val()
       e.preventDefault()
 
     onError: (error) =>
@@ -48,6 +47,6 @@ define (require, exports, module) ->
       @currentDisplay.html User.current?.name || ''
 
     signOut: =>
-      Authentication.logOut()
+      User.deauthenticate()
 
   module.exports = LoginForm
