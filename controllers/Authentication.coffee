@@ -10,7 +10,7 @@ define (require, exports, module) ->
 
     @logIn: (username, password) =>
       API.getJSON '/login', {username, password}, (rawUser) =>
-        @trigger 'login', rawUser
+        @trigger 'login', rawUser if rawUser.success
 
     @logOut: =>
       API.getJSON '/logout', =>
@@ -18,6 +18,9 @@ define (require, exports, module) ->
 
     @checkCurrent: =>
       API.getJSON '/current_user', (rawUser) =>
-        @trigger 'login', rawUser
+        if rawUser.success
+          @trigger 'login', rawUser
+        else
+          @trigger 'logout'
 
   module.exports = Authentication

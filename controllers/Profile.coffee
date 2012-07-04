@@ -36,6 +36,7 @@ define (require, exports, module) ->
       @el.toggleClass 'signed-in', User.current?
 
       if User.current?
+        console.log 'USER', User.current
         @usernameContainer.html User.current.name
         @updateFavorites()
         @updateRecents()

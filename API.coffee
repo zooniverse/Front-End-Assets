@@ -10,20 +10,21 @@ define (require, exports, module) ->
 
     @ready: false # Iframe will post "ready" signal when it loads.
 
-    @iframe = $("<iframe src='#{config.proxyHost}#{config.proxyPath}'></iframe>")
+    @iframe = $("<iframe src='#{config.apiHost}#{config.proxyPath}'></iframe>")
     @iframe.css display: 'none'
     @iframe.appendTo 'body'
     @external = @iframe.get(0).contentWindow
 
-    # Requests added here and posted when the iframe is ready.
-    @readyQueue: []
+    # Requests added here and posted sequentially when the iframe is ready.
+    @readyDaisyChain: [new $.Deferred]
 
     @requests:
       # The iframe will post a "READY" message when it loads.
       READY: new $.Deferred (deferred) =>
-        deferred.done =>
+        deferred.always =>
           @ready = true
-          @postMessage message for message in @readyQueue
+          @readyDaisyChain[0].resolve()
+          remove deferred, from: @readyDaisyChain
 
     # Headers to send along with requests (e.g. for authentication)
     @headers: {}
@@ -35,19 +36,25 @@ define (require, exports, module) ->
         data = null
 
       id = Math.floor Math.random() * 99999999
-      @requests[id] = new $.Deferred -> @then done, fail
+      deferred = new $.Deferred -> @then done, fail
 
       message = {id, type, url, data, @headers}
 
       if @ready
         @postMessage message
       else
-        @readyQueue.push message
+        # Post this message after the last deferred in the chain has completed.
+        @readyDaisyChain.slice(-1)[0].always =>
+          @postMessage message
+          remove deferred, from: @readyDaisyChain
 
-      # Cleanup once it's run
-      @requests[id].always => delete @requests[id]
+        # Add this deferred to the end of the chain.
+        @readyDaisyChain.push deferred
 
-      @requests[id]
+      @requests[id] = deferred
+      deferred.always => delete @requests[id]
+
+      deferred
 
     @getJSON: => @request 'getJSON', arguments...
     @get: => @request 'get', arguments...
@@ -55,10 +62,10 @@ define (require, exports, module) ->
     @delete: => @request 'delete', arguments...
 
     @postMessage: (message) =>
-      @external.postMessage JSON.stringify(message), config.proxyHost
+      @external.postMessage JSON.stringify(message), config.apiHost
 
     $(window).on 'message', ({originalEvent: e}) =>
-      return unless e.origin is config.proxyHost
+      return unless e.origin is config.apiHost
       # Data will come back as:
       # {"id": "1234567890", "response": ["foo", "bar"]}
       {id, failure, response} = JSON.parse e.data

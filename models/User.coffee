@@ -5,7 +5,7 @@ define (require, exports, module) ->
 
   API = require 'zooniverse/API'
   config = require 'zooniverse/config'
-  {delay, joinLines, remove} = require 'zooniverse/util'
+  {joinLines, remove} = require 'zooniverse/util'
 
   Authentication = require 'zooniverse/controllers/Authentication'
   Favorite = require './Favorite'
@@ -17,7 +17,8 @@ define (require, exports, module) ->
     @current: null
 
     @signIn: (user) =>
-      return if user is @current
+      # Always sign out, but only sign in if the user has changed.
+      return if user is @current unless @current is null
       @current = user
 
       if @current?

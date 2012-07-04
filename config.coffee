@@ -15,12 +15,10 @@ define (require, exports, module) ->
   if config.dev
     config.set
       apiHost: "http://#{location.hostname}:3000" # TODO: What if Ouroboros isn't on 3000?
-      proxyHost: "http://#{location.hostname}:3000"
       proxyPath: '/proxy/index.html'
   else
     config.set
       apiHost: 'https://api.zooniverse.org'
-      proxyHost: 'https://api.zooniverse.org'
       proxyPath: '/proxy/index.html'
 
   module.exports = config

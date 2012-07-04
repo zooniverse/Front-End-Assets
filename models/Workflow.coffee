@@ -23,8 +23,7 @@ define (require, exports, module) ->
       @subjects ?= []
       @tutorialSubjects ?= []
       subject.workflow = @ for subject in @subjects.concat @tutorialSubjects
-
-      @controller?.workflow = @ # The delay in controller constructor waits for this.
+      @selection ?= []
 
     fetchSubjects: (group) =>
       @trigger 'fetching'
@@ -40,7 +39,7 @@ define (require, exports, module) ->
         ?limit=#{@queueLength - @subjects.length}
       """
 
-      get = API.getJSON url
+      get = API.get url
 
       get.done (response) =>
         for raw in response
