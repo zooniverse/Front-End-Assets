@@ -33,17 +33,14 @@ define (require, exports, module) ->
         @tutorial = new Tutorial target: @el, steps: @tutorialSteps
 
       User.bind 'sign-in', =>
-        if User.current?
-          if @tutorial?
-            if User.current.finishedTutorial
-              @tutorial.end()
-              @nextSubjects()
-            else
-              @startTutorial()
-          else
+        if @tutorial?
+          if User.current?.finishedTutorial
+            @tutorial.end()
             @nextSubjects()
+          else
+            @startTutorial()
         else
-          @startTutorial()
+          @nextSubjects()
 
       User.bind 'add-favorite', (user, favorite) =>
         @el.toggleClass 'is-favored', arraysMatch favorite.subjects, @workflow.selection
