@@ -1,5 +1,5 @@
 server: python -m SimpleHTTPServer $ZOO_SERVER_PORT
-login_coffee: coffee --compile --watch src/scripts/lib/zooniverse/login-frame
+login_coffee: coffee --compile --watch src/scripts/lib/zooniverse/proxy
 main_coffee: coffee --compile --output scripts --watch src/scripts/lib/zooniverse/main.coffee
 src_coffee: coffee --compile --output scripts --watch src/scripts
 src_sass:   sass --watch src/styles:styles --require bourbon --no-cache --debug-info
