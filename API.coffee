@@ -5,29 +5,36 @@ define (require, exports, module) ->
   config = require 'zooniverse/config'
   {remove} = require 'zooniverse/util'
 
+  throw new Error 'zooniverse/API needs config.apiHost' unless config.apiHost
+  throw new Error 'zooniverse/API needs config.proxyPath' unless config.proxyPath
+
   class API extends Spine.Module
     @extend Spine.Events
-
-    @ready: false # Iframe will post "ready" signal when it loads.
 
     @iframe = $("<iframe src='#{config.apiHost}#{config.proxyPath}'></iframe>")
     @iframe.css display: 'none'
     @iframe.appendTo 'body'
     @external = @iframe.get(0).contentWindow
 
+    # The iframe will post "ready" message when it loads.
+    @ready: false
+
     # Requests added here and posted sequentially when the iframe is ready.
     @readyDaisyChain: [new $.Deferred]
 
     @requests:
-      # The iframe will post a "READY" message when it loads.
       READY: new $.Deferred (deferred) =>
         deferred.always =>
           @ready = true
+          # Kick off the daisy chain when the "ready" message comes.
           @readyDaisyChain[0].resolve()
-          remove deferred, from: @readyDaisyChain
+          remove @readyDaisyChain[0], from: @readyDaisyChain
 
     # Headers to send along with requests (e.g. for authentication)
     @headers: {}
+
+    @postMessage: (message) =>
+      @external.postMessage JSON.stringify(message), config.apiHost
 
     @request: (type, url, data, done, fail) =>
       if typeof data is 'function'
@@ -56,13 +63,11 @@ define (require, exports, module) ->
 
       deferred
 
-    @getJSON: => @request 'getJSON', arguments...
+    # Shortcuts
     @get: => @request 'get', arguments...
     @post: => @request 'post', arguments...
     @delete: => @request 'delete', arguments...
-
-    @postMessage: (message) =>
-      @external.postMessage JSON.stringify(message), config.apiHost
+    @getJSON: => @request 'getJSON', arguments...
 
     $(window).on 'message', ({originalEvent: e}) =>
       return unless e.origin is config.apiHost

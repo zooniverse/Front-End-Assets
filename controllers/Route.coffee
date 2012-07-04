@@ -1,6 +1,6 @@
 define (require, exports, module) ->
   $ = require 'jQuery'
-  {remove} = require 'zooniverse/util'
+  {remove, delay} = require 'zooniverse/util'
 
   class Route
     @routes: []
@@ -62,6 +62,6 @@ define (require, exports, module) ->
       remove @, from: @constructor.routes
 
     $(window).on 'hashchange', @checkHash
-    $ => @checkHash()
+    $ => delay 250, @checkHash
 
   module.exports = Route
