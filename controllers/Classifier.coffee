@@ -42,6 +42,8 @@ define (require, exports, module) ->
         else
           @nextSubjects()
 
+        @updateFavoriteButtons()
+
       User.bind 'add-favorite', (user, favorite) =>
         @el.toggleClass 'is-favored', arraysMatch favorite.subjects, @workflow.selection
 
@@ -63,6 +65,16 @@ define (require, exports, module) ->
 
       # Delay so extending classes can modify the classification before rendering
       delay => @classification.trigger 'change'
+
+    updateFavoriteButtons: =>
+      signedIn = User.current?
+
+      if @workflow.tutorialSubjects instanceof Array
+        tutorial = arraysMatch @workflow.selection, @workflow.tutorialSubjects
+      else
+        tutorial = false
+
+      @el.toggleClass 'can-favorite', signedIn and not tutorial
 
     render: =>
       # Override this.
