@@ -32,14 +32,11 @@ define (require, exports, module) ->
     activate: =>
       for element in @el.find(FOCUSABLE)
         element = $(element)
-
-        oldTabIndex = element.data 'old-tabindex'
-        if oldTabIndex
-          element.attr 'tabindex', oldTabIndex
-        else
-          element.removeAttr 'tabindex'
-
-        element.data 'old-tabindex', null
+        element.removeAttr 'tabindex'
+        oldTabindex = element.attr 'data-old-tabindex'
+        continue unless oldTabindex
+        element.removeAttr 'data-old-tabindex'
+        element.attr 'tabindex', oldTabindex
 
       elAndLinks = @el.add @links
       elAndLinks.removeClass BEFORE_CLASS
@@ -51,9 +48,11 @@ define (require, exports, module) ->
     deactivate: (inactiveClass) =>
       for element in @el.find(FOCUSABLE)
         element = $(element)
+        continue if element.attr 'data-old-tabindex'
         tabindex = element.attr 'tabindex'
-        element.data 'old-tabindex', tabindex || null
         element.attr 'tabindex', -1
+        continue unless tabindex
+        element.attr 'data-old-tabindex', tabindex
 
       elAndLinks = @el.add @links
       elAndLinks.removeClass BEFORE_CLASS
