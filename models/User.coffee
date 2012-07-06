@@ -11,7 +11,7 @@ define (require, exports, module) ->
   Recent = require './Recent'
 
   class User extends Spine.Model
-    @configure 'User', 'zooniverseId', 'name', 'apiKey', 'finishedTutorial', 'favorites', 'recents'
+    @configure 'User', 'zooniverseId', 'name', 'apiKey', 'tutorialDone', 'favorites', 'recents'
 
     @current: null
 
@@ -20,10 +20,11 @@ define (require, exports, module) ->
         id: raw.id
         zooniverseId: raw.zooniverse_id
         name: raw.name
+        tutorialDone: raw.project.tutorial_done || false
         apiKey: raw.api_key
 
     @authenticate: (username, password) =>
-      API.getJSON '/login', {username, password}, (response) =>
+      API.getJSON "/projects/#{config.app.projects[0].id}/login", {username, password}, (response) =>
         if response.success
           @signIn @fromJSON response
         else
@@ -45,7 +46,7 @@ define (require, exports, module) ->
       @current?.refreshRecents()
 
     @deauthenticate: =>
-      API.getJSON '/logout', =>
+      API.getJSON "/projects/#{config.app.projects[0].id}/logout", =>
         @signOut()
 
     @signOut: =>
@@ -56,9 +57,6 @@ define (require, exports, module) ->
       super
       @favorites ?= []
       @recents ?= []
-
-      tutorialFinishers = JSON.parse localStorage.finishedTutorial || '[]'
-      @finishedTutorial = @zooniverseId in tutorialFinishers
 
       Favorite.bind 'create', @onCreateFavorite
       Favorite.bind 'destroy', @onDestroyFavorite
@@ -106,19 +104,9 @@ define (require, exports, module) ->
       remove destroyed, from: @recents
       @trigger 'change'
 
-    setFinishedTutorial: (@finished) ->
-      finishers = JSON.parse localStorage.finishedTutorial || '[]'
-
-      if @finished
-        finishers.push @zooniverseId unless @zooniverseId in finishers
-      else
-        remove @zooniverseId, from: finishers
-
-      localStorage.finishedTutorial = JSON.stringify finishers
-
     # Check for a signed-in user at startup.
     $ =>
-      API.getJSON '/current_user', (response) =>
+      API.getJSON "/projects/#{config.app.projects[0].id}/current_user", (response) =>
         if response.success
           @signIn @fromJSON response
         else

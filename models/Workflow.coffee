@@ -3,13 +3,12 @@ define (require, exports, module) ->
   $ = require 'jQuery'
 
   API = require 'zooniverse/API'
-  config = require 'zooniverse/config'
   {joinLines} = require 'zooniverse/util'
 
   Subject = require 'zooniverse/models/Subject'
 
   class Workflow extends Spine.Model
-    @configure 'Workflow', 'devID', 'queueLength', 'selectionLength', 'tutorialSubjects', 'project', 'subjects'
+    @configure 'Workflow', 'queueLength', 'selectionLength', 'tutorialSubjects', 'project', 'subjects'
 
     queueLength: 5 # Number of subjects to preload
     selectionLength: 1 # Number of subjects to be classified at a time
@@ -18,11 +17,15 @@ define (require, exports, module) ->
 
     constructor: ->
       super
-      @id = @devID if config.dev
 
       @subjects ?= []
+      @subjects = [@subjects] unless @subjects instanceof Array
+
       @tutorialSubjects ?= []
+      @tutorialSubjects = [@tutorialSubjects] unless @tutorialSubjects instanceof Array
+
       subject.workflow = @ for subject in @subjects.concat @tutorialSubjects
+
       @selection ?= []
 
     fetchSubjects: (group) =>

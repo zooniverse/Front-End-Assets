@@ -82,10 +82,6 @@ define (require, exports, module) ->
         @end()
 
     end: =>
-      # User.current?.finishedTutorial = true
-      # User.current?.persist()
-      User.current?.setFinishedTutorial true
-
       @steps[@current]?.leave()
       @current = @steps.length
       @el.css display: 'none'

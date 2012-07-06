@@ -19,6 +19,7 @@ define (require, exports, module) ->
       super
 
       @projects ?= []
+      @projects = [@projects] unless @projects instanceof Array
       project.app = @ for project in @projects if @projects?
 
       @initTopBar()

@@ -34,7 +34,7 @@ define (require, exports, module) ->
 
       User.bind 'sign-in', =>
         if @tutorial?
-          if User.current?.finishedTutorial
+          if User.current?.tutorialDone
             @tutorial.end()
             @nextSubjects()
           else
@@ -54,6 +54,7 @@ define (require, exports, module) ->
 
     reset: =>
       @el.removeClass 'is-favored'
+      @updateFavoriteButtons()
 
       @classification?.destroy()
 
