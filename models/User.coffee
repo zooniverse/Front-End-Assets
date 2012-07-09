@@ -13,34 +13,33 @@ define (require, exports, module) ->
   class User extends Spine.Model
     @configure 'User', 'zooniverseId', 'name', 'apiKey', 'tutorialDone', 'favorites', 'recents'
 
+    @project: 'PROJECT_NOT_SPECIFIED'
     @current: null
 
     @fromJSON: (raw) ->
       super
         id: raw.id
         zooniverseId: raw.zooniverse_id
+        apiKey: raw.api_key
         name: raw.name
         tutorialDone: raw.project?.tutorial_done || false
-        apiKey: raw.api_key
 
-    @authenticate: (username, password) =>
-      path = '/login'
+    @checkCurrent: (@project) =>
+      API.getJSON "/projects/#{@project.id}/current_user", (response) =>
+        @signIn @fromJSON response if response.success
 
-      console.log "Authenticating at #{projectSegments}#{path}"
-      API.getJSON path, {username, password}, (response) =>
+    @authenticate: ({username, password}) =>
+      result = new $.Deferred
+
+      API.getJSON "/projects/#{@project.id}/login", {username, password}, (response) =>
         if response.success
           @signIn @fromJSON response
+          result.resolve @current
         else
           @trigger 'authentication-error', response.message
+          result.reject response.message
 
-    @checkCurrent: (project) =>
-      console.log 'Checking for current'
-      window.c = API.getJSON "/projects/#{project.id}/current_user", (response) =>
-        if response.success
-          console.log 'Siging in', response
-          @signIn @fromJSON response
-        else
-          console.log 'Nobody\'s signed in'
+      result.promise()
 
     @signIn: (user) =>
       # Always sign out, but only sign in if the user has changed.

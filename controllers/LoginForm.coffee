@@ -14,7 +14,7 @@ define (require, exports, module) ->
       'click .sign-out button': 'signOut'
 
     elements:
-      '.errors': 'errors'
+      '.errors': 'errorsContainer'
       '.sign-in input[name="username"]': 'usernameField'
       '.sign-in input[name="password"]': 'passwordField'
       '.sign-out .current': 'currentDisplay'
@@ -24,27 +24,36 @@ define (require, exports, module) ->
       @html @template
 
       User.bind 'sign-in', @onSignIn
-      User.bind 'authentication-error', @onError
+      @onSignIn()
 
     onSubmit: (e) =>
-      @el.removeClass 'has-error'
-      @el.addClass 'waiting'
-      @errors.empty()
-      User.authenticate @usernameField.val(), @passwordField.val()
       e.preventDefault()
 
-    onError: (error) =>
-      return unless error?
-      @el.removeClass 'signed-in'
-      @el.removeClass 'waiting'
-      @el.addClass 'has-error'
-      @errors.html "<div>#{error}</div>"
+      @el.removeClass 'has-error'
+      @el.addClass 'waiting'
+      @errorsContainer.empty()
+
+      auth = User.authenticate
+        username: @usernameField.val()
+        password: @passwordField.val()
+
+      # Auth errors are specific to the instance,
+      # but successes are listened to by all instances.
+      auth.fail @onError
 
     onSignIn: =>
       @el.toggleClass 'signed-in', User.current?
       @el.removeClass 'waiting', User.current?
       @usernameField.add(@passwordField).val ''
       @currentDisplay.html User.current?.name || ''
+
+    onError: (error) =>
+      return unless error?
+      @el.removeClass 'signed-in'
+      @el.removeClass 'waiting'
+      @el.addClass 'has-error'
+
+      @errorsContainer.append "<div>#{error}</div>"
 
     signOut: =>
       User.deauthenticate()
