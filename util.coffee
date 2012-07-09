@@ -57,7 +57,7 @@ define (require, exports, module) ->
     delay: (duration, callback) ->
       if typeof duration is 'function'
         callback = duration
-        duration = 0
+        duration = 1
 
       setTimeout callback, duration
 

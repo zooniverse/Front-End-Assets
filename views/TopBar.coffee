@@ -59,8 +59,7 @@ define (require, exports, module) ->
         </li>
 
         <li class="z-login z-dropdown">
-          <span>
-          </span>
+          <span></span>
           <div></div>
         </li>
       </ul>

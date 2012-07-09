@@ -2,7 +2,9 @@ define (require, exports, module) ->
   Spine = require 'Spine'
 
   config = require 'zooniverse/config'
+  {delay} = require 'zooniverse/util'
 
+  User = require 'zooniverse/models/User'
   TopBar = require 'zooniverse/controllers/TopBar'
   Pager = require 'zooniverse/controllers/Pager'
   GoogleAnalytics = require 'zooniverse/controllers/GoogleAnalytics'
@@ -17,6 +19,7 @@ define (require, exports, module) ->
 
     constructor: ->
       super
+      console.group 'Constructing app'
 
       @projects ?= []
       @projects = [@projects] unless @projects instanceof Array
@@ -26,15 +29,23 @@ define (require, exports, module) ->
       @initPagers()
       @initAnalytics()
 
+      console.log 'Finished constructing app'
+      User.checkCurrent @projects[0]
+
+      console.groupEnd()
+
     initTopBar: =>
+      console.log 'App: init top bar'
       @topBar = new TopBar languages: @languages
       @topBar.el.prependTo 'body'
 
     initPagers: =>
+      console.log 'App: init pagers'
       for pageContainer in @el.find('[data-page]').parent()
         new Pager el: pageContainer
 
     initAnalytics: =>
+      console.log 'App: init analytics'
       @analytics = new Analytics
 
       if config.googleAnalytics

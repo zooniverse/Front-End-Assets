@@ -34,7 +34,6 @@ define (require, exports, module) ->
       post = API.post url, @toJSON()
 
       post.done (response) =>
-        response = JSON.parse response
         @id = response.id
         @trigger 'persist'
 

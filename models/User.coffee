@@ -5,7 +5,7 @@ define (require, exports, module) ->
 
   API = require 'zooniverse/API'
   config = require 'zooniverse/config'
-  {joinLines, remove} = require 'zooniverse/util'
+  {joinLines, remove, delay} = require 'zooniverse/util'
 
   Favorite = require './Favorite'
   Recent = require './Recent'
@@ -20,15 +20,27 @@ define (require, exports, module) ->
         id: raw.id
         zooniverseId: raw.zooniverse_id
         name: raw.name
-        tutorialDone: raw.project.tutorial_done || false
+        tutorialDone: raw.project?.tutorial_done || false
         apiKey: raw.api_key
 
     @authenticate: (username, password) =>
-      API.getJSON "/projects/#{config.app.projects[0].id}/login", {username, password}, (response) =>
+      path = '/login'
+
+      console.log "Authenticating at #{projectSegments}#{path}"
+      API.getJSON path, {username, password}, (response) =>
         if response.success
           @signIn @fromJSON response
         else
           @trigger 'authentication-error', response.message
+
+    @checkCurrent: (project) =>
+      console.log 'Checking for current'
+      window.c = API.getJSON "/projects/#{project.id}/current_user", (response) =>
+        if response.success
+          console.log 'Siging in', response
+          @signIn @fromJSON response
+        else
+          console.log 'Nobody\'s signed in'
 
     @signIn: (user) =>
       # Always sign out, but only sign in if the user has changed.
@@ -103,13 +115,5 @@ define (require, exports, module) ->
     onDestroyRecent: (destroyed) =>
       remove destroyed, from: @recents
       @trigger 'change'
-
-    # Check for a signed-in user at startup.
-    $ =>
-      API.getJSON "/projects/#{config.app.projects[0].id}/current_user", (response) =>
-        if response.success
-          @signIn @fromJSON response
-        else
-          @signOut()
 
   module.exports = User
