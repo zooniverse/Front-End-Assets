@@ -44,7 +44,9 @@ define (require, exports, module) ->
 
       @workflow.bind 'change-selection', @reset
 
-      @chooseInitialSubjects()
+      # Delay so we can set up the UI.
+      delay =>
+        @chooseInitialSubjects()
 
     chooseInitialSubjects: =>
       if @tutorial?
