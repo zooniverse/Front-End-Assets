@@ -51,7 +51,6 @@ define (require, exports, module) ->
         continue if element.attr 'data-old-tabindex'
         tabindex = element.attr 'tabindex'
         element.attr 'tabindex', -1
-        continue unless tabindex
         element.attr 'data-old-tabindex', tabindex
 
       elAndLinks = @el.add @links
