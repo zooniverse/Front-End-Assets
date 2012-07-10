@@ -32,25 +32,31 @@ define (require, exports, module) ->
       if @workflow.tutorialSubjects?.length > 0 and @tutorialSteps?.length > 0
         @tutorial = new Tutorial target: @el, steps: @tutorialSteps
 
-      User.bind 'sign-in', =>
-        if @tutorial?
-          if User.current?.tutorialDone
-            @tutorial.end()
-            @nextSubjects()
-          else
-            @startTutorial()
-        else
-          @nextSubjects()
-
-        @updateFavoriteButtons()
+      User.bind 'sign-in', @chooseInitialSubjects
 
       User.bind 'add-favorite', (user, favorite) =>
-        @el.toggleClass 'is-favored', arraysMatch favorite.subjects, @workflow.selection
+        return unless arraysMatch favorite.subjects, @workflow.selection
+        @el.addClass 'is-favored'
 
       User.bind 'remove-favorite', (user, favorite) =>
-        @el.toggleClass 'is-favored', not arraysMatch favorite.subjects, @workflow.selection
+        return unless arraysMatch favorite.subjects, @workflow.selection
+        @el.removeClass 'is-favored'
 
       @workflow.bind 'change-selection', @reset
+
+      @chooseInitialSubjects()
+
+    chooseInitialSubjects: =>
+      if @tutorial?
+        if User.current?.tutorialDone
+          @tutorial.end()
+          @nextSubjects()
+        else
+          @startTutorial()
+      else
+        @nextSubjects()
+
+      @updateFavoriteButtons()
 
     reset: =>
       @el.removeClass 'is-favored'
@@ -90,12 +96,14 @@ define (require, exports, module) ->
       Recent.create subjects: @workflow.selection
 
     createFavorite: =>
-      favorite = Favorite.create subjects: @workflow.selection
+      favorite = Favorite.create
+        subjects: @workflow.selection
+        projectID: @workflow.project.id
       favorite.persist()
 
     destroyFavorite: =>
       favorite = (fav for fav in User.current.favorites when arraysMatch fav.subjects, @workflow.selection)[0]
-      favorite.destroy()
+      favorite.destroy true
 
     goToTalk: =>
       if @workflow.selection[0].eql @workflow.tutorialSubjects[0]

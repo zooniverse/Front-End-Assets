@@ -4,18 +4,16 @@ define (require, exports, module) ->
 
   API = require 'zooniverse/API'
 
-  Subject = require './Subject'
+  Subject = require 'zooniverse/models/Subject'
 
   class Favorite extends Spine.Model
-    @configure 'Favorite', 'createdAt', 'subjects'
+    @configure 'Favorite', 'createdAt', 'projectID', 'subjects'
 
     @fromJSON: (raw) ->
-      for subject in raw.subjects
-        subject.workflow_ids = [raw.workflow_id]
-
       @create
         id: raw.id
         createdAt: raw.created_at
+        projectID: raw.project_id
         subjects: (Subject.fromJSON subject for subject in raw.subjects)
 
     constructor: ->
@@ -29,7 +27,7 @@ define (require, exports, module) ->
     persist: =>
       @trigger 'persisting'
 
-      path = "/projects/#{@subjects[0].workflow.project.id}/favorites"
+      path = "/projects/#{@projectID}/favorites"
       post = API.post path, @toJSON()
 
       post.done (response) =>
@@ -41,7 +39,7 @@ define (require, exports, module) ->
 
     destroy: (fromServer) =>
       super
-      path = "/projects/#{@subjects[0].workflow.project.id}/favorites/#{@id}"
+      path = "/projects/#{@projectID}/favorites/#{@id}"
       API.delete path if fromServer is true
 
   module.exports = Favorite

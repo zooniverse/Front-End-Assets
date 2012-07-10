@@ -23,8 +23,9 @@ define (require, exports, module) ->
 
       @tutorialSubjects ?= []
       @tutorialSubjects = [@tutorialSubjects] unless @tutorialSubjects instanceof Array
-
-      subject.workflow = @ for subject in @subjects.concat @tutorialSubjects
+      for subject in @subjects.concat @tutorialSubjects
+        subject.workflow = @
+        subject.save()
 
       @selection ?= []
 
@@ -35,18 +36,14 @@ define (require, exports, module) ->
       groupSegment = ''
       groupSegment = '/#{group}' if typeof group is 'string'
 
-      url = joinLines """
-        /projects/#{@project.id}
-        #{groupSegment}
-        /subjects
-        ?limit=#{@queueLength - @subjects.length}
-      """
+      limit = @queueLength - @subjects.length
 
-      get = API.get url
+      path = "/projects/#{@project.id}#{groupSegment}/subjects?limit=#{limit}"
+      get = API.get path
 
       get.done (response) =>
         for raw in response
-          continue unless raw # TODO: Why am I getting some nulls back?
+          continue unless raw? # TODO: Why am I getting some nulls back?
 
           subject = Subject.fromJSON raw
           subject.workflow = @

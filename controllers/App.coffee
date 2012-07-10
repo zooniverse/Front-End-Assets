@@ -22,15 +22,16 @@ define (require, exports, module) ->
 
       @projects ?= []
       @projects = [@projects] unless @projects instanceof Array
-      project.app = @ for project in @projects if @projects?
+      for project in @projects
+        project.app = @
+        project.save()
 
       @initTopBar()
       @initPagers()
       @initAnalytics()
 
-      User.checkCurrent @projects[0]
-
-      console.groupEnd()
+      User.checkCurrent(@projects[0]).done (response) =>
+        console.log 'Current user', response
 
     initTopBar: =>
       @topBar = new TopBar languages: @languages
