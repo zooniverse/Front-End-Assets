@@ -3,7 +3,6 @@ define (require, exports, module) ->
   $ = require 'jQuery'
 
   API = require 'zooniverse/API'
-  config = require 'zooniverse/config'
 
   Subject = require './Subject'
 
@@ -30,17 +29,19 @@ define (require, exports, module) ->
     persist: =>
       @trigger 'persisting'
 
-      url = "/projects/#{config.app.projects[0].id}/favorites"
-      post = API.post url, @toJSON()
+      path = "/projects/#{@subjects[0].workflow.project.id}/favorites"
+      post = API.post path, @toJSON()
 
       post.done (response) =>
         @id = response.id
         @trigger 'persist'
 
-      post.fail => @trigger 'error'
+      post.fail (response) =>
+        @trigger 'error', response
 
     destroy: (fromServer) =>
       super
-      API.delete "/projects/#{config.app.projects[0].id}/favorites/#{@id}" if fromServer is true
+      path = "/projects/#{@subjects[0].workflow.project.id}/favorites/#{@id}"
+      API.delete path if fromServer is true
 
   module.exports = Favorite
