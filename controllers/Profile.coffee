@@ -26,7 +26,6 @@ define (require, exports, module) ->
     constructor: ->
       super
       @html @template
-
       @loginForm = new LoginForm el: @loginFormContainer
 
       User.bind 'sign-in', @userChanged
@@ -61,7 +60,7 @@ define (require, exports, module) ->
 
     signOut: (e) =>
       e.preventDefault()
-      User.signOut()
+      User.deauthenticate()
 
     onFavoriteDeleteClick: (e) =>
       # TODO: This is kinda hacky. This should be a list of controllers,
@@ -70,7 +69,7 @@ define (require, exports, module) ->
       favoriteID = target.data 'favorite'
       favorite = Favorite.find favoriteID
 
-      favorite.destroy()
+      favorite.destroy true
       target.parent('li').remove()
 
   module.exports = Profile

@@ -5,7 +5,7 @@ define (require, exports, module) ->
 
   API = require 'zooniverse/API'
   config = require 'zooniverse/config'
-  {joinLines, remove, delay} = require 'zooniverse/util'
+  {remove} = require 'zooniverse/util'
 
   Favorite = require './Favorite'
   Recent = require './Recent'
@@ -43,21 +43,14 @@ define (require, exports, module) ->
 
     @signIn: (user) =>
       # Always sign out, but only sign in if the user has changed.
-      return if user is @current and @current isnt null
+      return if user is @current unless @current is null
       @current = user
 
-      if @current?
-        auth = base64.encode "#{@current.name}:#{@current.apiKey}"
-        API.headers['Authorization'] = "Basic #{auth}"
-      else
-        delete API.headers['Authorization']
-
       @trigger 'sign-in', @current
-      @current?.refreshFavorites()
-      @current?.refreshRecents()
 
     @deauthenticate: =>
-      API.getJSON "/projects/#{config.app.projects[0].id}/logout", =>
+      API.getJSON "/projects/#{@project.id}/logout", =>
+        delete API.headers['Authorization']
         @signOut()
 
     @signOut: =>
@@ -69,23 +62,25 @@ define (require, exports, module) ->
       @favorites ?= []
       @recents ?= []
 
+      # Set HTTP authentication headers for this user.
+      auth = base64.encode "#{@name}:#{@apiKey}"
+      API.headers['Authorization'] = "Basic #{auth}"
+
       Favorite.bind 'create', @onCreateFavorite
       Favorite.bind 'destroy', @onDestroyFavorite
       Recent.bind 'create', @onCreateRecent
       Recent.bind 'destroy', @onDestroyRecent
 
+      @refreshFavorites()
+      @refreshRecents()
+
     refreshSomething: (attribute, model) =>
       refresh = new $.Deferred
 
-      url = joinLines """
-        /projects/#{config.app.projects[0].id}
-        /users/#{@id}
-        /#{attribute}
-      """
-
-      API.get url, (response) =>
+      API.get "/projects/#{@constructor.project.id}/users/#{@id}/#{attribute}", (response) =>
         model.fromJSON raw for raw in response.reverse()
         @trigger "refresh-#{attribute}"
+        @trigger "change"
 
         refresh.resolve @[attribute]
 
@@ -114,5 +109,10 @@ define (require, exports, module) ->
     onDestroyRecent: (destroyed) =>
       remove destroyed, from: @recents
       @trigger 'change'
+
+    destroy: =>
+      @favorites[0].destroy() while @favorites.length > 0
+      @recents[0].destroy() while @recents.length > 0
+      super
 
   module.exports = User

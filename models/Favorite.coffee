@@ -39,8 +39,8 @@ define (require, exports, module) ->
 
       post.fail => @trigger 'error'
 
-    destroy: =>
+    destroy: (fromServer) =>
       super
-      API.delete "/projects/#{config.app.projects[0].id}/favorites/#{@id}"
+      API.delete "/projects/#{config.app.projects[0].id}/favorites/#{@id}" if fromServer is true
 
   module.exports = Favorite
