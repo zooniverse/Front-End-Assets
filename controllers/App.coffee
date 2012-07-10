@@ -2,7 +2,6 @@ define (require, exports, module) ->
   Spine = require 'Spine'
 
   config = require 'zooniverse/config'
-  {delay} = require 'zooniverse/util'
 
   User = require 'zooniverse/models/User'
   TopBar = require 'zooniverse/controllers/TopBar'
