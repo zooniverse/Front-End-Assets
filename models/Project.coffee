@@ -9,8 +9,6 @@ define (require, exports, module) ->
 
       @workflows ?= []
       @workflows = [@workflows] unless @workflows instanceof Array
-      for workflow in @workflows
-        workflow.project = @
-        workflow.save()
+      workflow.project = @ for workflow in @workflows
 
   module.exports = Project
