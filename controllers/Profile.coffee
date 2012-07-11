@@ -2,6 +2,8 @@ define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
 
+  {delay} = require 'zooniverse/util'
+
   User = require 'zooniverse/models/User'
   Favorite = require 'zooniverse/models/Favorite'
   Recent = require 'zooniverse/models/Recent'
@@ -29,22 +31,21 @@ define (require, exports, module) ->
       @html @template
       @loginForm = new LoginForm el: @loginFormContainer
 
-      User.bind 'sign-in', =>
-        @userChanged()
-        Favorite.refresh()
-        Recent.refresh()
+      User.bind 'sign-in', @userChanged
 
-      User.bind 'add-favorite remove-favorite add-recent remove-recent', @userChanged
-      Favorite.refresh()
-      Recent.refresh()
+      User.bind 'add-favorite remove-favorite', @updateFavorites
+
+      User.bind 'add-recent remove-recent', @updateRecents
+
+      delay @userChanged
 
     userChanged: =>
       @el.toggleClass 'signed-in', User.current?
 
       if User.current?
         @usernameContainer.html User.current.name
-        @updateFavorites()
-        @updateRecents()
+        Favorite.refresh()
+        Recent.refresh()
 
     favoriteTemplate: (favorite) =>
       "<li>#{favorite.createdAt}</li>"

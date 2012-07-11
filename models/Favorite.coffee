@@ -8,6 +8,8 @@ define (require, exports, module) ->
   Subject = require 'zooniverse/models/Subject'
   User = require 'zooniverse/models/User'
 
+  # This is also the Recent class, for now.
+
   class Favorite extends Spine.Module
     @instances: []
 
@@ -18,7 +20,7 @@ define (require, exports, module) ->
         projectID: raw.project_id
         subjects: (Subject.fromJSON subject for subject in raw.subjects)
 
-    @refresh: =>
+    @refresh: ->
       @instances[0].destroy() while @instances.length > 0
       return unless User.current?
 
@@ -40,13 +42,13 @@ define (require, exports, module) ->
       @subjects ?= []
 
       @constructor.instances.push @
-      User.current?.add favorite: @
+      addMap = {}
+      addMap[@constructor.name.toLowerCase()] = @
+      User.current?.add addMap
 
     toJSON: =>
-      json = {}
-      json [@constructor.name.toLowerCase()] =
+      favorite:
         subject_ids: (subject.id for subject in @subjects)
-      json
 
     persist: =>
       @trigger 'persisting'

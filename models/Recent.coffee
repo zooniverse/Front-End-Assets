@@ -1,12 +1,8 @@
 define (require, exports, module) ->
   Favorite = require 'zooniverse/models/Favorite'
 
-  ###
-
-  NOTE: This does not work.
-
-  ###
-
+  # TODO: This is awful.
+  # Make a base and have Favorite and Recent extend it.
   class Recent extends Favorite
     @instances: []
 
