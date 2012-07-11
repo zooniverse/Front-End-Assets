@@ -4,6 +4,7 @@ define (require, exports, module) ->
 
   User = require 'zooniverse/models/User'
   Favorite = require 'zooniverse/models/Favorite'
+  Recent = require 'zooniverse/models/Recent'
 
   LoginForm = require 'zooniverse/controllers/LoginForm'
   TEMPLATE = require 'zooniverse/views/Profile'
@@ -28,8 +29,14 @@ define (require, exports, module) ->
       @html @template
       @loginForm = new LoginForm el: @loginFormContainer
 
-      User.bind 'sign-in', @userChanged
-      User.bind 'change', @userChanged
+      User.bind 'sign-in', =>
+        @userChanged()
+        Favorite.refresh()
+        Recent.refresh()
+
+      User.bind 'add-favorite remove-favorite add-recent remove-recent', @userChanged
+      Favorite.refresh()
+      Recent.refresh()
 
     userChanged: =>
       @el.toggleClass 'signed-in', User.current?

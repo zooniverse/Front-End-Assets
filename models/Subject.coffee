@@ -4,16 +4,25 @@ define (require, exports, module) ->
   config = require 'zooniverse/config'
   {joinLines} = require 'zooniverse/util'
 
-  class Subject extends Spine.Model
-    @configure 'Subject', 'zooniverseID', 'location', 'coords', 'metadata'
+  class Subject extends Spine.Module
+    @include Spine.Events
 
-    @fromJSON: (raw) ->
-      @create
+    @fromJSON: (raw) =>
+      new @
         id: raw.id
         zooniverseID: raw.zooniverse_id
         location: raw.location
         coords: raw.coords
         metadata: raw.metadata
+
+    id: ''
+    zooniverseID: ''
+    location: ''
+    coords: ''
+    metadata: ''
+
+    constructor: (params = {}) ->
+      @[property] = value for own property, value of params
 
     talkHref: =>
       "#{config.talkHost}/objects/#{@zooniverseID}"

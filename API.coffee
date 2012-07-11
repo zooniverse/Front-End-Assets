@@ -1,5 +1,6 @@
 define (require, exports, module) ->
-  {get, post, del, getJSON} = require 'zooniverse/Proxy'
+  Proxy = require 'zooniverse/Proxy'
+  {get, post, del, getJSON} = Proxy
 
   module.exports =
     # Temporary holdovers...
@@ -7,7 +8,8 @@ define (require, exports, module) ->
     post: post
     del: del
     getJSON: getJSON
-    headers: {}
+
+    Proxy: Proxy
 
     checkCurrent: ({project}, andThen...) ->
       getJSON "/projects/#{project}/current_user", andThen...
@@ -24,18 +26,18 @@ define (require, exports, module) ->
       path += "/subjects"
       get path, {limit}, andThen...
 
-    fetchFavorites: ({project, username}, andThen...) ->
-      get "/projects/#{project}/users/#{username}/favorites", andThen...
+    fetchFavorites: ({project, user}, andThen...) ->
+      get "/projects/#{project.id || project}/users/#{user.id || user}/favorites", andThen...
 
-    saveFavorite: ({project, subjects}, andThen...) ->
-      path = "/projects/#{project}/favorites"
+    createFavorite: ({project, subjects}, andThen...) ->
+      path = "/projects/#{project.id || project}/favorites"
       post path, {favorite: subject_ids: subjects}, andThen...
 
     destroyFavorite: ({project, favorite}, andThen...) ->
-      del "/projects/#{project}/favorites/#{favorite}", andThen...
+      del "/projects/#{project.id || project}/favorites/#{favorite.id || favorite}", andThen...
 
-    fetchRecents: ({project, username}, andThen...) ->
-      get "/projects/#{project}/users/#{username}/recents", andThen...
+    fetchRecents: ({project, user}, andThen...) ->
+      get "/projects/#{project.id || project}/users/#{user.id || user}/recents", andThen...
 
     saveClassification: ({project, workflow, subjects, annotations}, andThen...) ->
       path = "/projects/#{project}/workflows/#{workflow}/classifications"

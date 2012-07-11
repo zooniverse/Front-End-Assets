@@ -27,8 +27,7 @@ define (require, exports, module) ->
       @initPagers()
       @initAnalytics()
 
-      User.checkCurrent(@projects[0]).done (response) =>
-        console.log 'Current user', response
+      User.checkCurrent @projects[0]
 
     initTopBar: =>
       @topBar = new TopBar languages: @languages

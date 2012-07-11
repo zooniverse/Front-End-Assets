@@ -28,9 +28,7 @@ define (require, exports, module) ->
       @tutorialSubjects ?= []
       @tutorialSubjects = [@tutorialSubjects] unless @tutorialSubjects instanceof Array
 
-      for subject in @subjects.concat @tutorialSubjects
-        subject.workflow = @
-        subject.save()
+      subject.workflow = @ for subject in @subjects.concat @tutorialSubjects
 
       @selection ?= []
 
