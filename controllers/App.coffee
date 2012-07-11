@@ -21,9 +21,7 @@ define (require, exports, module) ->
 
       @projects ?= []
       @projects = [@projects] unless @projects instanceof Array
-      for project in @projects
-        project.app = @
-        project.save()
+      project.app = @ for project in @projects
 
       @initTopBar()
       @initPagers()

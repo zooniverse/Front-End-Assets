@@ -1,11 +1,11 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
 
-  class Project extends Spine.Model
-    @configure 'Project', 'app', 'workflows'
+  class Project
+    id: ''
 
-    constructor: ->
-      super
+    constructor: (params = {}) ->
+      @[property] = value for own property, value of params
 
       @workflows ?= []
       @workflows = [@workflows] unless @workflows instanceof Array
