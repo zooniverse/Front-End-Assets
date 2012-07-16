@@ -111,7 +111,7 @@ define (require, exports, module) ->
         open @workflow.selection[0].talkHref()
 
     nextSubjects: =>
-      @workflow.nextSubjects().done => @workflow.changeSelection()
+      @workflow.fetchSubjects().done => @workflow.selectNext()
 
     noMoreSubjects: =>
       alert 'We\'ve run out of subjects for you!' # TODO: Make this much nicer.

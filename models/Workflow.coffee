@@ -45,20 +45,19 @@ define (require, exports, module) ->
 
     fetchSubjects: (group) =>
       @trigger 'fetching-subjects'
-      @fetched = new $.Deferred
+      @enough = new $.Deferred
 
       limit = @queueLength - @subjects.length
+
+      # If there are enough subjects in the queue, resolve the deferred immediately.
+      @enough.resolve @subjects if limit is 0
 
       console.log 'Workflow fetching subjects...',
         'Need:', @queueLength, 'have:', @subjects.length, 'fetching:', limit
 
-      fetch = API.fetchSubjects {@project, group, limit}
-
       currentSubjectIDs = (subject.id for subject in @subjects)
 
-      # If there are enough subjects in the queue,
-      # change the selection immediately.
-      @fetched.resolve @selection if @subjects.length >= @selectionLength
+      fetch = API.fetchSubjects {@project, group, limit}
 
       fetch.done (response) =>
         for rawSubject in response
@@ -84,9 +83,9 @@ define (require, exports, module) ->
             img.appendTo 'body'
 
         @trigger 'fetch-subjects', @subjects
-        @fetched.resolve @selection unless @fetched.isResolved()
+        @enough.resolve @subjects unless @enough.isResolved()
 
-      @fetched.promise()
+      @enough.promise()
 
     selectNext: =>
       console.log 'Workflow changing selection'
