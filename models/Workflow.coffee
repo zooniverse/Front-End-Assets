@@ -2,6 +2,7 @@ define (require, exports, module) ->
   Spine = require 'Spine'
   $ = require 'jQuery'
 
+  User = require 'zooniverse/models/User'
   API = require 'zooniverse/API'
 
   Subject = require 'zooniverse/models/Subject'
@@ -32,46 +33,67 @@ define (require, exports, module) ->
 
       @selection ?= []
 
+      User.bind 'sign-in', =>
+        console.log 'Workflow detected sign in'
+        # When a user signs in, they'll need a whole new queue.
+        @subjects.pop() until @subjects.length is 0 if User.current?
+        @nextSubjects() # TODO: Group?
+
     nextSubjects: (group) =>
       @trigger 'changing-selection'
-      next = new $.Deferred
+      @next = new $.Deferred
 
-      limit = @queueLength - @subjects.length - @selectionLength
+      limit = @queueLength - @subjects.length
+
+      console.log 'Workflow selecting next subjects...',
+        'Need:', @queueLength, 'have:', @subjects.length, 'fetching:', limit
+
       fetch = API.fetchSubjects {@project, group, limit}
 
+      currentSubjectIDs = (subject.id for subject in @subjects)
+
+      # If there are enough subjects in the queue,
+      # change the selection immediately.
       if @subjects.length >= @selectionLength
         @changeSelection()
-        next.resolve @selection
-      else
-        fetch.done (response) =>
-          for rawSubject in response
-            # Sometimes we get nulls when the database gets screwed up.
-            # This shouldn't happen in production.
-            continue unless rawSubject?
+        @next.resolve @selection
 
-            subject = Subject.fromJSON rawSubject
-            subject.workflow = @
-            @subjects.push subject
+      fetch.done (response) =>
+        for rawSubject in response
+          # Sometimes we get nulls when the database gets screwed up.
+          # This shouldn't happen in production.
+          continue unless rawSubject?
 
-            # Preload subject images
-            src = subject.location.standard
-            src ?= subject.location.iamge
-            if src
-              img = $("<img src='#{src}' />")
-              img.css height: 0, opacity: 0, position: 'absolute', width: 0
-              img.appendTo 'body'
+          # Rarely we can get a subject that's already in the queue.
+          # This becomes more common as more subjets are retired.
+          # TODO: Re-request subjects to keep the queue full.
+          continue if rawSubject.id in currentSubjectIDs
 
+          subject = Subject.fromJSON rawSubject
+          subject.workflow = @
+          @subjects.push subject
+
+          # Preload subject images
+          src = subject.location.standard
+          src ?= subject.location.image
+          if src
+            img = $("<img src='#{src}' />")
+            img.css height: 0, opacity: 0, position: 'absolute', width: 0
+            img.appendTo 'body'
+
+        # Change the selection if we haven't already.
+        unless @next.isResolved()
           @changeSelection()
-          next.resolve @selection
+          @next.resolve @selection
 
-      next.promise()
+      @next.promise()
 
     changeSelection: =>
-      if @subjects.length < @selectionLength
-        # TODO: Make this nicer.
-        alert 'We\'ve run out of subjects for you to classify on this project!'
-      else
-        @selection = @subjects[...@selectionLength]
+      console.log 'Workflow changing selection'
+      if @subjects.length > @selectionLength
+        @selection = @subjects.splice 0, @selectionLength
         @trigger 'change-selection', @selection
+      else
+        @trigger 'selection-error'
 
   module.exports = Workflow

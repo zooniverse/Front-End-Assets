@@ -8,7 +8,7 @@ define (require, exports, module) ->
   Subject = require 'zooniverse/models/Subject'
   User = require 'zooniverse/models/User'
 
-  # This is also the Recent class, for now.
+  # NOTE: This is also the Recent class, for now.
 
   class Favorite extends Spine.Module
     @instances: []

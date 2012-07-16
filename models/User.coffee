@@ -13,6 +13,7 @@ define (require, exports, module) ->
 
     @project: 'PROJECT_NOT_SPECIFIED'
     @current: null
+    @currentChecked: false
 
     @fromJSON: (raw) =>
       new @
@@ -23,8 +24,16 @@ define (require, exports, module) ->
         tutorialDone: raw.project?.tutorial_done || false
 
     @checkCurrent: (@project) =>
+      console.log 'Checking current user...'
       API.checkCurrent {@project}, (response) =>
-        @signIn @fromJSON response if response.success
+        console.log 'Current user', response.name || response.success
+
+        if response.success
+          @signIn @fromJSON response
+        else
+          @signOut()
+
+        @currentChecked = true
 
     @authenticate: ({username, password}) =>
       result = new $.Deferred
@@ -41,7 +50,7 @@ define (require, exports, module) ->
 
     @signIn: (user) =>
       # Always sign out, but only sign in if the user has changed.
-      return if user is @current unless @current is null
+      return if user is @current and @currentChecked
       @current = user
       @trigger 'sign-in', @current
 
@@ -51,7 +60,6 @@ define (require, exports, module) ->
         @signOut()
 
     @signOut: =>
-      @current?.destroy()
       @signIn null
 
     zooniverseID: ''

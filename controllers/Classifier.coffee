@@ -32,8 +32,6 @@ define (require, exports, module) ->
       if @workflow.tutorialSubjects?.length > 0 and @tutorialSteps?.length > 0
         @tutorial = new Tutorial target: @el, steps: @tutorialSteps
 
-      User.bind 'sign-in', @chooseInitialSubjects
-
       User.bind 'add-favorite', (user, favorite) =>
         return unless arraysMatch favorite.subjects, @workflow.selection
         @el.addClass 'is-favored'
@@ -43,10 +41,11 @@ define (require, exports, module) ->
         @el.removeClass 'is-favored'
 
       @workflow.bind 'change-selection', @reset
+      @workflow.bind 'selection-error', @noMoreSubjects
 
-      # Delay so we can set up the UI.
+      # Delay so extending classes can set up their UIs.
       delay =>
-        @chooseInitialSubjects()
+        @chooseInitialSubjects() if User.currentChecked
 
     chooseInitialSubjects: =>
       if @tutorial?
@@ -118,5 +117,8 @@ define (require, exports, module) ->
 
     nextSubjects: =>
       @workflow.nextSubjects()
+
+    noMoreSubjects: =>
+      alert 'We\'ve run out of subjects for you!' # TODO: Make this much nicer.
 
   module.exports = Classifier
