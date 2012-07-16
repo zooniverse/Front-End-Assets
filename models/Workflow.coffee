@@ -50,40 +50,41 @@ define (require, exports, module) ->
       limit = @queueLength - @subjects.length
 
       # If there are enough subjects in the queue, resolve the deferred immediately.
-      @enough.resolve @subjects if limit is 0
+      if limit is 0
+        @enough.resolve @subjects
+      else
+        console.log 'Workflow fetching subjects...',
+          'Need:', @queueLength, 'have:', @subjects.length, 'fetching:', limit
 
-      console.log 'Workflow fetching subjects...',
-        'Need:', @queueLength, 'have:', @subjects.length, 'fetching:', limit
+        currentSubjectIDs = (subject.id for subject in @subjects)
 
-      currentSubjectIDs = (subject.id for subject in @subjects)
+        fetch = API.fetchSubjects {@project, group, limit}
 
-      fetch = API.fetchSubjects {@project, group, limit}
+        fetch.done (response) =>
+          for rawSubject in response
+            # Sometimes we get nulls when the database gets screwed up.
+            # This shouldn't happen in production.
+            continue unless rawSubject?
 
-      fetch.done (response) =>
-        for rawSubject in response
-          # Sometimes we get nulls when the database gets screwed up.
-          # This shouldn't happen in production.
-          continue unless rawSubject?
+            # Rarely we can get a subject that's already in the queue.
+            # This becomes more common as more subjets are retired.
+            # TODO: Re-request subjects to keep the queue full.
+            continue if rawSubject.id in currentSubjectIDs
 
-          # Rarely we can get a subject that's already in the queue.
-          # This becomes more common as more subjets are retired.
-          # TODO: Re-request subjects to keep the queue full.
-          continue if rawSubject.id in currentSubjectIDs
+            subject = Subject.fromJSON rawSubject
+            subject.workflow = @
+            @subjects.push subject
 
-          subject = Subject.fromJSON rawSubject
-          subject.workflow = @
-          @subjects.push subject
+            # Preload subject images
+            src = subject.location.standard
+            src ?= subject.location.image
+            if src
+              img = $("<img src='#{src}' />")
+              img.css height: 0, opacity: 0, position: 'absolute', width: 0
+              img.appendTo 'body'
 
-          # Preload subject images
-          src = subject.location.standard
-          src ?= subject.location.image
-          if src
-            img = $("<img src='#{src}' />")
-            img.css height: 0, opacity: 0, position: 'absolute', width: 0
-            img.appendTo 'body'
-
-        @trigger 'fetch-subjects', @subjects
-        @enough.resolve @subjects unless @enough.isResolved()
+          @trigger 'fetch-subjects', @subjects
+          @enough.resolve @subjects unless @enough.isResolved()
 
       @enough.promise()
 
