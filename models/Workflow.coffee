@@ -15,10 +15,10 @@ define (require, exports, module) ->
 
     project: null
 
-    subjects: null # Available subjects
+    subjects: null # Available subjects queue
     tutorialSubjects: null # Predefined subject for tutorial
 
-    selection: null # Selectedsubjects, removed from main list
+    selection: null # Selected subjects, removed from queue
 
     constructor: (params = {}) ->
       @[property] = value for own property, value of params
@@ -37,15 +37,19 @@ define (require, exports, module) ->
         console.log 'Workflow detected sign in'
         # When a user signs in, they'll need a whole new queue.
         @subjects.pop() until @subjects.length is 0 if User.current?
-        @nextSubjects() # TODO: Group?
+        @fetchSubjects().done =>
+          if User.current?.tutorialDone?
+            @selectNext()
+          else
+            @selectTutorial()
 
-    nextSubjects: (group) =>
-      @trigger 'changing-selection'
-      @next = new $.Deferred
+    fetchSubjects: (group) =>
+      @trigger 'fetching-subjects'
+      @fetched = new $.Deferred
 
       limit = @queueLength - @subjects.length
 
-      console.log 'Workflow selecting next subjects...',
+      console.log 'Workflow fetching subjects...',
         'Need:', @queueLength, 'have:', @subjects.length, 'fetching:', limit
 
       fetch = API.fetchSubjects {@project, group, limit}
@@ -54,9 +58,7 @@ define (require, exports, module) ->
 
       # If there are enough subjects in the queue,
       # change the selection immediately.
-      if @subjects.length >= @selectionLength
-        @changeSelection()
-        @next.resolve @selection
+      @fetched.resolve @selection if @subjects.length >= @selectionLength
 
       fetch.done (response) =>
         for rawSubject in response
@@ -81,19 +83,23 @@ define (require, exports, module) ->
             img.css height: 0, opacity: 0, position: 'absolute', width: 0
             img.appendTo 'body'
 
-        # Change the selection if we haven't already.
-        unless @next.isResolved()
-          @changeSelection()
-          @next.resolve @selection
+        @trigger 'fetch-subjects', @subjects
+        @fetched.resolve @selection unless @fetched.isResolved()
 
-      @next.promise()
+      @fetched.promise()
 
-    changeSelection: =>
+    selectNext: =>
       console.log 'Workflow changing selection'
       if @subjects.length > @selectionLength
         @selection = @subjects.splice 0, @selectionLength
         @trigger 'change-selection', @selection
       else
-        @trigger 'selection-error'
+        @trigger 'selection-error', @selection
+
+    selectTutorial: =>
+      return unless @tutorialSubjects.length > 0
+      @subjects.unshift @tutorialSubjects...
+      @selectNext()
+      @trigger 'select-tutorial'
 
   module.exports = Workflow

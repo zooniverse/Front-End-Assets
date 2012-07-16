@@ -42,24 +42,17 @@ define (require, exports, module) ->
 
       @workflow.bind 'change-selection', @reset
       @workflow.bind 'selection-error', @noMoreSubjects
+      @workflow.bind 'select-tutorial', @tutorialSelected
 
       # Delay so extending classes can set up their UIs.
       delay =>
-        @chooseInitialSubjects() if User.currentChecked
-
-    chooseInitialSubjects: =>
-      if @tutorial?
-        if User.current?.tutorialDone
-          @tutorial.end()
-          @nextSubjects()
-        else
-          @startTutorial()
-      else
-        @nextSubjects()
+        @reset() if User.currentChecked
 
       @updateFavoriteButtons()
 
     reset: =>
+      @tutorial.end()
+
       @el.removeClass 'is-favored'
       @updateFavoriteButtons()
 
@@ -77,7 +70,7 @@ define (require, exports, module) ->
     updateFavoriteButtons: =>
       signedIn = User.current?
 
-      if @workflow.tutorialSubjects instanceof Array
+      if @workflow.tutorialSubjects?
         tutorial = arraysMatch @workflow.selection, @workflow.tutorialSubjects
       else
         tutorial = false
@@ -88,9 +81,10 @@ define (require, exports, module) ->
       # Override this.
 
     startTutorial: (e) =>
-      e?.preventDefault?()
-      @workflow.subjects.unshift subject for subject in @workflow.tutorialSubjects
-      @nextSubjects().done @tutorial.start
+      @workflow.selectTutorial()
+
+    tutorialSelected: =>
+      @tutorial?.start()
 
     saveClassification: =>
       @classification.persist()
@@ -117,7 +111,7 @@ define (require, exports, module) ->
         open @workflow.selection[0].talkHref()
 
     nextSubjects: =>
-      @workflow.nextSubjects()
+      @workflow.nextSubjects().done => @workflow.changeSelection()
 
     noMoreSubjects: =>
       alert 'We\'ve run out of subjects for you!' # TODO: Make this much nicer.
