@@ -97,9 +97,10 @@ define (require, exports, module) ->
       Recent.create subjects: @workflow.selection
 
     createFavorite: =>
-      favorite = Favorite.create
+      favorite = new Favorite
         subjects: @workflow.selection
         projectID: @workflow.project.id
+
       favorite.persist()
 
     destroyFavorite: =>

@@ -11,6 +11,9 @@ define (require, exports, module) ->
   # NOTE: This is also the Recent class, for now.
 
   class Favorite extends Spine.Module
+    @extend Spine.Events
+    @include Spine.Events
+
     @instances: []
 
     @fromJSON: (raw) ->
@@ -53,7 +56,9 @@ define (require, exports, module) ->
     persist: =>
       @trigger 'persisting'
 
-      post = API.createFavorite project: @projectID, favorite: @toJSON()
+      post = API.createFavorite
+        project: @projectID
+        subjects: @subjects
 
       post.done (response) =>
         @id = response.id
@@ -70,6 +75,6 @@ define (require, exports, module) ->
       User.current?.remove removeMap
 
       if fromServer is true
-        API["destroy#{@constructor.name}"] $.extends {project: @projectID}, removeMap
+        API["destroy#{@constructor.name}"] $.extend {project: @projectID}, removeMap
 
   module.exports = Favorite
