@@ -75,7 +75,7 @@ define (require, exports, module) ->
       # and destroying a model should remove its controller/view automatically.
       target = $(e.target)
       favoriteID = target.data 'favorite'
-      favorite = Favorite.find favoriteID
+      favorite = (f for f in User.current.favorites when f.id is favoriteID)[0]
 
       favorite.destroy true
       target.parent('li').remove()
