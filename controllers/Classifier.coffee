@@ -102,7 +102,7 @@ define (require, exports, module) ->
       favorite.destroy true
 
     goToTalk: =>
-      if @workflow.selection[0].eql @workflow.tutorialSubjects[0]
+      if arraysMatch @workflow.selection, @workflow.tutorialSubjects
         new Dialog
           content: 'Tutorial subjects are not available in Talk at this time.'
           className: 'classifier'
