@@ -50,9 +50,10 @@ define (require, exports, module) ->
       limit = @queueLength - @subjects.length
 
       # If there are enough subjects in the queue, resolve the deferred immediately.
-      if limit is 0
+      if @subjects.length > @selectionLength
         @enough.resolve @subjects
-      else
+
+      unless limit is 0
         console.log 'Workflow fetching subjects...',
           'Need:', @queueLength, 'have:', @subjects.length, 'fetching:', limit
 
