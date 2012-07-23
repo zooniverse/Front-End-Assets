@@ -71,8 +71,6 @@ define (require, exports, module) ->
       @next()
 
     next: (e) =>
-      # e?.stopPropagation()
-
       @steps[@current]?.leave()
 
       @current += 1
@@ -97,10 +95,11 @@ define (require, exports, module) ->
     continueText: ''
     className: ''
     arrowClass: ''
+    delay: 0
 
     tutorial: null
 
-    constructor: ({@heading, @content, @style, @attach, @block, @nextOn, @continueText, @className, @arrowClass}) ->
+    constructor: ({@heading, @content, @style, @attach, @block, @nextOn, @continueText, @className, @arrowClass, @delay}) ->
       @content = [@content] if typeof @content is 'string'
       @content = $(("<p>#{line}</p>" for line in @content).join '') if @content instanceof Array
       @content = $("<p class='heading'>#{@heading}</p>").add @content if @heading
@@ -115,6 +114,8 @@ define (require, exports, module) ->
 
       @continueText ?= 'Continue'
 
+      @delay ?= @constructor::delay
+
     enter: (@tutorial) =>
       @tutorial.message.html @content
 
@@ -128,7 +129,7 @@ define (require, exports, module) ->
       @tutorial.el.css @style if @style
       @tutorial.arrow.addClass @arrowClass if @arrowClass
 
-      delay =>
+      delay @delay, =>
         @moveMessage()
         @createBlockers()
 
