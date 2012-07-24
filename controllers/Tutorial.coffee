@@ -92,14 +92,16 @@ define (require, exports, module) ->
     attach: null
     block: ''
     nextOn: null
-    continueText: ''
+    continueText: 'Continue'
     className: ''
     arrowClass: ''
     delay: 0
 
     tutorial: null
 
-    constructor: ({@heading, @content, @style, @attach, @block, @nextOn, @continueText, @className, @arrowClass, @delay}) ->
+    constructor: (params = {}) ->
+      @[property] = value for own property, value of params
+
       @content = [@content] if typeof @content is 'string'
       @content = $(("<p>#{line}</p>" for line in @content).join '') if @content instanceof Array
       @content = $("<p class='heading'>#{@heading}</p>").add @content if @heading
@@ -111,10 +113,6 @@ define (require, exports, module) ->
       @attach.at ?= {}
       @attach.at.x ?= 'center'
       @attach.at.y ?= 'middle'
-
-      @continueText ?= 'Continue'
-
-      @delay ?= @constructor::delay
 
     enter: (@tutorial) =>
       @tutorial.message.html @content
