@@ -47,7 +47,7 @@ define (require, exports, module) ->
 
       if User.current?
         # set the pixel url including user id
-        @setUrl "&user=#{ User.current.id }"
+        @setUrl "&user_id=#{ User.current.id }"
       else
         # set the pixel url
         @setUrl()
