@@ -80,4 +80,6 @@ define (require, exports, module) ->
       favorite.destroy true
       target.parent('li').remove()
 
+      e?.preventDefault?()
+
   module.exports = Profile
