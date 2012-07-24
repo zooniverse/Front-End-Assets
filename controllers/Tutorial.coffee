@@ -115,6 +115,7 @@ define (require, exports, module) ->
       @attach.at.y ?= 'middle'
 
     enter: (@tutorial) =>
+      @onEnter()
       @tutorial.message.html @content
 
       if @nextOn?
@@ -132,6 +133,9 @@ define (require, exports, module) ->
         @createBlockers()
 
       @tutorial.el.addClass @className if @className
+
+    onEnter: =>
+      # Override this.
 
     moveMessage: () ->
       xStrings = left: 0, center: 0.5, right: 1
@@ -170,6 +174,7 @@ define (require, exports, module) ->
         blocker.offset element.offset()
 
     leave: =>
+      @onLeave()
       @tutorial.message.html ''
 
       if @nextOn?
@@ -181,5 +186,8 @@ define (require, exports, module) ->
       @tutorial.el.removeClass @className if @className
 
       @tutorial.blockers.remove().empty()
+
+    onLeave: =>
+      # Override this.
 
   module.exports = Tutorial
