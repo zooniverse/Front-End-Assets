@@ -14,6 +14,8 @@ define (require, exports, module) ->
     @extend Spine.Events
     @include Spine.Events
 
+    @className: 'Favorite'
+
     @instances: []
 
     @fromJSON: (raw) ->
@@ -27,7 +29,7 @@ define (require, exports, module) ->
       @instances[0].destroy() while @instances.length > 0
       return unless User.current?
 
-      fetch = API["fetch#{@name}s"] project: User.project, user: User.current
+      fetch = API["fetch#{@className}s"] project: User.project, user: User.current
       fetch.done (response) =>
         for raw in response
           instance = @fromJSON raw
@@ -46,7 +48,7 @@ define (require, exports, module) ->
 
       @constructor.instances.push @
       addMap = {}
-      addMap[@constructor.name.toLowerCase()] = @
+      addMap[@constructor.className.toLowerCase()] = @
       User.current?.add addMap
 
     toJSON: =>
@@ -71,10 +73,10 @@ define (require, exports, module) ->
       remove @, from: @constructor.instances
 
       removeMap = {}
-      removeMap[@constructor.name.toLowerCase()] = @
+      removeMap[@constructor.className.toLowerCase()] = @
       User.current?.remove removeMap
 
       if fromServer is true
-        API["destroy#{@constructor.name}"] $.extend {project: @projectID}, removeMap
+        API["destroy#{@constructor.className}"] $.extend {project: @projectID}, removeMap
 
   module.exports = Favorite
