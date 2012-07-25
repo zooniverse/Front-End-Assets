@@ -38,7 +38,7 @@ define (require, exports, module) ->
         # When a user signs in, they'll need a whole new queue.
         @subjects.pop() until @subjects.length is 0 if User.current?
         @fetchSubjects().done =>
-          if User.current?.tutorialDone?
+          if User.current?.tutorialDone
             @selectNext()
           else
             @selectTutorial()
