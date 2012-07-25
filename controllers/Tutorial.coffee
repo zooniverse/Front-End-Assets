@@ -115,7 +115,7 @@ define (require, exports, module) ->
       @attach.at.y ?= 'middle'
 
     enter: (@tutorial) =>
-      @onEnter()
+      @onEnter.call @, @tutorial
       @tutorial.message.html @content
 
       if @nextOn?
@@ -174,7 +174,7 @@ define (require, exports, module) ->
         blocker.offset element.offset()
 
     leave: =>
-      @onLeave()
+      @onLeave.call @, @tutorial
       @tutorial.message.html ''
 
       if @nextOn?
