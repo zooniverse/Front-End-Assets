@@ -9,7 +9,9 @@ define (require, exports, module) ->
   elementsMap = {}
 
   # Store translations so we don't need to download them again.
-  translationCache = {}
+  languagesCache = {}
+
+  currentLang = ''
 
   # Set up the elements map.
   for target in $("[#{attribute}]")
@@ -17,7 +19,7 @@ define (require, exports, module) ->
     continue unless target.find("[#{attribute}]").length is 0
 
     tree = target.parents("[#{attribute}]").andSelf()
-    path = ($(el).attr attribute for el in tree).join '/'
+    path = ($(el).attr attribute for el in tree).join '.'
 
     elementsMap[path] = target
 
@@ -25,19 +27,24 @@ define (require, exports, module) ->
   applyFromCache = (lang) ->
     $('html').attr 'lang', lang
     for path, target of elementsMap
-      content = getObject path, translationCache[lang]
+      content = getObject path, languagesCache[lang]
       target.html content if content?
 
   # Apply a translation, request if not cached.
-  translate = (e..., lang) ->
-    console.log 'Translating into', lang
-    if lang of translationCache
+  translateDocument = (e..., lang) ->
+    currentLang = lang
+    if lang of languagesCache
       applyFromCache lang
     else
       $.get "#{translationsRoot}/#{lang}.json", (response) ->
-        translationCache[lang] = response
+        languagesCache[lang] = response
         applyFromCache lang
 
-  $(document).on 'request-translation', translate
+  translate = (string) ->
+    console.log languagesCache[currentLang]
+    throw new Error 'No language selected' unless currentLang
+    getObject string, languagesCache[currentLang]
 
-  module.exports = {translate, elementsMap, translationCache}
+  $(document).on 'request-translation', translateDocument
+
+  module.exports = {translateDocument, translate, elementsMap, languagesCache}

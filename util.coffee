@@ -39,7 +39,7 @@ define (require, exports, module) ->
       return true
 
     getObject: (path, root) ->
-      path = path.split '/'
+      path = path.split '.'
       until path.length is 0
         root = root[path.shift()]
         return unless root?
