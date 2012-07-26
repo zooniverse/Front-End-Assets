@@ -8,6 +8,7 @@ define (require, exports, module) ->
   Pager = require 'zooniverse/controllers/Pager'
   GoogleAnalytics = require 'zooniverse/controllers/GoogleAnalytics'
   Analytics = require 'zooniverse/controllers/Analytics'
+  {translate} = require 'zooniverse/i18n'
 
   class App extends Spine.Controller
     languages: null # Array like ['en', 'po'] passed to TopBar
@@ -28,6 +29,7 @@ define (require, exports, module) ->
       @initAnalytics()
 
       User.checkCurrent @projects[0]
+      translate @languages[0] # TODO: Respect user preference.
 
     initTopBar: =>
       @topBar = new TopBar languages: @languages

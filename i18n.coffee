@@ -23,12 +23,14 @@ define (require, exports, module) ->
 
   # Apply a cached translation.
   applyFromCache = (lang) ->
+    $('html').attr 'lang', lang
     for path, target of elementsMap
       content = getObject path, translationCache[lang]
       target.html content if content?
 
   # Apply a translation, request if not cached.
   translate = (e..., lang) ->
+    console.log 'Translating into', lang
     if lang of translationCache
       applyFromCache lang
     else
@@ -38,4 +40,4 @@ define (require, exports, module) ->
 
   $(document).on 'request-translation', translate
 
-  module.exports = translate
+  module.exports = {translate, elementsMap, translationCache}

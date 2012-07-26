@@ -112,6 +112,6 @@ define (require, exports, module) ->
     changeLanguage: (e) ->
       e.preventDefault()
       lang = e.currentTarget.hash.slice -2
-      $('html').attr lang: lang
+      @el.trigger 'request-translation', lang
 
   module.exports = TopBar
