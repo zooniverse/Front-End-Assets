@@ -38,6 +38,13 @@ define (require, exports, module) ->
           return false unless first[i] is second[i]
       return true
 
+    getObject: (path, root) ->
+      path = path.split '/'
+      until path.length is 0
+        root = root[path.shift()]
+        return unless root?
+      root
+
     # Sugar for splicing values out of an array. Can compare Spine models and jQuery instances.
     # Call like `remove thing, from: listOfThings`
     remove: (thing, {from: array}) ->
