@@ -55,7 +55,8 @@ require.config
 
         window.soundManager = new SoundManager()
         window.soundManager.url = 'scripts/lib/soundmanager/swf'
-        window.soundManager.flashLoadTimeout = 5000
+        window.soundManager.preferFlash = false
+        window.soundManager.flashLoadTimeout = 0 # Wait forever.
         window.soundManager.html5PollingInterval = 50
         window.soundManager.debugMode = false
         window.soundManager.beginDelayedInit()
