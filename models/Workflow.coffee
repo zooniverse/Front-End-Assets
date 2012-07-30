@@ -91,7 +91,7 @@ define (require, exports, module) ->
 
     selectNext: =>
       console.log 'Workflow changing selection'
-      if @subjects.length > @selectionLength
+      if @subjects.length >= @selectionLength
         @selection = @subjects.splice 0, @selectionLength
         @trigger 'change-selection', @selection
       else
