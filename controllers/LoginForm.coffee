@@ -1,37 +1,64 @@
 define (require, exports, module) ->
+  $ = require 'jQuery'
   Spine = require 'Spine'
-
   User = require 'zooniverse/models/User'
+  templates = require 'zooniverse/views/LoginForm'
 
-  template = require 'zooniverse/views/LoginForm'
 
-  class LoginForm extends Spine.Controller
-    className: 'zooniverse-login-form'
-    template: template
-
+  class BaseForm extends Spine.Controller
     events:
-      'submit .sign-in form': 'onSubmit'
-      'click .sign-out button': 'signOut'
+      submit: 'onSubmit'
+      keydown: 'onKeyDown'
 
     elements:
-      '.errors': 'errorsContainer'
-      '.sign-in input[name="username"]': 'usernameField'
-      '.sign-in input[name="password"]': 'passwordField'
-      '.sign-out .current': 'currentDisplay'
+      '.errors': 'errors'
+      'input[name="username"]': 'usernameField'
+      'input[name="email"]': 'emailField'
+      'input[name="password"]': 'passwordField'
+      'input[name="password-confirm"]': 'passwordConfirmField'
+      'input[name="policy"]': 'policyCheckbox'
+      'button[type="submit"]': 'submitButton'
+      '.progress': 'progress'
+      'input[required]': 'requiredInputs'
 
     constructor: ->
       super
       @html @template
 
       User.bind 'sign-in', @onSignIn
-      @onSignIn()
+
+      @onKeyDown() # Disable submit buttons
+      @onSignIn() # In case we're already logged in
 
     onSubmit: (e) =>
       e.preventDefault()
 
-      @el.removeClass 'has-error'
-      @el.addClass 'waiting'
-      @errorsContainer.empty()
+      @errors.hide()
+      @errors.empty()
+
+      @progress.show()
+
+    onKeyDown: =>
+      # Only allow submit if all required fields are filled in.
+      setTimeout =>
+        allFilledIn = Array::every.call @requiredInputs, (el) -> !!$(el).val()
+        @submitButton.attr disabled: not allFilledIn
+
+    onError: (error) =>
+      @progress.hide()
+      @errors.append error
+      @errors.show()
+
+    onSignIn: =>
+      @progress.hide()
+
+
+  class SignInForm extends BaseForm
+    className: 'sign-in'
+    template: templates.signIn
+
+    onSubmit: =>
+      super
 
       auth = User.authenticate
         username: @usernameField.val()
@@ -42,20 +69,111 @@ define (require, exports, module) ->
       auth.fail @onError
 
     onSignIn: =>
-      @el.toggleClass 'signed-in', User.current?
-      @el.removeClass 'waiting', User.current?
+      super
       @usernameField.add(@passwordField).val ''
-      @currentDisplay.html User.current?.name || ''
 
-    onError: (error) =>
-      return unless error?
-      @el.removeClass 'signed-in'
-      @el.removeClass 'waiting'
-      @el.addClass 'has-error'
 
-      @errorsContainer.append "<div>#{error}</div>"
+  class SignUpForm extends BaseForm
+    className: 'sign-in'
+    template: templates.signUp
 
-    signOut: =>
+    onSubmit: =>
+      super
+
+      signUp = User.authenticate
+        username: @usernameField.val()
+        email: @emailField.val()
+        password: @passwordField.val()
+
+      signUp.fail @onError
+
+
+  class ResetForm extends BaseForm
+    className: 'reset'
+    template: templates.reset
+
+    onSubmit: =>
+      # TODO
+
+  class SignOutForm extends BaseForm
+    className: 'sign-out'
+    template: templates.signOut
+
+    onSubmit: =>
+      super
       User.deauthenticate()
+
+    onSignIn: =>
+      super
+      @el.find('.current').html User.current?.name || ''
+
+
+  class LoginForm extends Spine.Controller
+    className: 'zooniverse-login-form'
+
+    events:
+      'click button[name="sign-in"]': 'signIn'
+      'click button[name="sign-up"]': 'signUp'
+      'click button[name="reset"]': 'reset'
+
+    elements:
+      '.sign-in': 'signInContainer'
+      '.sign-up': 'signUpContainer'
+      '.reset': 'resetContainer'
+      '.picker': 'signInPickers'
+      'button[name="sign-in"]': 'signInButton'
+      'button[name="sign-up"]': 'signUpButton'
+      'button[name="reset"]': 'resetButton'
+      '.picker button': 'pickerButtons'
+      '.sign-out': 'signOutContainer'
+
+    constructor: ->
+      super
+      @html templates.login
+
+      @signInForm = new SignInForm el: @signInContainer
+      @signUpForm = new SignUpForm el: @signUpContainer
+      @resetForm = new ResetForm el: @resetContainer
+      @signInForms = $()
+        .add @signInContainer
+        .add @signUpContainer
+        .add @resetContainer
+
+      @signOutForm = new SignOutForm el: @signOutContainer
+
+      User.bind 'sign-in', @onSignIn
+      @onSignIn()
+
+    signIn: =>
+      @signInForms.hide()
+      @signInContainer.show()
+
+      @pickerButtons.show()
+      @signInButton.hide()
+
+    signUp: =>
+      @signInForms.hide()
+      @signUpContainer.show()
+
+      @pickerButtons.show()
+      @signUpButton.hide()
+
+    reset: =>
+      @signInForms.hide()
+      @resetContainer.show()
+
+      @pickerButtons.show()
+      @resetButton.hide()
+
+    onSignIn: =>
+      if User.current
+        @signInForms.hide()
+        @signInPickers.hide()
+        @signOutContainer.show()
+      else
+        @signIn()
+        @signInPickers.show()
+        @signOutContainer.hide()
+
 
   module.exports = LoginForm

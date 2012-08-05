@@ -14,6 +14,9 @@ define (require, exports, module) ->
 
     Proxy: Proxy
 
+    signUp: ({project, username, email, password}, andThen...) ->
+      getJSON "/projects/#{idOf project}/signup", {name: username, email, password}, andThen...
+
     checkCurrent: ({project}, andThen...) ->
       getJSON "/projects/#{idOf project}/current_user", andThen...
 

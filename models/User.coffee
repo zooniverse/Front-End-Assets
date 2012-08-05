@@ -35,6 +35,18 @@ define (require, exports, module) ->
 
         @currentChecked = true
 
+    @signUp: ({username, email, password}) =>
+      result = new $.Deferred
+
+      API.signUp {@project, username, email, password}, (response) =>
+        if response.success
+          @signIn @fromJSON response
+          result.resolve @current
+        else
+          result.reject response.message
+
+      result.promise()
+
     @authenticate: ({username, password}) =>
       result = new $.Deferred
 
