@@ -38,12 +38,17 @@ define (require, exports, module) ->
     @signUp: ({username, email, password}) =>
       result = new $.Deferred
 
-      API.signUp {@project, username, email, password}, (response) =>
+      signUp = API.signUp {@project, username, email, password}
+
+      signUp.done (response) =>
         if response.success
           @signIn @fromJSON response
           result.resolve @current
         else
           result.reject response.message
+
+      signUp.fail (response) =>
+          result.reject 'There was an error connecting to the server! The development team has been informed. Please try again later.'
 
       result.promise()
 

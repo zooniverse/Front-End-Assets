@@ -8,7 +8,8 @@ define (require, exports, module) ->
   class BaseForm extends Spine.Controller
     events:
       submit: 'onSubmit'
-      keydown: 'onKeyDown'
+      keydown: 'onInputChange'
+      change: 'onInputChange'
 
     elements:
       '.errors': 'errors'
@@ -27,7 +28,7 @@ define (require, exports, module) ->
 
       User.bind 'sign-in', @onSignIn
 
-      @onKeyDown() # Disable submit buttons
+      @onInputChange() # Disable submit buttons
       @onSignIn() # In case we're already logged in
 
     onSubmit: (e) =>
@@ -38,10 +39,15 @@ define (require, exports, module) ->
 
       @progress.show()
 
-    onKeyDown: =>
+    onInputChange: =>
       # Only allow submit if all required fields are filled in.
       setTimeout =>
-        allFilledIn = Array::every.call @requiredInputs, (el) -> !!$(el).val()
+        allFilledIn = Array::every.call @requiredInputs, (el) ->
+          if el.type is 'checkbox'
+            el.checked
+          else
+            !!el.value
+
         @submitButton.attr disabled: not allFilledIn
 
     onError: (error) =>
@@ -80,7 +86,7 @@ define (require, exports, module) ->
     onSubmit: =>
       super
 
-      signUp = User.authenticate
+      signUp = User.signUp
         username: @usernameField.val()
         email: @emailField.val()
         password: @passwordField.val()
@@ -133,7 +139,7 @@ define (require, exports, module) ->
 
       @signInForm = new SignInForm el: @signInContainer
       @signUpForm = new SignUpForm el: @signUpContainer
-      @resetForm = new ResetForm el: @resetContainer
+      # @resetForm = new ResetForm el: @resetContainer
       @signInForms = $()
         .add @signInContainer
         .add @signUpContainer
