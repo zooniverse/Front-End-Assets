@@ -86,6 +86,11 @@ define (require, exports, module) ->
     onSubmit: =>
       super
 
+      unless @passwordField.val() is @passwordConfirmField.val()
+        @onError 'Both passwords must match!'
+        @passwordField.focus()
+        return
+
       signUp = User.signUp
         username: @usernameField.val()
         email: @emailField.val()
