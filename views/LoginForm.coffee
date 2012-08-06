@@ -13,7 +13,7 @@ define (require, exports, module) ->
 
     signUp: '''
       <p>Sign up for a new Zooniverse account.</p>
-      <div class="errors"></div>
+      <p class="errors"></p>
       <form>
         <label><span>User name</span> <input type="text" name="username" required="required" /></label>
         <label><span>Email address</span> <input type="text" name="email" required="required" /></label>
@@ -27,7 +27,7 @@ define (require, exports, module) ->
 
     reset: '''
       <p>Enter your <strong>username</strong> or <strong>email address</strong> and we'll send you instructions on how to reset your password.</p>
-      <div class="errors"></div>
+      <p class="errors"></p>
       <form>
         <label><input type="text" name="email" required="required" /></label>
         <button type="submit">Submit</button>
