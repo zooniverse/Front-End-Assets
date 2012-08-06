@@ -28,7 +28,7 @@ $border-color: #555;
 
 .zooniverse-top-bar {
   background: $black;
-  // border-bottom: 1px solid $border-color;
+  border-bottom: 1px solid $border-color;
   color: $text-color;
   font: {
     family: "Helvetica Neue", Arial, Helvetica, sans-serif;
@@ -56,7 +56,7 @@ $border-color: #555;
     background: url("lib/zooniverse/zooniverse-logo.png") center 5px no-repeat;
     color: transparent;
     display: inline-block;
-    height: 14px;
+    height: 13px;
     letter-spacing: -2em;
     overflow: hidden;
     text-indent: -4em;
