@@ -85,7 +85,9 @@ class ZooApp < Thor
       system "grabass ./assets.json"
 
       puts "=> Installing Bourbon SASS mixins".green
-      FileUtils.cd File.join('src', 'styles', 'lib')
+      styles_lib = File.join('src', 'styles', 'lib')
+      FileUtils.mkdir_p styles_lib
+      FileUtils.cd styles_lib
       system "bourbon install"
       FileUtils.cd File.join('..', '..', '..')
     end

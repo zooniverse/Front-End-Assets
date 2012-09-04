@@ -2,7 +2,7 @@ Gem::Specification.new do |s|
   s.name = 'zoo'
   s.summary = 'Zooniverse project initializer'
   s.description = 'Initialize new projects for the Zooniverse'
-  s.version = '0.0.6'
+  s.version = '0.0.7'
   s.author = 'Brian Carstensen'
   s.email = 'brian@zooniverse.org'
   s.homepage = 'http://www.zooniverse.org/'
