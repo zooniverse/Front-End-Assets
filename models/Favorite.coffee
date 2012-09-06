@@ -25,11 +25,11 @@ define (require, exports, module) ->
         projectID: raw.project_id
         subjects: (Subject.fromJSON subject for subject in raw.subjects)
 
-    @refresh: ->
-      @instances[0].destroy() while @instances.length > 0
+    @refresh: ({page} = {page: 1}) ->
+      @instances[0].destroy() while @instances.length > 0 unless page > 1
       return unless User.current?
 
-      fetch = API["fetch#{@className}s"] project: User.project, user: User.current
+      fetch = API["fetch#{@className}s"] {project: User.project, user: User.current}, {page}
       fetch.done (response) =>
         for raw in response
           instance = @fromJSON raw

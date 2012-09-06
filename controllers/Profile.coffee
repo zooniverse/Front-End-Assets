@@ -18,6 +18,8 @@ define (require, exports, module) ->
     events:
       'click .sign-out': 'signOut'
       'click .favorites .delete': 'onFavoriteDeleteClick'
+      'click .recents button[name="more"]': 'loadMoreRecents'
+      'click .favorites button[name="more"]': 'loadMoreFavorites'
 
     elements:
       '.username': 'usernameContainer'
@@ -25,6 +27,9 @@ define (require, exports, module) ->
       '.favorites ul': 'favoritesList'
       '.recents ul': 'recentsList'
       '.groups ul': 'groupsList'
+
+    recentsPage: 1
+    favoritesPage: 1
 
     constructor: ->
       super
@@ -81,5 +86,13 @@ define (require, exports, module) ->
       target.parent('li').remove()
 
       e?.preventDefault?()
+
+    loadMoreRecents: =>
+      @recentsPage += 1
+      console.log Recent.refresh page: @recentsPage
+
+    loadMoreFavorites: =>
+      @favoritesPage += 1
+      console.log Favorite.refresh page: @favoritesPage
 
   module.exports = Profile
