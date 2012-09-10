@@ -1,6 +1,7 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
   Leaflet = require 'Leaflet'
+  $ = require 'jQuery'
 
   {delay} = require 'zooniverse/util'
 
@@ -10,6 +11,7 @@ define (require, exports, module) ->
     zoom: 10
 
     layers: null
+    cartoLogo: false
 
     zoomControl: true
     scrollWheelZoom: false
@@ -44,6 +46,15 @@ define (require, exports, module) ->
       # If the map isn't immediately visible, resize it after a bit.
       mapSize = @map.getSize()
       if 0 in [mapSize.x, mapSize.y] then delay 1000, @resized
+
+      if @cartoLogo
+        logo = $('''
+          <a href="http://www.cartodb.com/" target="_blank" class="cartodb-logo">
+            <img src="images/cartodb-logo.png" />
+          </a>
+        ''')
+
+        logo.appendTo @el
 
     setCenter: (@latitude, @longitude) =>
       @map.setView new Leaflet.LatLng(@latitude, @longitude), @map.getZoom()
