@@ -11,6 +11,7 @@ define (require, exports, module) ->
   {translateDocument} = require 'zooniverse/i18n'
 
   class App extends Spine.Controller
+    appName: ''
     languages: null # Array like ['en', 'po'] passed to TopBar
     projects: null # Array of Project model instances
 
@@ -32,7 +33,7 @@ define (require, exports, module) ->
       translateDocument @languages[0] # TODO: Respect user preference.
 
     initTopBar: =>
-      @topBar = new TopBar languages: @languages
+      @topBar = new TopBar {@languages, @appName}
       @topBar.el.prependTo 'body'
 
     initPagers: =>

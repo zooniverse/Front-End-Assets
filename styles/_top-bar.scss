@@ -1,202 +1,270 @@
-$black: #111;
-$white: #fff;
-$text-color: #ddd;
-$border-color: #555;
-
-@mixin default-padding {
-  display: block;
-  padding: 6px 16px;
-
-  &:hover {
-    color: $white;
-  }
+@mixin appearance($a) {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
-@mixin menu-item {
-  border-top: 1px solid $border-color;
-  cursor: pointer;
+body {
+  -moz-transition: top 0.5s ease-in-out;
+  -ms-transition: top 0.5s ease-in-out;
+  -webkit-transition: top 0.5s ease-in-out;
+  transition: top 0.5s ease-in-out;
+  position: relative;
+  top: -100px;
+}
 
-  &:hover {
-    background: $black;
-  }
-
-  > em {
-    color: $border-color;
-    font-style: normal;
-  }
+body.show-top-bar {
+  top: 0;
 }
 
 .zooniverse-top-bar {
-  background: $black;
-  border-bottom: 1px solid $border-color;
-  color: $text-color;
-  font: {
-    family: "Helvetica Neue", Arial, Helvetica, sans-serif;
-    size: 10px;
-    weight: 500;
-  };
-  left: 0;
-  letter-spacing: 1px;
-  position: absolute;
-  text-transform: uppercase;
+  margin: 0;
+  position: relative;
   top: 0;
+  left: 0;
+  box-shadow: 10px;
   width: 100%;
-  z-index: 100;
+  z-index: 999;
 
-  > div {
-    margin: 0 auto;
+  label {
+    display: block;
+    font-size: 11px;
   }
 
-  a {
+  input, button, select {
+    margin-top: 10px;
+    height: 25px;
+    border-radius: 3px;
+  }
+
+  button {
+    border: 0;
+    box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.5), 0px 1px 2px rgba(0, 0, 0, 0.5);
+    background: rgba(255, 255, 255, 0.5);
     color: inherit;
-    text-decoration: none;
   }
 
-  a.z-logo {
-    background: url("lib/zooniverse/zooniverse-logo.png") center 5px no-repeat;
-    color: transparent;
-    display: inline-block;
-    height: 13px;
-    letter-spacing: -2em;
-    overflow: hidden;
-    text-indent: -4em;
-    width: 120px;
-
-    &:hover {
-      background-position: center -39px;
-    };
+  input[type="text"], input[type="password"] {
+    width: 115px;
+    margin-right: 5px;
+    padding-left: 5px;
+    background: #fff;
+    box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3), inset 0px 1px 2px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.3);
   }
 
-  ul {
-    margin: 0;
-    padding: 0;
+  button {
+    color: inherit;
+    width: 85px;
+    margin-right: 20px;
+    padding-bottom: 2px;
+    margin-right: 10px;
+    text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);
+  }
 
-    > li {
-      display: block;
+  button[name="signout"] {
+    margin-left: 5px;
+  }
+}
+
+#zooniverse-top-bar-container {
+  padding: 30px;
+  display: block;
+  background: #f7f7f7;
+  color: inherit;
+  font-family: "Open Sans";
+  height: 45px;
+
+  h3 {
+    font-size: 18px;
+    font-weight: 200;
+    line-height: 10px;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    strong {
+      font-weight: 700;
     }
   }
 
-  > div {
-    > ul {
-      float: left;
-      margin-left: 1px;
+  p {
+    font-size: 11px;
+    margin-bottom: 0;
+  }
 
-      > li {
-        float: left;
+  #zooniverse-top-bar-info {
+    float: left;
+    padding-right: 10px;
+    width: 470px;
+    border-right: 1px solid;
+    height: 45px;
+  }
 
-        > :first-child {
-          @include default-padding;
-          border-right: 1px solid $border-color;
-          cursor: pointer;
-        }
-      }
+  #zooniverse-top-bar-projects {
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    float: left;
+    padding-left: 10px;
+    padding-right: 15px;
+    width: 300px;
+    height: 45px;
 
-      &.last-child {
-        float: right;
-        margin-right: 1px;
+    a {
+      font-weight: 700;
+      color: inherit;
+      text-decoration: none;
+    }
 
-        > li > :first-child {
-          border: {
-            left: 1px solid $border-color;
-            right: 0;
-          };
-        }
-      }
+    h3 a {
+      font-weight: 200;
+    }
+  }
 
-      .z-dropdown {
-        position: relative;
+  #zooniverse-top-bar-login {
+    float: right;
+    height: 45px;
 
-        > .last-child {
-          background: $black;
-          border: 1px solid $border-color {
-            radius: 0 0 4px 4px;
-            top: 0;
-          };
-          left: -1px;
-          margin-top: 1px;
-          min-width: 100%;
-          overflow: hidden;
-          position: absolute;
-          top: 100%;
-          white-space: nowrap;
-        }
+    h3 {
+      display: inline;
+      line-height: 0;
+    }
 
-        &:hover {
-          z-index: 1;
-        }
+    .progress {
+      display: none;
+    }
 
-        > ul {
-          > li {
-            > a {
-              @include default-padding;
-              @include menu-item;
-            }
-          }
-        }
-      }
+    .inputs {
+      display: inline;
+    }
 
-      &.last-child .z-dropdown > .last-child {
-        left: auto;
-        right: -1px;
-      }
+    .buttons {
+      display: inline;
+    }
+  }
 
-      .z-accordion {
-        > :first-child {
-          @include default-padding;
-          @include menu-item;
-          font-size: 16px;
-          text-align: center;
-          text-transform: none;
-        }
+  #zooniverse-top-bar-languages {
+    float: right;
+    height: 45px;
+    display: none;
 
-        > .last-child {
-          overflow: hidden;
+    select {
+      background: #f7f7f7;
+      color: inherit;
+      margin-top: 12px;
+      @include appearance(none);
+      padding: 5px;
+      border: 0;
+      margin-right: -5px;
+    }
+  }
+}
 
-          > li {
-            a {
-              @include default-padding;
-              @include menu-item;
-            }
-          }
-        }
-      }
+#zooniverse-top-bar-button {
+  width: 50px;
+  height: 50px;
+  top: 0;
+  left: 50%;
+  margin-left: -500px;
+  position: relative;
+  background: #f7f7f7;
+  border-radius: 0px 0px 5px 5px;
 
-      .z-login > .zooniverse-login-form {
-        border-top: 1px solid $border-color;
+  img {
+    margin-left: 10px;
+    margin-top: 10px;
+  }
+}
 
-        label {
-          display: block;
-          margin: 15px 0;
-          text-align: center;
+.dialog.sign-up {
+  height: 325px;
+  width: 300px;
+  font-family: "Open Sans";
+  padding: 30px;
 
-          > span {
-            display: inline-block;
-            width: 15em;
-          }
-        }
+  label {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 11px;
+    display: block;
 
-        p {
-          margin: 0;
-        }
+    > span {
+      display: inline-block;
+      width: 15em;
+    }
 
-        button {
-          @include menu-item;
-          background: transparent;
-          border: 1px solid $border-color;
-          color: inherit;
-          font: {
-            family: inherit;
-            style: inherit;
-            weight: inherit;
-          };
-          padding: 0.25em 1.5em;
-        }
+    input[type="text"],
+    input[type="password"] {
+      width: 150px;
+      margin-top: 0;
+    }
+  }
 
-        > div {
-          margin: 20px;
-          text-align: center;
-        }
-      }
+  p {
+    margin: 0;
+    text-align: center;
+    font-size: 11px;
+  }
+
+  p.errors {
+    font-size: 11px;
+  }
+
+  button[type="submit"] {
+    padding: 0.25em 1.5em;
+    margin-left: 5px;
+    width: 85px;
+  }
+
+  button.dialog-closer {
+    float: right;
+  }
+
+  > div  {
+    margin: 20px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 1385px) {
+  #zooniverse-top-bar-container #zooniverse-top-bar-info {
+    width: 290px;
+
+    h3 {
+      margin-top: 17px;
+    }
+
+    p {
+      display: none;
+    }
+  }
+
+  #zooniverse-top-bar-projects {
+    width: 110px;
+
+    h3 {
+      margin-top: 17px;
+    }
+
+    p {
+      display: none;
+    }
+  }
+}
+
+@media (max-width: 1050px) {
+  #zooniverse-top-bar-container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+@media (max-width: 990px) {
+  #zooniverse-top-bar-container {
+    #zooniverse-top-bar-info {
+      border: 0;
+    }
+
+    #zooniverse-top-bar-projects {
+      display: none;
     }
   }
 }
