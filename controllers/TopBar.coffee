@@ -8,6 +8,23 @@ define (require, exports, module) ->
   class TopBar extends Controller
     className: 'zooniverse-top-bar'
 
+    events:
+      'click button[name="login"]'   : 'logIn'
+      'click button[name="signup"]'  : 'startSignUp'
+      'click button[name="signout"]' : 'signOut'
+      'keypress input'               : 'logInOnEnter'
+      'click a.top-bar-button'       : 'toggleDisplay'
+      'change select.language'       : 'setLanguage'
+
+    elements:
+      '#zooniverse-top-bar-container'        : 'container'
+      '#app-name'                            : 'appNameContainer'
+      '#zooniverse-top-bar-login .login'     : 'loginContainer'
+      '#zooniverse-top-bar-login .welcome'   : 'welcomeContainer'
+      'select.language'                      : 'langSelect'
+      '.login .progress'                     : 'progress'
+      '.login .errors'                       : 'errors'
+
     constructor: ->
       super
       @app ||= "test"
@@ -25,23 +42,6 @@ define (require, exports, module) ->
       @setAppName()
       @initLanguages()
       @setUser()
-
-    events:
-      'click button[name="login"]'   : 'logIn'
-      'click button[name="signup"]'  : 'startSignUp'
-      'click button[name="signout"]' : 'signOut'
-      'keypress input'               : 'logInOnEnter'
-      'click a.top-bar-button'       : 'toggleDisplay'
-      'change select.language'       : 'setLanguage'
-
-    elements:
-      '#zooniverse-top-bar-container'        : 'container'
-      '#app-name'                            : 'appNameContainer'
-      '#zooniverse-top-bar-login .login'     : 'loginContainer'
-      '#zooniverse-top-bar-login .welcome'   : 'welcomeContainer'
-      'select.language'                      : 'langSelect'
-      '.login .progress'                     : 'progress'
-      '.login .errors'                       : 'errors'
 
     logIn: (e) =>
       username = @el.find('input[name="username"]').val()
@@ -81,7 +81,7 @@ define (require, exports, module) ->
 
     setUser: =>
       if User.current
-        @signUp.el.remove()
+        # @signUp.el.remove()
         @loginContainer.hide()
         @errors.empty()
         @welcomeContainer.html @userGreeting(User.current.name)
