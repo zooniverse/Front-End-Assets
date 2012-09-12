@@ -43,6 +43,13 @@ define (require, exports, module) ->
       @initLanguages()
       @setUser()
 
+      if User.currentChecked
+        @toggleDisplay() unless User.current
+      else
+        User.bind 'sign-in', =>
+          return if User.currentChecked
+          @toggleDisplay() unless User.current
+
     logIn: (e) =>
       username = @el.find('input[name="username"]').val()
       password = @el.find('input[name="password"]').val()
