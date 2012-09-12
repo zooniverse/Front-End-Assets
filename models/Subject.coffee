@@ -28,16 +28,8 @@ define (require, exports, module) ->
       "#{config.talkHost}/objects/#{@zooniverseID}"
 
     facebookHref: =>
-      joinLines """
-        https://www.facebook.com/dialog/feed?
-        app_id=#{config.facebookAppId}&
-        link=#{@talkHref()}&
-        picture=#{@location.image || @location}&
-        name=#{config.name}&
-        caption=A Zooniverse citizen science project&
-        description=#{config.description}&
-        redirect_uri=#{location.href}
-      """
+      text = "I've classified something on #{config.name}!"
+      "http://www.facebook.com/sharer.php?u=#{@talkHref()}"
 
     twitterHref: =>
       text = "I've classified something on #{config.name}!"
