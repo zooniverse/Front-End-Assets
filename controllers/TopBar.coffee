@@ -54,7 +54,7 @@ define (require, exports, module) ->
         auth.fail @onError
 
     signOut: (e) =>
-      User.signOut()
+      User.deauthenticate()
 
     startSignUp: (e) =>
       dialog = new Dialog
