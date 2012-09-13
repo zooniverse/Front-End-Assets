@@ -40,6 +40,7 @@ body.show-top-bar {
   button {
     border: 0;
     box-shadow: inset 0px 1px 0px rgba(255, 255, 255, 0.5), 0px 1px 2px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
     background: rgba(255, 255, 255, 0.5);
     color: inherit;
   }
@@ -225,27 +226,29 @@ body.show-top-bar {
 }
 
 @media (max-width: 1385px) {
-  #zooniverse-top-bar-container #zooniverse-top-bar-info {
-    width: 290px;
+  #zooniverse-top-bar-container {
+    #zooniverse-top-bar-info {
+      width: auto;
 
-    h3 {
-      margin-top: 17px;
+      h3 {
+        margin-top: 17px;
+      }
+
+      p {
+        display: none;
+      }
     }
 
-    p {
-      display: none;
-    }
-  }
+    #zooniverse-top-bar-projects {
+      width: auto;
 
-  #zooniverse-top-bar-projects {
-    width: 110px;
+      h3 {
+        margin-top: 17px;
+      }
 
-    h3 {
-      margin-top: 17px;
-    }
-
-    p {
-      display: none;
+      p {
+        display: none;
+      }
     }
   }
 }
