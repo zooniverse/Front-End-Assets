@@ -49,7 +49,7 @@ define (require, exports, module) ->
       <div class="reset"></div>
 
       <div class="picker">
-        <button name="sign-in">Already't have an account? Sign in!</button>
+        <button name="sign-in">Already have an account? Sign in!</button>
         <button name="sign-up">Don't have an account? Create one!</button>
         <!--<button name="reset">Forgot your username or password?</button>-->
       </div>
