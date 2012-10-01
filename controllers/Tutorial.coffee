@@ -146,7 +146,7 @@ define (require, exports, module) ->
       @attach.at.x = xStrings[@attach.at.x] if @attach.at.x of xStrings
       @attach.at.y = yStrings[@attach.at.y] if @attach.at.y of yStrings
 
-      target = $(@attach.to).first()
+      target = $(@attach.to).filter(':visible').first()
 
       targetSize = width: target.outerWidth(), height: target.outerHeight()
       targetOffset = target.offset()
