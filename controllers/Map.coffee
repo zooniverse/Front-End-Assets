@@ -73,4 +73,11 @@ define (require, exports, module) ->
     resized: =>
       @map.invalidateSize()
 
+    addLabel: (lat, lng, html, radius = 5) =>
+      latLng = new Leaflet.LatLng lat, lng, true
+      label = new Leaflet.CircleMarker latLng, {radius}
+      @map.addLayer label
+      label.bindPopup html if html
+      label
+
   module.exports = Map
