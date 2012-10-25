@@ -2,7 +2,7 @@ define (require, exports, module) ->
   module.exports = """
     <div id="zooniverse-top-bar-container">
       <div id="zooniverse-top-bar-info">
-        <h3><span id="app-name"></span> is a <strong>Zooniverse</strong> project.</h3>
+        <h3><span id="app-name"></span> is a <a href="https://www.zooniverse.org">Zooniverse</a> project.</h3>
         <p>The Zooniverse is a collection of web-based Citizen Science projects that use the efforts and abilities of volunteers to help researchers deal with the flood of data that confronts them.</p>
       </div>
       <div id="zooniverse-top-bar-projects">
@@ -15,8 +15,13 @@ define (require, exports, module) ->
       <div id="zooniverse-top-bar-login">
         <div class='login'>
           <div class="inputs">
-            <input name="username" placeholder="username" type="text" />
-            <input name="password" placeholder="password" type="password" />
+            <div class="textboxs">
+              <input name="username" placeholder="username" type="text" />
+              <input name="password" placeholder="password" type="password" />
+            </div>
+            <div class="reset">
+              <p class="password-recovery"><a href="https://www.zooniverse.org/password/reset">Forgot Password?</a></p>
+            </div>
           </div>
           <div class="buttons">
             <button name="login" type="button">Login</button>
