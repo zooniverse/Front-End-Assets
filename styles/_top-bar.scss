@@ -132,7 +132,6 @@ body.show-top-bar {
 
     h3 {
       display: inline;
-      line-height: 0;
     }
 
     .progress {
@@ -141,16 +140,22 @@ body.show-top-bar {
 
     .inputs {
       display: inline-block;
+      position: relative;
+
+      .reset {
+        left: 0;
+        position: absolute;
+        top: 100%;
+      }
     }
-    
+
     .inputs .reset p {
       display: inline;
     }
-    
+
     .buttons {
       display: inline-block;
       position: relative;
-      top: -24px;
     }
   }
 
@@ -283,3 +288,4 @@ body.show-top-bar {
     }
   }
 }
+
