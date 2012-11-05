@@ -89,10 +89,10 @@ define (require, exports, module) ->
 
     loadMoreRecents: =>
       @recentsPage += 1
-      console.log Recent.refresh page: @recentsPage
+      # console.log Recent.refresh page: @recentsPage
 
     loadMoreFavorites: =>
       @favoritesPage += 1
-      console.log Favorite.refresh page: @favoritesPage
+      # console.log Favorite.refresh page: @favoritesPage
 
   module.exports = Profile

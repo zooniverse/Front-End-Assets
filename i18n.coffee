@@ -41,7 +41,7 @@ define (require, exports, module) ->
         applyFromCache lang
 
   translate = (string) ->
-    console.log languagesCache[currentLang]
+    # console.log languagesCache[currentLang]
     throw new Error 'No language selected' unless currentLang
     getObject string, languagesCache[currentLang]
 

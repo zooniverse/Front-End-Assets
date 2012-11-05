@@ -45,7 +45,7 @@ require.config
 
     Raphael:
       exports: ->
-        console.error 'Raphael needs its own <script> tag before RequireJS.' unless Raphael?
+        # console.error 'Raphael needs its own <script> tag before RequireJS.' unless Raphael?
         Raphael
 
     soundManager:
