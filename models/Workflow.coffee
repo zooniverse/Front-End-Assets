@@ -55,7 +55,7 @@ define (require, exports, module) ->
 
       unless limit is 0
         # console.log 'Workflow fetching subjects...',
-          'Need:', @queueLength, 'have:', @subjects.length, 'fetching:', limit
+        #   'Need:', @queueLength, 'have:', @subjects.length, 'fetching:', limit
 
         currentSubjectIDs = (subject.id for subject in @subjects)
 
