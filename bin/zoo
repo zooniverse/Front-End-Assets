@@ -125,7 +125,7 @@ class ZooApp < Thor
 
     puts "=> Checking for RequireJS optimizer".green
     unless system 'which r.js'
-      puts "=> RequireJS optimizer not found. Try `npm install -g requirejs`.".red
+      puts "=> RequireJS optimizer not found. Try `npm install -g requirejs@2.0.0`. The version is important.".red
       exit 1
     end
 
