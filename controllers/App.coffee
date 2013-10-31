@@ -7,7 +7,6 @@ define (require, exports, module) ->
   TopBar = require 'zooniverse/controllers/TopBar'
   Pager = require 'zooniverse/controllers/Pager'
   GoogleAnalytics = require 'zooniverse/controllers/GoogleAnalytics'
-  Analytics = require 'zooniverse/controllers/Analytics'
   {translateDocument} = require 'zooniverse/i18n'
 
   class App extends Spine.Controller
@@ -15,7 +14,6 @@ define (require, exports, module) ->
     languages: null # Array like ['en', 'po'] passed to TopBar
     projects: null # Array of Project model instances
 
-    analytics: null
     googleAnalytics: null
 
     constructor: ->
@@ -41,8 +39,6 @@ define (require, exports, module) ->
         new Pager el: pageContainer
 
     initAnalytics: =>
-      @analytics = new Analytics
-
       if config.googleAnalytics
         @googleAnalytics = new GoogleAnalytics
           account: config.googleAnalytics
