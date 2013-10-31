@@ -67,31 +67,32 @@ class ZooApp < Thor
     puts "=> Cloning #{options.user}/#{repository} into #{destination}".green
     system "git clone git@github.com:#{options.user}/#{repository}.git #{destination} --branch #{options.branch}"
     FileUtils.cd destination
-    system "git submodule init"
-    system "git submodule update"
     install()
 
     puts "=> Project is in \"#{destination}\".".green
   end
 
-  no_tasks {
-    def install()
-      puts "=> Moving images from Zooniverse library".green
-      images_destination = File.join("styles", "lib")
-      FileUtils.mkdir_p images_destination
-      FileUtils.cp_r File.join("src", "scripts", "lib", "zooniverse", "images"), File.join(images_destination, "zooniverse")
+  desc "install", "Init and update submodules, move things into place, install assets"
+  def install()
+    puts "=> Initializing and updating git submodules".green
+    system "git submodule init"
+    system "git submodule update"
 
-      puts "=> Installing third-party assets".green
-      system "grabass ./assets.json"
+    puts "=> Moving images from Zooniverse library".green
+    images_destination = File.join("styles", "lib")
+    FileUtils.mkdir_p images_destination
+    FileUtils.cp_r File.join("src", "scripts", "lib", "zooniverse", "images"), File.join(images_destination, "zooniverse")
 
-      puts "=> Installing Bourbon SASS mixins".green
-      styles_lib = File.join('src', 'styles', 'lib')
-      FileUtils.mkdir_p styles_lib
-      FileUtils.cd styles_lib
-      system "bourbon install"
-      FileUtils.cd File.join('..', '..', '..')
-    end
-  }
+    puts "=> Installing third-party assets".green
+    system "grabass ./assets.json"
+
+    puts "=> Installing Bourbon SASS mixins".green
+    styles_lib = File.join('src', 'styles', 'lib')
+    FileUtils.mkdir_p styles_lib
+    FileUtils.cd styles_lib
+    system "bourbon install"
+    FileUtils.cd File.join('..', '..', '..')
+  end
 
   desc "generate TYPE NAME", "Generate a model or controller"
   map "g" => :generate
