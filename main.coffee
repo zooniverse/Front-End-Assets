@@ -29,27 +29,10 @@ require.config
       deps: ['jQuery']
       exports: 'Spine'
 
-    Leaflet:
-      deps: ['jQuery']
-      exports: ($) ->
-        styleTags = '''
-          <link rel="stylesheet" href="styles/lib/leaflet/leaflet.css" />
-          <!--[if lte IE 8]>
-              <link rel="stylesheet" href="styles/lib/leaflet/leaflet.ie.css" />
-          <![endif]-->
-        '''
-
-        # Hack to make leafletProviders work with old Leaflet:
-        L.tileLayer = {}
-        L.control = layers: {}
-
-        head = $('head')
-        head.prepend styleTags unless ~head.html().indexOf 'leaflet.css'
-
-        L # Leaflet goes by "L". Its noConflict method is broken as of 3.1.
-
     leafletProviders:
       deps: ['Leaflet']
+      exports: (Leaflet) ->
+        Leaflet
 
     Raphael:
       exports: ->
