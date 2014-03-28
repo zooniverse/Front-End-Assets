@@ -1,6 +1,7 @@
 define (require, exports, module) ->
   Spine = require 'Spine'
   Leaflet = require 'Leaflet'
+  require 'leafletProviders'
   $ = require 'jQuery'
 
   {delay} = require 'zooniverse/util'
@@ -18,8 +19,12 @@ define (require, exports, module) ->
     doubleClickZoom: false
 
     # Set these before use.
+    # NOTE: These are no longer used. CloudMade dropped support.
     apiKey: ''
     tilesId: 998
+
+    # Pick one from http://leaflet-extras.github.io/leaflet-providers/preview/index.html
+    tilesProvider: 'MapQuestOpen.Aerial'
 
     map: null
 
@@ -35,7 +40,7 @@ define (require, exports, module) ->
         center: new Leaflet.LatLng @latitude, @longitude
         zoom: @zoom
         layers: [
-          new Leaflet.TileLayer "http://{s}.tile.cloudmade.com/#{@apiKey}/#{@tilesId}/256/{z}/{x}/{y}.png"
+          new Leaflet.TileLayer.Provider @tilesProvider
           (new Leaflet.TileLayer url for url in @layers)...
         ]
         scrollWheelZoom: @scrollWheelZoom

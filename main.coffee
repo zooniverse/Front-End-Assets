@@ -7,6 +7,7 @@ require.config
     jQuery: 'lib/zooniverse/blanks/jQuery'
     Spine: 'lib/spine'
     Leaflet: 'lib/leaflet'
+    leafletProviders: 'lib/leaflet-providers'
     # Raphael has a fit if a "require" function is present.
     # Make sure it's loaded in its own script tag before RequireJS.
     # Again we'll use a blank file and a shim to refer to it.
@@ -38,10 +39,17 @@ require.config
           <![endif]-->
         '''
 
+        # Hack to make leafletProviders work with old Leaflet:
+        L.tileLayer = {}
+        L.control = layers: {}
+
         head = $('head')
         head.prepend styleTags unless ~head.html().indexOf 'leaflet.css'
 
         L # Leaflet goes by "L". Its noConflict method is broken as of 3.1.
+
+    leafletProviders:
+      deps: ['Leaflet']
 
     Raphael:
       exports: ->
