@@ -31,8 +31,6 @@ define (require, exports, module) ->
     constructor: ->
       super
 
-      throw new Error 'zooniverse/controllers/Map::apiKey is empty' unless @apiKey
-
       @layers ?= []
       @layers = [@layers] unless @layers instanceof Array
 
